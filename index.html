@@ -1,0 +1,936 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BullaAcoustic | Guilherme Bulla — Voz & Violão</title>
+    <meta name="description" content="BullaAcoustic — Guilherme Bulla. Show solo de voz, violão e stompbox. Repertório de 2000+ músicas. Contrate para eventos no Brasil.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0f0f0f;
+            --bg-elevated: #171717;
+            --bg-card: #1a1a1a;
+            --border: #2a2a2a;
+            --text: #f5f5f5;
+            --text-muted: #a3a3a3;
+            --gold: #d4a853;
+            --gold-hover: #b88d3e;
+            --gold-soft: rgba(212, 168, 83, 0.12);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'Playfair Display', serif;
+            font-weight: 600;
+            line-height: 1.2;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        section {
+            padding: 96px 0;
+        }
+
+        .section-title {
+            font-size: clamp(2rem, 5vw, 2.75rem);
+            color: var(--gold);
+            margin-bottom: 16px;
+            text-align: center;
+        }
+
+        .section-subtitle {
+            color: var(--text-muted);
+            text-align: center;
+            max-width: 640px;
+            margin: 0 auto 48px;
+            font-size: 1.05rem;
+        }
+
+        /* Header */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            background: rgba(15, 15, 15, 0.72);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border-bottom: 1px solid var(--border);
+        }
+
+        nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 72px;
+        }
+
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--gold);
+            letter-spacing: -0.5px;
+        }
+
+        .logo span {
+            color: var(--text);
+            font-weight: 400;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 32px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            transition: color 0.2s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--gold);
+        }
+
+        .nav-cta {
+            display: inline-flex;
+            align-items: center;
+            padding: 10px 20px;
+            background: var(--gold);
+            color: #0f0f0f;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            transition: background 0.2s ease;
+        }
+
+        .nav-cta:hover {
+            background: var(--gold-hover);
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* Hero */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding-top: 72px;
+            position: relative;
+            background: radial-gradient(circle at 50% 30%, rgba(212, 168, 83, 0.08), transparent 50%);
+        }
+
+        .hero-content {
+            max-width: 800px;
+        }
+
+        .hero-tag {
+            display: inline-block;
+            color: var(--gold);
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            border: 1px solid var(--gold);
+            padding: 6px 14px;
+            border-radius: 100px;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 7vw, 5rem);
+            margin-bottom: 20px;
+            letter-spacing: -1px;
+        }
+
+        .hero h1 em {
+            color: var(--gold);
+            font-style: italic;
+        }
+
+        .hero p {
+            font-size: 1.15rem;
+            color: var(--text-muted);
+            max-width: 600px;
+            margin: 0 auto 40px;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 16px 32px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-primary {
+            background: var(--gold);
+            color: #0f0f0f;
+            box-shadow: 0 4px 24px rgba(212, 168, 83, 0.25);
+        }
+
+        .btn-primary:hover {
+            background: var(--gold-hover);
+            transform: translateY(-2px);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--gold);
+            border: 1.5px solid var(--gold);
+        }
+
+        .btn-outline:hover {
+            background: var(--gold-soft);
+        }
+
+        /* Sobre */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-bottom: 64px;
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 28px;
+            text-align: center;
+            transition: transform 0.2s ease, border-color 0.2s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--gold);
+        }
+
+        .stat-card strong {
+            display: block;
+            font-family: 'Playfair Display', serif;
+            font-size: 1.25rem;
+            color: var(--gold);
+            margin-bottom: 8px;
+        }
+
+        .stat-card span {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        .highlights {
+            max-width: 760px;
+            margin: 0 auto;
+        }
+
+        .highlights h3 {
+            color: var(--gold);
+            margin-bottom: 24px;
+            font-size: 1.5rem;
+        }
+
+        .highlights ul {
+            list-style: none;
+        }
+
+        .highlights li {
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            padding: 16px 0;
+            border-bottom: 1px solid var(--border);
+            color: var(--text-muted);
+        }
+
+        .highlights li:last-child {
+            border-bottom: none;
+        }
+
+        .highlights .icon {
+            color: var(--gold);
+            font-size: 1.2rem;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        /* Performance */
+        .performance {
+            background: var(--bg-elevated);
+        }
+
+        .video-wrapper {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            overflow: hidden;
+            border-radius: 16px;
+            border: 1px solid var(--border);
+        }
+
+        .video-wrapper iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+
+        /* Repertório */
+        .rep-intro {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .rep-count {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            background: var(--gold-soft);
+            border: 2px solid var(--gold);
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            color: var(--gold);
+            margin-bottom: 16px;
+        }
+
+        .rep-count span {
+            display: block;
+            font-size: 0.75rem;
+            font-family: 'Inter', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 4px;
+        }
+
+        details {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            margin-bottom: 16px;
+            overflow: hidden;
+        }
+
+        summary {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 22px 28px;
+            cursor: pointer;
+            font-family: 'Playfair Display', serif;
+            font-size: 1.25rem;
+            color: var(--gold);
+            list-style: none;
+            transition: background 0.2s ease;
+        }
+
+        summary::-webkit-details-marker {
+            display: none;
+        }
+
+        summary:hover {
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        summary .chevron {
+            transition: transform 0.2s ease;
+            color: var(--text-muted);
+        }
+
+        details[open] summary .chevron {
+            transform: rotate(180deg);
+        }
+
+        .rep-content {
+            padding: 0 28px 28px;
+            color: var(--text-muted);
+        }
+
+        .rep-content p {
+            line-height: 1.8;
+        }
+
+        .cta-box {
+            background: var(--gold-soft);
+            border: 1px solid var(--gold);
+            border-radius: 16px;
+            padding: 48px;
+            text-align: center;
+            margin-top: 48px;
+        }
+
+        .cta-box h3 {
+            font-size: 1.75rem;
+            margin-bottom: 24px;
+        }
+
+        /* Rider */
+        .rider {
+            background: var(--bg-elevated);
+        }
+
+        .rider-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .rider-table th,
+        .rider-table td {
+            padding: 20px 24px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .rider-table th {
+            background: rgba(212, 168, 83, 0.1);
+            color: var(--gold);
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .rider-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .rider-table td {
+            color: var(--text-muted);
+        }
+
+        .rider-table td:first-child {
+            color: var(--text);
+            font-weight: 500;
+            width: 28%;
+        }
+
+        /* Testimonials */
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+
+        .testimonial-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 32px;
+            text-align: center;
+            color: var(--text-muted);
+        }
+
+        .testimonial-card .quote {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.35rem;
+            color: var(--gold);
+            margin-bottom: 16px;
+        }
+
+        .testimonial-card .role {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            opacity: 0.7;
+            margin-top: 8px;
+        }
+
+        /* Contato */
+        .contato {
+            background: var(--bg-elevated);
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 48px;
+            align-items: start;
+        }
+
+        .contact-info h3 {
+            color: var(--gold);
+            font-size: 1.75rem;
+            margin-bottom: 24px;
+        }
+
+        .contact-list {
+            list-style: none;
+        }
+
+        .contact-list li {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 14px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .contact-list li:last-child {
+            border-bottom: none;
+        }
+
+        .contact-list .icon {
+            color: var(--gold);
+            font-size: 1.2rem;
+            width: 24px;
+            text-align: center;
+        }
+
+        .contact-list a {
+            color: var(--text-muted);
+            transition: color 0.2s ease;
+        }
+
+        .contact-list a:hover {
+            color: var(--gold);
+        }
+
+        .contact-cta {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .contact-cta h4 {
+            color: var(--gold);
+            font-size: 1.5rem;
+            margin-bottom: 16px;
+        }
+
+        .contact-cta p {
+            color: var(--text-muted);
+            margin-bottom: 28px;
+        }
+
+        /* Footer */
+        footer {
+            background: #0a0a0a;
+            border-top: 1px solid var(--border);
+            padding: 48px 0 32px;
+        }
+
+        .footer-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .footer-nav {
+            display: flex;
+            gap: 28px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .footer-nav a {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            transition: color 0.2s ease;
+        }
+
+        .footer-nav a:hover {
+            color: var(--gold);
+        }
+
+        .footer-legal {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            opacity: 0.7;
+        }
+
+        .footer-legal p {
+            margin-bottom: 6px;
+        }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .nav-links {
+                display: none;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .testimonials-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .contact-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 600px) {
+            section {
+                padding: 72px 0;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .rider-table th,
+            .rider-table td {
+                padding: 16px;
+                font-size: 0.9rem;
+            }
+
+            .cta-box {
+                padding: 32px 24px;
+            }
+
+            .contact-cta {
+                padding: 28px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <nav>
+                <a href="#inicio" class="logo">Bulla<span>Acoustic</span></a>
+                <ul class="nav-links">
+                    <li><a href="#inicio">Início</a></li>
+                    <li><a href="#sobre">Sobre</a></li>
+                    <li><a href="#repertorio">Repertório</a></li>
+                    <li><a href="#rider">Rider</a></li>
+                    <li><a href="#contato">Contato</a></li>
+                </ul>
+                <a href="#contato" class="nav-cta">Contratar Show</a>
+                <button class="mobile-menu-btn" aria-label="Menu">☰</button>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section id="inicio" class="hero">
+            <div class="container">
+                <div class="hero-content">
+                    <span class="hero-tag">Voz & Violão</span>
+                    <h1>Guilherme <em>Bulla</em></h1>
+                    <p>Apresentações solo de voz, violão e stompbox com um repertório de 2000+ músicas. Do MPB ao rock internacional, do soul ao reggae.</p>
+                    <div class="hero-buttons">
+                        <a href="#contato" class="btn btn-primary">Contratar Show</a>
+                        <a href="https://twitch.tv/bullaacoustic" target="_blank" rel="noopener noreferrer" class="btn btn-outline">Assistir na Twitch</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="sobre" class="sobre">
+            <div class="container">
+                <h2 class="section-title">Sobre</h2>
+                <p class="section-subtitle">Mais de duas décadas de carreira, formação clássica e experiências artísticas pelo mundo.</p>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <strong>28 anos</strong>
+                        <span>de carreira profissional</span>
+                    </div>
+                    <div class="stat-card">
+                        <strong>Heitor de Lemos</strong>
+                        <span>Formação musical desde os 7 anos</span>
+                    </div>
+                    <div class="stat-card">
+                        <strong>FURG</strong>
+                        <span>Bacharel em Direito</span>
+                    </div>
+                    <div class="stat-card">
+                        <strong>Montreal 2010</strong>
+                        <span>Residência artística no Canadá</span>
+                    </div>
+                    <div class="stat-card">
+                        <strong>Amazônia 2020-2022</strong>
+                        <span>Imersão de 3 anos em Maués/AM</span>
+                    </div>
+                    <div class="stat-card">
+                        <strong>5 continentes</strong>
+                        <span>Transmissões ao vivo em inglês</span>
+                    </div>
+                </div>
+
+                <div class="highlights">
+                    <h3>Trajetória</h3>
+                    <ul>
+                        <li>
+                            <span class="icon">♪</span>
+                            <span>Formação clássica desde os 7 anos na Escola de Belas Artes Heitor de Lemos</span>
+                        </li>
+                        <li>
+                            <span class="icon">✈</span>
+                            <span>Residência artística em Montreal, Canadá (2010)</span>
+                        </li>
+                        <li>
+                            <span class="icon">🌿</span>
+                            <span>Imersão de 3 anos na Floresta Amazônica, Maués/AM (2020-2022)</span>
+                        </li>
+                        <li>
+                            <span class="icon">🎤</span>
+                            <span>Radicado em Vila Velha/ES, apresentações pelo Sul e Sudeste do Brasil</span>
+                        </li>
+                        <li>
+                            <span class="icon">🌐</span>
+                            <span>Transmissões ao vivo em inglês para audiência nos 5 continentes</span>
+                        </li>
+                        <li>
+                            <span class="icon">⚖</span>
+                            <span>Bacharel em Direito pela FURG — segurança contratual e profissionalismo</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="performance" class="performance">
+            <div class="container">
+                <h2 class="section-title">Ao Vivo</h2>
+                <p class="section-subtitle">Um pouco da energia do show solo de voz, violão e stompbox.</p>
+                <div class="video-wrapper">
+                    <iframe src="https://www.youtube.com/embed/nXAi3QrVisc" title="Performance BullaAcoustic" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                </div>
+            </div>
+        </section>
+
+        <section id="repertorio" class="repertorio">
+            <div class="container">
+                <h2 class="section-title">Repertório</h2>
+                <div class="rep-intro">
+                    <div class="rep-count">2000+<span>músicas</span></div>
+                    <p class="section-subtitle">Repertório vasto e adaptável, do clássico ao contemporâneo, do nacional ao internacional.</p>
+                </div>
+
+                <details>
+                    <summary>MPB <span class="chevron">⌄</span></summary>
+                    <div class="rep-content">
+                        <p>Caetano Veloso, Djavan, Gilberto Gil, Tom Jobim, Chico Buarque, Elis Regina, Milton Nascimento, Tim Maia, Maria Gadú, Marisa Monte, Anavitória, Tiago Iorc, Rubel, Melim</p>
+                    </div>
+                </details>
+
+                <details>
+                    <summary>Pop/Rock Nacional <span class="chevron">⌄</span></summary>
+                    <div class="rep-content">
+                        <p>Legião Urbana, Titãs, Lulu Santos, Paralamas, Skank, Nando Reis, Cazuza, Engenheiros, Capital Inicial, Biquini Cavadão, CPM22, Raimundos, O Rappa</p>
+                    </div>
+                </details>
+
+                <details>
+                    <summary>Pop/Rock Internacional <span class="chevron">⌄</span></summary>
+                    <div class="rep-content">
+                        <p>Coldplay, U2, Queen, Pink Floyd, Nirvana, Red Hot Chili Peppers, Pearl Jam, The Beatles, Radiohead, Foo Fighters, Ed Sheeran, John Mayer, Jack Johnson, Bruno Mars, Adele, Amy Winehouse, Norah Jones, Aretha Franklin, Jason Mraz</p>
+                    </div>
+                </details>
+
+                <details>
+                    <summary>Soul / R&B / Reggae <span class="chevron">⌄</span></summary>
+                    <div class="rep-content">
+                        <p>Bob Marley, Stevie Wonder, Aretha Franklin, Al Green, Amy Winehouse, Lauryn Hill, Sublime</p>
+                    </div>
+                </details>
+
+                <div class="cta-box">
+                    <h3>Quer esse repertório no seu evento?</h3>
+                    <a href="#contato" class="btn btn-primary">Contratar Show</a>
+                </div>
+            </div>
+        </section>
+
+        <section id="rider" class="rider">
+            <div class="container">
+                <h2 class="section-title">Rider Técnico</h2>
+                <p class="section-subtitle">Estrutura simples e objetiva para uma performance solo de qualidade.</p>
+                <table class="rider-table">
+                    <thead>
+                        <tr>
+                            <th>Item</th>
+                            <th>Especificação</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Violão</td>
+                            <td>01 entrada P10 (canal para violão)</td>
+                        </tr>
+                        <tr>
+                            <td>Voz e Stompbox</td>
+                            <td>02 entradas XLR (canal para microfone + stompbox)</td>
+                        </tr>
+                        <tr>
+                            <td>Energia</td>
+                            <td>01 ponto 110V/220V próximo ao palco</td>
+                        </tr>
+                        <tr>
+                            <td>Monitor</td>
+                            <td>01 monitor de retorno (floor ou in-ear)</td>
+                        </tr>
+                        <tr>
+                            <td>Instrumento</td>
+                            <td>Violão eletroacústico Martin DC Aura (próprio)</td>
+                        </tr>
+                        <tr>
+                            <td>Formação</td>
+                            <td>Solo - Voz e Violão + Stompbox</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section id="depoimentos" class="depoimentos">
+            <div class="container">
+                <h2 class="section-title">O que dizem quem já contratou</h2>
+                <div class="testimonials-grid">
+                    <div class="testimonial-card">
+                        <div class="quote">Depoimentos em breve</div>
+                        <p>Em breve</p>
+                        <p class="role">Cliente / Produtor</p>
+                    </div>
+                    <div class="testimonial-card">
+                        <div class="quote">Depoimentos em breve</div>
+                        <p>Em breve</p>
+                        <p class="role">Cliente / Produtor</p>
+                    </div>
+                    <div class="testimonial-card">
+                        <div class="quote">Depoimentos em breve</div>
+                        <p>Em breve</p>
+                        <p class="role">Cliente / Produtor</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="contato" class="contato">
+            <div class="container">
+                <h2 class="section-title">Contato</h2>
+                <p class="section-subtitle">Fale diretamente e tire seu evento do papel.</p>
+                <div class="contact-grid">
+                    <div class="contact-info">
+                        <h3>Fale com o artista</h3>
+                        <ul class="contact-list">
+                            <li>
+                                <span class="icon">💬</span>
+                                <a href="https://wa.me/5551984440402" target="_blank" rel="noopener noreferrer">WhatsApp: (51) 98444.0402</a>
+                            </li>
+                            <li>
+                                <span class="icon">✉</span>
+                                <a href="mailto:guilhermebullars@gmail.com">guilhermebullars@gmail.com</a>
+                            </li>
+                            <li>
+                                <span class="icon">✉</span>
+                                <a href="mailto:bullaacoustic@gmail.com">bullaacoustic@gmail.com</a>
+                            </li>
+                            <li>
+                                <span class="icon">📷</span>
+                                <a href="https://instagram.com/guilhermebulla" target="_blank" rel="noopener noreferrer">Instagram: @guilhermebulla</a>
+                            </li>
+                            <li>
+                                <span class="icon">🎮</span>
+                                <a href="https://twitch.tv/bullaacoustic" target="_blank" rel="noopener noreferrer">Twitch: twitch.tv/bullaacoustic</a>
+                            </li>
+                            <li>
+                                <span class="icon">▶</span>
+                                <a href="https://youtube.com/MrGuilhermeBulla" target="_blank" rel="noopener noreferrer">YouTube: youtube.com/MrGuilhermeBulla</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="contact-cta">
+                        <h4>Leve o BullaAcoustic ao seu evento</h4>
+                        <p>Show solo de voz, violão e stompbox com repertório de 2000+ músicas. Atendimento ágil e contrato seguro.</p>
+                        <a href="https://wa.me/5551984440402" target="_blank" rel="noopener noreferrer" class="btn btn-primary">Contratar Show</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <nav class="footer-nav">
+                    <a href="#inicio">Início</a>
+                    <a href="#sobre">Sobre</a>
+                    <a href="#repertorio">Repertório</a>
+                    <a href="#rider">Rider</a>
+                    <a href="#contato">Contato</a>
+                </nav>
+                <div class="footer-legal">
+                    <p>© Guilherme Bulla | BullaAcoustic. Todos os direitos reservados.</p>
+                    <p>NF Disponível — MEI / CNPJ próprio</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
