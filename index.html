@@ -630,6 +630,20 @@
             .contact-grid {
                 grid-template-columns: 1fr;
             }
+            .nav-links.active {
+                display: flex;
+                flex-direction: column;
+                position: fixed;
+                top: 72px;
+                left: 0;
+                width: 100%;
+                background: rgba(15, 15, 15, 0.98);
+                backdrop-filter: blur(14px);
+                padding: 24px;
+                gap: 16px;
+                border-bottom: 1px solid var(--border);
+                z-index: 999;
+            }
         }
 
         @media (max-width: 600px) {
@@ -932,5 +946,21 @@
             </div>
         </div>
     </footer>
+    <script>
+        const menuBtn = document.querySelector('.mobile-menu-btn');
+        const navLinks = document.querySelector('.nav-links');
+
+        menuBtn.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+            menuBtn.textContent = navLinks.classList.contains('active') ? '✕' : '☰';
+        });
+
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+                menuBtn.textContent = '☰';
+            });
+        });
+    </script>
 </body>
 </html>
