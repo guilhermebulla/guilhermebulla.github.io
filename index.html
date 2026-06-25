@@ -669,6 +669,41 @@
                 padding: 28px;
             }
         }
+
+        .video-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            align-items: start;
+        }
+
+        .video-wrapper-portrait {
+            position: relative;
+            padding-bottom: 177.78%;
+            height: 0;
+            overflow: hidden;
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            max-height: 500px;
+        }
+
+        .video-wrapper-portrait iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+
+        @media (max-width: 768px) {
+            .video-grid {
+                grid-template-columns: 1fr;
+            }
+            .video-wrapper-portrait {
+                max-height: none;
+            }
+        }
     </style>
 </head>
 <body>
@@ -699,6 +734,21 @@
                     <div class="hero-buttons">
                         <a href="#contato" class="btn btn-primary">Contratar Show</a>
                         <a href="https://twitch.tv/bullaacoustic" target="_blank" rel="noopener noreferrer" class="btn btn-outline">Assistir na Twitch</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="performance" class="performance">
+            <div class="container">
+                <h2 class="section-title">Ao Vivo</h2>
+                <p class="section-subtitle">Do homestudio ao palco — confira a energia do show.</p>
+                <div class="video-grid">
+                    <div class="video-wrapper">
+                        <iframe src="https://www.youtube.com/embed/nXAi3QrVisc" title="Performance BullaAcoustic" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                    </div>
+                    <div class="video-wrapper-portrait">
+                        <iframe src="https://www.youtube.com/embed/Xhb-BCHBdw0" title="BullaAcoustic ao vivo - Plateia" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
                     </div>
                 </div>
             </div>
@@ -755,16 +805,6 @@
                             <span>Bacharel em Direito pela FURG — segurança contratual e profissionalismo</span>
                         </li>
                     </ul>
-                </div>
-            </div>
-        </section>
-
-        <section id="performance" class="performance">
-            <div class="container">
-                <h2 class="section-title">Ao Vivo</h2>
-                <p class="section-subtitle">Um pouco da energia do show solo de voz, violão e stompbox.</p>
-                <div class="video-wrapper">
-                    <iframe src="https://www.youtube.com/embed/nXAi3QrVisc" title="Performance BullaAcoustic" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
                 </div>
             </div>
         </section>
