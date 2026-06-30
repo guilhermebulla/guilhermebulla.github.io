@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BullaAcoustic | Guilherme Bulla — Voz & Violão</title>
-    <meta name="description" content="BullaAcoustic — Guilherme Bulla. Show solo de voz, violão e stompbox. Repertório de 2000+ músicas. Contrate para eventos no Brasil.">
+    <meta name="description" content="BullaAcoustic — Guilherme Bulla. Show solo de voz, violão e stompbox. Repertório de 1200+ músicas. Contrate para eventos no Brasil.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -701,6 +701,39 @@
                 grid-template-columns: 1fr;
             }
         }
+
+        /* --- Busca no Repertório --- */
+        .rep-divider { border: none; height: 1px; background: var(--border); margin: 48px 0 40px; }
+        .rep-search { margin-bottom: 48px; }
+        .rep-search-title { font-family: 'Playfair Display', serif; font-size: 1.5rem; color: var(--gold); margin-bottom: 24px; text-align: center; }
+        .rep-search-field { display: block; width: 100%; padding: 16px 20px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; color: var(--text); font-size: 1rem; font-family: 'Inter', sans-serif; outline: none; transition: border-color 0.2s ease; margin-bottom: 20px; }
+        .rep-search-field:focus { border-color: var(--gold); }
+        .rep-search-field::placeholder { color: var(--text-muted); opacity: 0.6; }
+        .rep-filters { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+        .rep-filters.lang-filters { margin-bottom: 24px; gap: 16px; }
+        .rep-chip { display: inline-flex; align-items: center; padding: 6px 14px; border: 1px solid var(--border); border-radius: 100px; background: transparent; color: var(--text-muted); font-size: 0.85rem; font-family: 'Inter', sans-serif; cursor: pointer; transition: all 0.2s ease; user-select: none; }
+        .rep-chip:hover { border-color: var(--gold); color: var(--text); }
+        .rep-chip.active { background: var(--gold-soft); border-color: var(--gold); color: var(--gold); }
+        .rep-lang-chip { display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px; border: 1px solid var(--border); border-radius: 100px; background: transparent; color: var(--text-muted); font-size: 0.85rem; font-family: 'Inter', sans-serif; cursor: pointer; transition: all 0.2s ease; user-select: none; }
+        .rep-lang-chip input { display: none; }
+        .rep-lang-chip:hover { border-color: var(--gold); color: var(--text); }
+        .rep-lang-chip.active { background: var(--gold-soft); border-color: var(--gold); color: var(--gold); }
+        .rep-counter { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 16px; font-family: 'Inter', sans-serif; }
+        .rep-results { max-height: 500px; overflow-y: auto; border: 1px solid var(--border); border-radius: 12px; background: var(--bg-card); }
+        .rep-results:empty { border: none; background: transparent; }
+        .rep-result-item { display: flex; justify-content: space-between; align-items: center; padding: 14px 20px; border-bottom: 1px solid var(--border); transition: background 0.15s ease; gap: 12px; }
+        .rep-result-item:last-child { border-bottom: none; }
+        .rep-result-item:hover { background: rgba(255,255,255,0.02); }
+        .rep-result-info { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+        .rep-result-musica { color: var(--text); font-size: 0.95rem; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .rep-result-artista { color: var(--text-muted); font-size: 0.85rem; }
+        .rep-result-tags { display: flex; gap: 6px; flex-shrink: 0; flex-wrap: wrap; }
+        .rep-result-tag { display: inline-block; padding: 3px 10px; border: 1px solid var(--gold); border-radius: 100px; color: var(--gold); font-size: 0.75rem; background: transparent; white-space: nowrap; }
+        .rep-no-results { color: var(--text-muted); text-align: center; padding: 32px 20px; font-size: 0.95rem; }
+        .rep-results::-webkit-scrollbar { width: 6px; }
+        .rep-results::-webkit-scrollbar-track { background: transparent; }
+        .rep-results::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+        @media (max-width: 600px) { .rep-result-item { flex-direction: column; align-items: flex-start; } .rep-result-tags { margin-top: 4px; } }
     </style>
 </head>
 <body>
@@ -728,7 +761,7 @@
                 <div class="hero-content">
                     <span class="hero-tag">Voz & Violão</span>
                     <h1>Guilherme <em>Bulla</em></h1>
-                    <p>Apresentações solo de voz, violão e stompbox com um repertório de 2000+ músicas. Do MPB ao rock internacional, do soul ao reggae.</p>
+                    <p>Apresentações solo de voz, violão e stompbox com um repertório de 1200+ músicas. Do MPB ao rock internacional, do soul ao reggae.</p>
                     <div class="hero-buttons">
                         <a href="#contato" class="btn btn-primary">Contratar Show</a>
                         <a href="https://twitch.tv/bullaacoustic" target="_blank" rel="noopener noreferrer" class="btn btn-outline">Assistir na Twitch</a>
@@ -814,7 +847,7 @@
             <div class="container">
                 <h2 class="section-title">Repertório</h2>
                 <div class="rep-intro">
-                    <div class="rep-count">2000+<span>músicas</span></div>
+                    <div class="rep-count">1200+<span>músicas</span></div>
                     <p class="section-subtitle">Repertório vasto e adaptável, do clássico ao contemporâneo, do nacional ao internacional.</p>
                 </div>
 
@@ -845,6 +878,21 @@
                         <p>Bob Marley, Amy Winehouse, Lauryn Hill, Stevie Wonder, Aretha Franklin, Al Green, Sublime</p>
                     </div>
                 </details>
+
+                <hr class="rep-divider">
+                <div class="rep-search">
+                    <h3 class="rep-search-title">Busca no repertório completo</h3>
+                    <input type="text" id="repSearchInput" class="rep-search-field" placeholder="Digite nome da música ou artista...">
+                    <div id="repStyleFilters" class="rep-filters"></div>
+                    <div class="rep-filters lang-filters">
+                        <span class="rep-lang-chip" data-lang="Português"><input type="checkbox"> 🇧🇷 Português</span>
+                        <span class="rep-lang-chip" data-lang="Inglês"><input type="checkbox"> 🇺🇸 Inglês</span>
+                        <span class="rep-lang-chip" data-lang="Espanhol"><input type="checkbox"> 🇪🇸 Español</span>
+                        <span class="rep-lang-chip" data-lang="Francês"><input type="checkbox"> 🇫🇷 Français</span>
+                    </div>
+                    <p id="repCounter" class="rep-counter">Carregando repertório...</p>
+                    <div id="repResults" class="rep-results"></div>
+                </div>
 
                 <div class="cta-box">
                     <h3>Quer esse repertório no seu evento?</h3>
@@ -953,7 +1001,7 @@
                     </div>
                     <div class="contact-cta">
                         <h4>Leve o BullaAcoustic ao seu evento</h4>
-                        <p>Show solo de voz, violão e stompbox com repertório de 2000+ músicas. Atendimento ágil e contrato seguro.</p>
+                        <p>Show solo de voz, violão e stompbox com repertório de 1200+ músicas. Atendimento ágil e contrato seguro.</p>
                         <a href="https://wa.me/5551984440402" target="_blank" rel="noopener noreferrer" class="btn btn-primary">Contratar Show</a>
                     </div>
                 </div>
@@ -980,20 +1028,151 @@
         </div>
     </footer>
     <script>
+        // === MENU MOBILE ===
         const menuBtn = document.querySelector('.mobile-menu-btn');
         const navLinks = document.querySelector('.nav-links');
-
-        menuBtn.addEventListener('click', () => {
-            navLinks.classList.toggle('active');
-            menuBtn.textContent = navLinks.classList.contains('active') ? '✕' : '☰';
-        });
-
-        document.querySelectorAll('.nav-links a').forEach(link => {
-            link.addEventListener('click', () => {
-                navLinks.classList.remove('active');
-                menuBtn.textContent = '☰';
+        if (menuBtn && navLinks) {
+            menuBtn.addEventListener('click', () => {
+                navLinks.classList.toggle('active');
+                menuBtn.textContent = navLinks.classList.contains('active') ? '✕' : '☰';
             });
-        });
+            document.querySelectorAll('.nav-links a').forEach(link => {
+                link.addEventListener('click', () => {
+                    navLinks.classList.remove('active');
+                    menuBtn.textContent = '☰';
+                });
+            });
+        }
+
+        // === BUSCA NO REPERTÓRIO ===
+        let repData = [];
+        
+        function esc(t) {
+            const d = document.createElement('div');
+            d.textContent = t;
+            return d.innerHTML;
+        }
+
+        function getEstilos(item) {
+            if (Array.isArray(item.estilo)) return item.estilo;
+            if (typeof item.estilo === 'string') return item.estilo.split(',').map(s => s.trim());
+            return [];
+        }
+
+        function extrairEstilos() {
+            const s = new Set();
+            repData.forEach(item => getEstilos(item).forEach(e => s.add(e)));
+            return Array.from(s).sort();
+        }
+
+        function generarFiltros() {
+            const container = document.getElementById('repStyleFilters');
+            if (!container) return;
+            container.innerHTML = '';
+            extrairEstilos().forEach(estilo => {
+                const chip = document.createElement('span');
+                chip.className = 'rep-chip';
+                chip.dataset.estilo = estilo;
+                chip.textContent = estilo;
+                chip.addEventListener('click', function() {
+                    this.classList.toggle('active');
+                    aplicarFiltros();
+                });
+                container.appendChild(chip);
+            });
+            document.querySelectorAll('.rep-lang-chip').forEach(chip => {
+                chip.addEventListener('click', function() {
+                    this.classList.toggle('active');
+                    aplicarFiltros();
+                });
+            });
+            const input = document.getElementById('repSearchInput');
+            if (input) input.addEventListener('input', aplicarFiltros);
+        }
+
+        function aplicarFiltros() {
+            if (!repData.length) return;
+            const termo = document.getElementById('repSearchInput').value.trim().toLowerCase();
+            const estilosAtivos = Array.from(document.querySelectorAll('.rep-chip.active')).map(el => el.dataset.estilo);
+            const idiomasAtivos = Array.from(document.querySelectorAll('.rep-lang-chip.active')).map(el => el.dataset.lang);
+            let result = repData;
+            if (termo) result = result.filter(item => (item.musica||'').toLowerCase().includes(termo) || (item.artista||'').toLowerCase().includes(termo));
+            if (estilosAtivos.length) result = result.filter(item => getEstilos(item).some(e => estilosAtivos.includes(e)));
+            if (idiomasAtivos.length) result = result.filter(item => idiomasAtivos.includes(item.idioma));
+            document.getElementById('repCounter').textContent = result.length + ' de ~' + repData.length + ' músicas encontradas';
+            renderizar(result);
+        }
+
+        function renderizar(lista) {
+            const container = document.getElementById('repResults');
+            if (!container) return;
+            if (!lista.length) {
+                container.innerHTML = '<div class="rep-no-results">Nenhuma música encontrada com esses filtros.</div>';
+                return;
+            }
+            const max = 50;
+            const exibir = lista.slice(0, max);
+            let html = '';
+            exibir.forEach(item => {
+                const tags = getEstilos(item).map(e => '<span class="rep-result-tag">' + esc(e) + '</span>').join('');
+                html += '<div class="rep-result-item">' +
+                    '<div class="rep-result-info">' +
+                        '<span class="rep-result-musica">' + esc(item.musica) + '</span>' +
+                        '<span class="rep-result-artista">' + esc(item.artista) + '</span>' +
+                    '</div>' +
+                    '<div class="rep-result-tags">' + tags + '</div>' +
+                '</div>';
+            });
+            if (lista.length > max) {
+                html += '<div class="rep-no-results">Mostrando ' + max + ' de ' + lista.length + ' resultados. Refine a busca.</div>';
+            }
+            container.innerHTML = html;
+        }
+
+        async function carregarRepertorio() {
+            try {
+                let resp = await fetch('repertorio.json');
+                if (resp.ok) {
+                    repData = await resp.json();
+                } else {
+                    throw new Error('no json');
+                }
+            } catch(e) {
+                try {
+                    resp = await fetch('JSON-setlist.txt');
+                    const text = await resp.text();
+                    repData = [];
+                    let i = 0;
+                    while (i < text.length) {
+                        if (text[i] !== '[') { i++; continue; }
+                        let start = i;
+                        let depth = 0;
+                        while (i < text.length) {
+                            if (text[i] === '[') depth++;
+                            else if (text[i] === ']') depth--;
+                            if (depth === 0) break;
+                            i++;
+                        }
+                        if (depth === 0) {
+                            try {
+                                const arr = JSON.parse(text.substring(start, i + 1));
+                                if (Array.isArray(arr)) repData.push(...arr);
+                            } catch(pe) {}
+                        }
+                        i++;
+                    }
+                } catch(err) {
+                    const c = document.getElementById('repCounter');
+                    const r = document.getElementById('repResults');
+                    if (c) c.textContent = 'Erro ao carregar repertório.';
+                    if (r) r.innerHTML = '<div class="rep-no-results">Não foi possível carregar os dados.</div>';
+                    return;
+                }
+            }
+            if (repData && repData.length) { generarFiltros(); aplicarFiltros(); }
+        }
+
+        document.addEventListener('DOMContentLoaded', carregarRepertorio);
     </script>
 </body>
 </html>
