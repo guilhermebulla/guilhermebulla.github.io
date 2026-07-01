@@ -309,6 +309,23 @@
             flex-shrink: 0;
             margin-top: 2px;
         }
+        .sobre-divider-top {
+            border: none;
+            height: 40px;
+            background: radial-gradient(ellipse 100% 100% at 50% 100%, rgba(212, 168, 83, 0.3) 0%, rgba(212, 168, 83, 0.15) 30%, transparent 70%);
+            margin-top: -20px;
+            margin-bottom: 12px;
+            position: relative;
+        }
+        .sobre-divider-top::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(to right, transparent 0%, var(--gold) 50%, transparent 100%);
+        }
 
         /* Performance */
         .performance {
@@ -333,34 +350,80 @@
             border: 0;
         }
 
+        /* Divider da seção Performance */
+        .performance-divider-top {
+            border: none;
+            height: 40px;
+            background: radial-gradient(ellipse 100% 100% at 50% 100%, rgba(212, 168, 83, 0.3) 0%, rgba(212, 168, 83, 0.15) 30%, transparent 70%);
+            margin-top: -20px;
+            margin-bottom: 12px;
+            position: relative;
+        }
+        
+        .performance-divider-top::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(to right, transparent 0%, var(--gold) 50%, transparent 100%);
+        }
+
         /* Repertório */
         .rep-intro {
             text-align: center;
             margin-bottom: 40px;
+            margin-top: -20px;
         }
-
         .rep-count {
-            display: inline-flex;
-            align-items: center;
+            display: flex;
+            flex-direction: row;
+            align-items: baseline;
             justify-content: center;
-            width: 140px;
-            height: 140px;
-            border-radius: 50%;
-            background: var(--gold-soft);
-            border: 2px solid var(--gold);
+            gap: 8px;
+            width: auto;
+            height: auto;
+            border-radius: 0;
+            background: transparent;
+            border: none;
+            padding: 0;
+            margin-bottom: 24px;
             font-family: 'Playfair Display', serif;
-            font-size: 2rem;
+            font-size: 2.2rem;
+            font-weight: 700;
             color: var(--gold);
-            margin-bottom: 16px;
+            line-height: 1;
         }
-
         .rep-count span {
-            display: block;
+            display: inline;
             font-size: 0.75rem;
             font-family: 'Inter', sans-serif;
             text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-top: 4px;
+            letter-spacing: 2px;
+            margin-left: 4px;
+            color: var(--text);
+            font-weight: 500;
+            vertical-align: super;
+            position: relative;
+            top: -14px;
+        }
+        .rep-divider-top {
+            border: none;
+            height: 40px;
+            background: radial-gradient(ellipse 100% 100% at 50% 100%, rgba(212, 168, 83, 0.3) 0%, rgba(212, 168, 83, 0.15) 30%, transparent 70%);
+            margin-bottom: 12px;
+            position: relative;
+        }
+        
+        .rep-divider-top::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(to right, transparent 0%, var(--gold) 50%, transparent 100%);
         }
 
         details {
@@ -466,6 +529,25 @@
             color: var(--text);
             font-weight: 500;
             width: 28%;
+        }
+
+        .rider-divider-top {
+            border: none;
+            height: 40px;
+            background: radial-gradient(ellipse 100% 100% at 50% 100%, rgba(212, 168, 83, 0.3) 0%, rgba(212, 168, 83, 0.15) 30%, transparent 70%);
+            margin-top: -20px;
+            margin-bottom: 12px;
+            position: relative;
+        }
+        
+        .rider-divider-top::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(to right, transparent 0%, var(--gold) 50%, transparent 100%);
         }
 
         /* Testimonials */
@@ -773,6 +855,7 @@
         <section id="performance" class="performance">
             <div class="container">
                 <h2 class="section-title">Ao Vivo</h2>
+                <div class="performance-divider-top"></div>
                 <p class="section-subtitle">Do homestudio ao palco — confira a energia do show.</p>
                 <div class="video-grid">
                     <div class="video-wrapper">
@@ -791,6 +874,7 @@
         <section id="sobre" class="sobre">
             <div class="container">
                 <h2 class="section-title">Sobre</h2>
+                <div class="sobre-divider-top"></div>
                 <p class="section-subtitle">28 anos de estrada, formação musical desde os 7 anos e alcance global — do Sul do Brasil aos cinco continentes.</p>
 
                 <div class="stats-grid">
@@ -847,6 +931,7 @@
             <div class="container">
                 <h2 class="section-title">Repertório</h2>
                 <div class="rep-intro">
+                    <div class="rep-divider-top"></div>
                     <div class="rep-count">1200+<span>músicas</span></div>
                     <p class="section-subtitle">Repertório vasto e adaptável, do clássico ao contemporâneo, do nacional ao internacional.</p>
                 </div>
@@ -868,7 +953,7 @@
                 <details>
                     <summary>Pop/Rock Internacional <span class="chevron">⌄</span></summary>
                     <div class="rep-content">
-                        <p>Coldplay, U2, Ed Sheeran, John Mayer, Queen, Pink Floyd, Nirvana, Red Hot Chili Peppers, Pearl Jam, The Beatles, Radiohead, Foo Fighters, Jack Johnson, Bruno Mars, Adele, Amy Winehouse, Norah Jones, Aretha Franklin, Jason Mraz</p>
+                        <p>Coldplay, U2, Ed Sheeran, John Mayer, Queen, Pink Floyd, Counting Crows, Nirvana, Red Hot Chili Peppers, Pearl Jam, The Beatles, Radiohead, Foo Fighters, Jack Johnson, Bruno Mars, Adele, Amy Winehouse, Norah Jones, Jason Mraz</p>
                     </div>
                 </details>
 
@@ -904,6 +989,7 @@
         <section id="rider" class="rider">
             <div class="container">
                 <h2 class="section-title">Rider Técnico</h2>
+                <div class="rider-divider-top"></div>
                 <p class="section-subtitle">Estrutura simples e objetiva para uma performance solo de qualidade.</p>
                 <table class="rider-table">
                     <thead>
