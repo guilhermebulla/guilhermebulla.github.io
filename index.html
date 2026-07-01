@@ -713,12 +713,72 @@
 
         /* Responsive */
         @media (max-width: 900px) {
+            /* 1. Esconde a lista de navegação por padrão no mobile. */
             .nav-links {
                 display: none;
             }
 
+            /* 2. Mostra o menu como coluna flexível quando a classe .active é aplicada. */
+            .nav-links.active {
+                display: flex;
+                flex-direction: column;
+                position: fixed;
+                top: 72px;
+                left: 0;
+                width: 100%;
+                background: #0a0a0a;
+                backdrop-filter: blur(14px);
+                -webkit-backdrop-filter: blur(14px);
+                padding: 24px;
+                gap: 0;
+                border-bottom: 2px solid var(--gold);
+                z-index: 999;
+                box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+            }
+
+            /* 3. Adiciona uma linha divisória sutil entre cada item do menu. */
+            .nav-links.active li {
+                background: linear-gradient(to right, var(--gold) 0%, transparent 100%);
+                background-position: bottom;
+                background-size: 100% 1px;
+                background-repeat: no-repeat;
+                padding-bottom: 1px;
+            }
+
+            .nav-links.active li:last-child {
+                border-bottom: none;
+            }
+
+            /* 4. Aumenta a área de toque dos links dentro do menu mobile. */
+            .nav-links.active a {
+                display: block;
+                padding: 18px 0 18px 20px;
+                font-size: 1.1rem;
+                font-weight: 500;
+                color: var(--text-muted);
+                transition: color 0.2s ease, background 0.2s ease;
+            }
+
+            .nav-links.active a:hover {
+                color: var(--gold);
+                background: linear-gradient(to right, var(--gold-soft) 0%, transparent 100%);
+                border-radius: 24px 0 0 0;
+            }
+
+            /* 5. Destaca o botão hambúrguer quando o menu está aberto. */
             .mobile-menu-btn {
                 display: block;
+                background: none;
+                border: none;
+                color: var(--text);
+                font-size: 1.8rem;
+                cursor: pointer;
+                transition: all 0.3s ease;
+            }
+
+            .mobile-menu-btn.open {
+                color: var(--gold);
+                transform: rotate(90deg);
             }
 
             .stats-grid {
@@ -732,6 +792,8 @@
             .contact-grid {
                 grid-template-columns: 1fr;
             }
+        }
+
             .nav-links.active {
                 display: flex;
                 flex-direction: column;
@@ -1135,21 +1197,45 @@
         </div>
     </footer>
     <script>
+
         // === MENU MOBILE ===
-        const menuBtn = document.querySelector('.mobile-menu-btn');
-        const navLinks = document.querySelector('.nav-links');
-        if (menuBtn && navLinks) {
-            menuBtn.addEventListener('click', () => {
+        // Configura o menu mobile: toggle, ícone e fechamento ao clicar em links
+        function initMobileMenu() {
+            // Seleciona o botão de abertura/fechamento do menu
+            const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+            // Seleciona o container com os links de navegação
+            const navLinks = document.querySelector('.nav-links');
+
+            // Alterna a exibição do menu e atualiza o estado do botão
+            function toggleMenu() {
+                // Adiciona ou remove a classe .active para exibir/ocultar o menu
                 navLinks.classList.toggle('active');
-                menuBtn.textContent = navLinks.classList.contains('active') ? '✕' : '☰';
-            });
-            document.querySelectorAll('.nav-links a').forEach(link => {
-                link.addEventListener('click', () => {
+                // Verifica se o menu está aberto após o toggle
+                const isOpen = navLinks.classList.contains('active');
+                // Adiciona a classe .open no botão quando o menu está aberto
+                mobileMenuBtn.classList.toggle('open', isOpen);
+                // Troca o ícone entre ☰ (fechado) e ✕ (aberto)
+                mobileMenuBtn.textContent = isOpen ? '✕' : '☰';
+            }
+
+            // Listener no botão para abrir/fechar o menu ao toque/clique
+            mobileMenuBtn.addEventListener('click', toggleMenu);
+
+            // Fecha o menu ao clicar em qualquer link interno
+            navLinks.querySelectorAll('a').forEach(function(link) {
+                link.addEventListener('click', function() {
+                    // Remove a classe .active para ocultar o menu
                     navLinks.classList.remove('active');
-                    menuBtn.textContent = '☰';
+                    // Remove a classe .open do botão
+                    mobileMenuBtn.classList.remove('open');
+                    // Restaura o ícone para o estado ☰
+                    mobileMenuBtn.textContent = '☰';
                 });
             });
         }
+
+        // Inicializa o menu mobile quando o DOM está pronto
+        document.addEventListener('DOMContentLoaded', initMobileMenu);
 
         // === BUSCA NO REPERTÓRIO ===
         let repData = [];
