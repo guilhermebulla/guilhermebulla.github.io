@@ -4,11 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#0f0f0f">
-    <title>Conecte-se | BullaAcoustic</title>
+    <title>Conecte-se | Guilherme Bulla — Ao Vivo</title>
     <meta name="description" content="Conecte-se com Guilherme Bulla — Instagram, Twitch, YouTube, WhatsApp e site oficial.">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%230f0f0f'/><text x='50' y='75' font-family='Playfair Display,serif' font-size='72' font-weight='700' fill='%23d4a853' text-anchor='middle'>B</text></svg>">
     <meta property="og:title" content="BullaAcoustic — Conecte-se com Guilherme Bulla">
-    <meta property="og:description" content="Instagram, Twitch, YouTube, WhatsApp e site oficial. Voz & Violão.">
+    <meta property="og:description" content="Instagram, Twitch, YouTube, WhatsApp e site oficial. Ao Vivo.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://guilhermebulla.github.io/conecte-se.html">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -46,7 +46,6 @@
             position: relative;
             overflow-x: hidden;
         }
-        /* Gradiente de fundo com profundidade */
         body::before {
             content: '';
             position: fixed;
@@ -75,8 +74,8 @@
             }
         }
         header {
-            margin-bottom: 48px;
-            padding-bottom: 32px;
+            margin-bottom: 56px;
+            padding-bottom: 40px;
             border-bottom: 1px solid var(--border);
             position: relative;
         }
@@ -89,13 +88,26 @@
             height: 1px;
             background: linear-gradient(to right, transparent 0%, var(--gold) 50%, transparent 100%);
         }
+        .hero-tag {
+            display: inline-block;
+            color: var(--gold);
+            font-size: 0.8rem;
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            border: 1px solid var(--gold);
+            padding: 6px 14px;
+            border-radius: 100px;
+        }
         .logo {
             font-family: 'Playfair Display', serif;
-            font-size: clamp(2rem, 6vw, 2.75rem);
+            font-size: clamp(2.5rem, 8vw, 3.5rem);
             font-weight: 700;
             letter-spacing: -1px;
-            margin-bottom: 12px;
+            margin-bottom: 16px;
             color: var(--gold);
+            line-height: 1.1;
         }
         .logo span {
             color: var(--text);
@@ -103,7 +115,7 @@
         }
         .tagline {
             font-family: 'Inter', sans-serif;
-            font-size: 0.9rem;
+            font-size: 1.1rem;
             color: var(--text-muted);
             font-weight: 400;
             letter-spacing: 0.5px;
@@ -126,7 +138,7 @@
             font-weight: 600;
             transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
             border: 1.5px solid var(--gold);
-            background: transparent;
+            background: rgba(212, 168, 83, 0.08);
             color: var(--gold);
             cursor: pointer;
             position: relative;
@@ -137,22 +149,6 @@
             height: 20px;
             flex-shrink: 0;
         }
-        .btn-primary {
-            background: var(--gold);
-            color: #0f0f0f;
-            border-color: var(--gold);
-        }
-        .btn-primary::before {
-            background: rgba(15, 15, 15, 0.3);
-        }
-        .btn-primary:hover {
-            background: var(--gold-hover);
-            border-color: var(--gold-hover);
-        }
-        .btn-primary:hover::after {
-            background: radial-gradient(circle at 30% 30%, rgba(15, 15, 15, 0.15), transparent 70%);
-        }
-        /* Efeito de ripple ao clicar */
         .btn::before {
             content: '';
             position: absolute;
@@ -175,23 +171,18 @@
                 opacity: 0;
             }
         }
-        /* Hover: elevação + glow */
         .btn:hover {
-            background: var(--gold-soft);
-            transform: translateY(-4px);
-            box-shadow: 0 12px 32px rgba(212, 168, 83, 0.2);
+            background: rgba(212, 168, 83, 0.15);
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
             border-color: var(--gold-hover);
-        }
-        .btn:hover::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            border-radius: 8px;
-            background: radial-gradient(circle at 30% 30%, rgba(212, 168, 83, 0.1), transparent 70%);
-            pointer-events: none;
         }
         .btn:active {
             transform: translateY(-2px);
+        }
+        .btn:focus-visible {
+            outline: 2px solid var(--gold);
+            outline-offset: 3px;
         }
         footer {
             font-size: 0.8rem;
@@ -200,24 +191,23 @@
             line-height: 1.6;
             animation: fadeInUp 0.8s ease-out 0.2s both;
         }
-        /* Responsividade */
         @media (max-width: 480px) {
             .container {
                 max-width: 100%;
             }
             .logo {
-                font-size: clamp(1.6rem, 6vw, 2rem);
+                font-size: clamp(2.2rem, 7vw, 2.75rem);
             }
             .tagline {
-                font-size: 0.85rem;
+                font-size: 0.95rem;
             }
             .btn {
                 padding: 14px 20px;
                 font-size: 0.95rem;
             }
             header {
-                margin-bottom: 40px;
-                padding-bottom: 24px;
+                margin-bottom: 48px;
+                padding-bottom: 32px;
             }
         }
         @media (max-width: 320px) {
@@ -225,52 +215,58 @@
                 padding: 16px;
             }
             .logo {
-                font-size: 1.5rem;
+                font-size: 2rem;
+            }
+            .hero-tag {
+                font-size: 0.7rem;
+                padding: 5px 12px;
             }
             .tagline {
-                font-size: 0.8rem;
+                font-size: 0.85rem;
             }
             .btn {
                 padding: 12px 16px;
                 font-size: 0.9rem;
             }
             header {
-                margin-bottom: 32px;
+                margin-bottom: 40px;
+                padding-bottom: 28px;
             }
         }
     </style>
 </head>
 <body>
-    <div class="container">
+    <main class="container">
         <header>
-            <div class="logo">Bulla<span>Acoustic</span></div>
-            <div class="tagline">Guilherme Bulla — Voz & Violão</div>
+            <div class="hero-tag">Voz &amp; Violão</div>
+            <h1 class="logo">Bulla<span>Acoustic</span></h1>
+            <p class="tagline">Guilherme Bulla — Ao Vivo</p>
         </header>
-        <div class="buttons">
-            <a href="https://instagram.com/guilhermebulla" class="btn btn-primary" target="_blank" rel="noopener noreferrer">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+        <nav class="buttons" aria-label="Redes sociais e contato">
+            <a href="https://instagram.com/guilhermebulla" class="btn" target="_blank" rel="noopener noreferrer">
+                <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
                 Seguir no Instagram
             </a>
             <a href="https://twitch.tv/bullaacoustic" class="btn" target="_blank" rel="noopener noreferrer">
-                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714z"/></svg>
+                <svg aria-hidden="true" viewBox="0 0 24 24" fill="currentColor"><path d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714z"/></svg>
                 Assistir na Twitch
             </a>
-            <a href="https://youtube.com/user/MrGuilhermeBulla" class="btn btn-primary" target="_blank" rel="noopener noreferrer">
-                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+            <a href="https://youtube.com/user/MrGuilhermeBulla" class="btn" target="_blank" rel="noopener noreferrer">
+                <svg aria-hidden="true" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
                 Assistir no YouTube
             </a>
             <a href="https://wa.me/5551984440402" class="btn" target="_blank" rel="noopener noreferrer">
-                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg>
+                <svg aria-hidden="true" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg>
                 Falar comigo no WhatsApp
             </a>
-            <a href="https://guilhermebulla.github.io" class="btn btn-primary" target="_blank" rel="noopener noreferrer">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+            <a href="https://guilhermebulla.github.io" class="btn" target="_blank" rel="noopener noreferrer">
+                <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
                 Visitar meu site
             </a>
-        </div>
+        </nav>
         <footer>
             <p>© Guilherme Bulla | BullaAcoustic</p>
         </footer>
-    </div>
+    </main>
 </body>
 </html>
