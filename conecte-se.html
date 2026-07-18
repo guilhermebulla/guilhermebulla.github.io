@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#0f0f0f">
+    <meta name="robots" content="noindex, follow">
     <title>Conecte-se | Guilherme Bulla — Ao Vivo</title>
     <meta name="description" content="Conecte-se com Guilherme Bulla — Instagram, Twitch, YouTube, WhatsApp e site oficial.">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%230f0f0f'/><text x='50' y='75' font-family='Playfair Display,serif' font-size='72' font-weight='700' fill='%23d4a853' text-anchor='middle'>B</text></svg>">
@@ -11,6 +12,10 @@
     <meta property="og:description" content="Instagram, Twitch, YouTube, WhatsApp e site oficial. Ao Vivo.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://guilhermebulla.github.io/conecte-se.html">
+    <meta property="og:image" content="https://guilhermebulla.github.io/og-image.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="BullaAcoustic — Guilherme Bulla">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -184,6 +189,11 @@
             outline: 2px solid var(--gold);
             outline-offset: 3px;
         }
+        .buttons .btn:nth-child(1) { background: rgba(212, 168, 83, 0.20); }
+        .buttons .btn:nth-child(2) { background: rgba(212, 168, 83, 0.15); }
+        .buttons .btn:nth-child(3) { background: rgba(212, 168, 83, 0.11); }
+        .buttons .btn:nth-child(4) { background: rgba(212, 168, 83, 0.08); }
+        .buttons .btn:nth-child(5) { background: rgba(212, 168, 83, 0.05); }
         footer {
             font-size: 0.8rem;
             color: var(--text-muted);
@@ -191,7 +201,6 @@
             line-height: 1.6;
             animation: fadeInUp 0.8s ease-out 0.2s both;
         }
-
         /* === MOBILE 480px === */
         @media (max-width: 480px) {
             body {
@@ -219,7 +228,6 @@
                 margin-bottom: 28px;
             }
         }
-
         /* === MOBILE 320px === */
         @media (max-width: 320px) {
             body {
