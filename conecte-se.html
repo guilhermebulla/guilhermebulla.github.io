@@ -191,12 +191,18 @@
             line-height: 1.6;
             animation: fadeInUp 0.8s ease-out 0.2s both;
         }
+
+        /* === MOBILE 480px === */
         @media (max-width: 480px) {
+            body {
+                padding: 5vh 16px 16px;
+                align-items: flex-start;
+            }
             .container {
                 max-width: 100%;
             }
             .logo {
-                font-size: clamp(2.2rem, 7vw, 2.75rem);
+                font-size: clamp(2.5rem, 8vw, 3.25rem);
             }
             .tagline {
                 font-size: 0.95rem;
@@ -206,16 +212,21 @@
                 font-size: 0.95rem;
             }
             header {
-                margin-bottom: 48px;
-                padding-bottom: 32px;
+                margin-bottom: 32px;
+                padding-bottom: 24px;
+            }
+            .buttons {
+                margin-bottom: 28px;
             }
         }
+
+        /* === MOBILE 320px === */
         @media (max-width: 320px) {
             body {
-                padding: 16px;
+                padding: 4vh 12px 12px;
             }
             .logo {
-                font-size: 2rem;
+                font-size: 2.25rem;
             }
             .hero-tag {
                 font-size: 0.7rem;
@@ -229,8 +240,11 @@
                 font-size: 0.9rem;
             }
             header {
-                margin-bottom: 40px;
-                padding-bottom: 28px;
+                margin-bottom: 24px;
+                padding-bottom: 20px;
+            }
+            .buttons {
+                margin-bottom: 20px;
             }
         }
     </style>
