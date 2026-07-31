@@ -580,6 +580,158 @@
             margin-top: 8px;
         }
 
+        /* === Depoimentos (Carrossel) === */
+        .depoimentos-divider-top {
+            border: none;
+            height: 40px;
+            background: radial-gradient(ellipse 100% 100% at 50% 100%, rgba(212, 168, 83, 0.3) 0%, rgba(212, 168, 83, 0.15) 30%, transparent 70%);
+            margin-top: -20px;
+            margin-bottom: 12px;
+            position: relative;
+        }
+        .depoimentos-divider-top::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(to right, transparent 0%, var(--gold) 50%, transparent 100%);
+        }
+        .carousel-wrapper {
+            position: relative;
+            margin-bottom: 24px;
+        }
+        .carousel-viewport {
+            overflow: hidden;
+            padding: 20px 0;
+        }
+        .carousel-track {
+            display: flex;
+            gap: 24px;
+            transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            will-change: transform;
+        }
+        .depoimento-card {
+            flex: 0 0 340px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+            text-align: center;
+            transition: opacity 0.4s ease, filter 0.4s ease, transform 0.4s ease, border-color 0.2s ease;
+            opacity: 0.3;
+            filter: blur(4px);
+            transform: scale(0.92);
+            pointer-events: none;
+        }
+        .depoimento-card.active {
+            opacity: 1;
+            filter: blur(0);
+            transform: scale(1);
+            pointer-events: auto;
+        }
+        .depoimento-card.active:hover {
+            border-color: var(--gold);
+        }
+        .depoimento-video {
+            position: relative;
+            padding-bottom: 177.78%;
+            height: 0;
+            overflow: hidden;
+        }
+        .depoimento-video iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+        .depoimento-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.25rem;
+            color: var(--gold);
+            margin: 20px 0 8px;
+            padding: 0 20px;
+        }
+        .depoimento-role {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            padding: 0 20px 24px;
+        }
+        .carousel-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 10;
+            background: rgba(15, 15, 15, 0.8);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid var(--border);
+            color: var(--gold);
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.5rem;
+            transition: opacity 0.3s ease, background 0.2s ease, border-color 0.2s ease;
+            opacity: 0;
+            pointer-events: none;
+        }
+        .carousel-arrow.visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .carousel-arrow:hover {
+            background: rgba(212, 168, 83, 0.15);
+            border-color: var(--gold);
+        }
+        .carousel-arrow-prev { left: -10px; }
+        .carousel-arrow-next { right: -10px; }
+        .carousel-dots {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 48px;
+        }
+        .carousel-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--border);
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            transition: background 0.2s ease, transform 0.2s ease;
+        }
+        .carousel-dot:hover {
+            background: var(--text-muted);
+        }
+        .carousel-dot.active {
+            background: var(--gold);
+            transform: scale(1.25);
+        }
+        .depoimento-cta {
+            text-align: center;
+            max-width: 560px;
+            margin: 0 auto;
+        }
+        .depoimento-cta p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin-bottom: 20px;
+        }
+        @media (max-width: 600px) {
+            .depoimento-card { flex: 0 0 280px; }
+            .carousel-arrow { width: 38px; height: 38px; font-size: 1.3rem; }
+            .carousel-arrow-prev { left: 0; }
+            .carousel-arrow-next { right: 0; }
+        }
+
         /* Contato */
         .contato {
             background: var(--bg-elevated);
@@ -724,29 +876,38 @@
             margin-bottom: 6px;
         }
 
+        /* Overlay do menu mobile */
+        .menu-overlay {
+            display: none;
+        }
+
         /* Responsive */
         @media (max-width: 900px) {
-            /* 1. Esconde a lista de navegação por padrão no mobile. */
+            /* 1. Painel deslizante — escondido à direita por padrão. */
             .nav-links {
-                display: none;
-            }
-
-            /* 2. Mostra o menu como coluna flexível quando a classe .active é aplicada. */
-            .nav-links.active {
                 display: flex;
                 flex-direction: column;
                 position: fixed;
-                top: 72px;
-                left: 0;
-                width: 100%;
-                background: #0a0a0a;
+                top: 0;
+                right: 0;
+                width: 66.67%;
+                height: 100vh;
+                background: rgba(15, 15, 15, 0.98);
                 backdrop-filter: blur(14px);
                 -webkit-backdrop-filter: blur(14px);
-                padding: 24px;
+                padding: 80px 24px 24px;
                 gap: 0;
-                border-bottom: 2px solid var(--gold);
+                border-left: 2px solid var(--gold);
                 z-index: 999;
-                box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+                box-shadow: -8px 0 32px rgba(0, 0, 0, 0.5);
+                transform: translateX(100%);
+                transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+                overflow-y: auto;
+            }
+
+            /* 2. Desliza o painel da direita para a esquerda. */
+            .nav-links.active {
+                transform: translateX(0);
             }
 
             /* 3. Adiciona uma linha divisória sutil entre cada item do menu. */
@@ -787,6 +948,8 @@
                 font-size: 1.8rem;
                 cursor: pointer;
                 transition: all 0.3s ease;
+                position: relative;
+                z-index: 1001;
             }
 
             .mobile-menu-btn.open {
@@ -805,21 +968,21 @@
             .contact-grid {
                 grid-template-columns: 1fr;
             }
-        }
 
-            .nav-links.active {
-                display: flex;
-                flex-direction: column;
+            .menu-overlay {
                 position: fixed;
-                top: 72px;
+                top: 0;
                 left: 0;
                 width: 100%;
-                background: rgba(15, 15, 15, 0.98);
-                backdrop-filter: blur(14px);
-                padding: 24px;
-                gap: 16px;
-                border-bottom: 1px solid var(--border);
-                z-index: 999;
+                height: 100vh;
+                background: rgba(15, 15, 15, 0.3);
+                backdrop-filter: blur(4px);
+                -webkit-backdrop-filter: blur(4px);
+                z-index: 998;
+                cursor: pointer;
+            }
+            .menu-overlay.active {
+                display: block;
             }
         }
 
@@ -914,6 +1077,7 @@
     </style>
 </head>
 <body>
+    <div class="menu-overlay"></div>
     <header>
         <div class="container">
             <nav>
@@ -924,6 +1088,7 @@
                     <li><a href="#sobre">Sobre</a></li>
                     <li><a href="#repertorio">Repertório</a></li>
                     <li><a href="#rider">Rider</a></li>
+                    <li><a href="#depoimentos">Depoimentos</a></li>
                     <li><a href="#contato">Contato</a></li>
                 </ul>
                 <a href="#contato" class="nav-cta">Contratar Show</a>
@@ -1126,22 +1291,33 @@
         <section id="depoimentos" class="depoimentos">
             <div class="container">
                 <h2 class="section-title">O que diz quem já contratou</h2>
-                <div class="testimonials-grid">
-                    <div class="testimonial-card">
-                        <div class="quote">Depoimentos em breve</div>
-                        <p>Em breve</p>
-                        <p class="role">Cliente / Produtor</p>
+                <div class="depoimentos-divider-top"></div>
+                <div class="carousel-wrapper">
+                    <button class="carousel-arrow carousel-arrow-prev" aria-label="Depoimento anterior">‹</button>
+                    <div class="carousel-viewport">
+                        <div class="carousel-track">
+                            <div class="depoimento-card">
+                                <div class="depoimento-video">
+                                    <iframe src="https://www.youtube.com/embed/ydb7GHhhSWM" title="Depoimento — Fernando Waschburger" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                                </div>
+                                <h3 class="depoimento-name">Fernando Waschburger</h3>
+                                <p class="depoimento-role">Bar histórico • Noite porto-alegrense</p>
+                            </div>
+                            <div class="depoimento-card">
+                                <div class="depoimento-video">
+                                    <iframe src="https://www.youtube.com/embed/35l8qrOgrrg" title="Depoimento — Ana Deutschmann" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                                </div>
+                                <h3 class="depoimento-name">Ana Deutschmann</h3>
+                                <p class="depoimento-role">Eventos corporativos e sociais</p>
+                            </div>
+                        </div>
                     </div>
-                    <div class="testimonial-card">
-                        <div class="quote">Depoimentos em breve</div>
-                        <p>Em breve</p>
-                        <p class="role">Cliente / Produtor</p>
-                    </div>
-                    <div class="testimonial-card">
-                        <div class="quote">Depoimentos em breve</div>
-                        <p>Em breve</p>
-                        <p class="role">Cliente / Produtor</p>
-                    </div>
+                    <button class="carousel-arrow carousel-arrow-next" aria-label="Próximo depoimento">›</button>
+                </div>
+                <div class="carousel-dots"></div>
+                <div class="depoimento-cta">
+                    <p>Contratou o BullaAcoustic? Sua experiência pode ajudar outros contratantes — compartilhe via WhatsApp.</p>
+                    <a href="https://wa.me/5551984440402?text=Ol%C3%A1%20Guilherme%21%20Gostaria%20de%20compartilhar%20minha%20experi%C3%AAncia%20com%20o%20BullaAcoustic." target="_blank" rel="noopener noreferrer" class="btn btn-outline">Compartilhar depoimento</a>
                 </div>
             </div>
         </section>
@@ -1200,6 +1376,7 @@
                     <a href="#sobre">Sobre</a>
                     <a href="#repertorio">Repertório</a>
                     <a href="#rider">Rider</a>
+                    <a href="#depoimentos">Depoimentos</a>
                     <a href="#contato">Contato</a>
                 </nav>
                 <div class="footer-legal">
@@ -1214,38 +1391,87 @@
         // === MENU MOBILE ===
         // Configura o menu mobile: toggle, ícone e fechamento ao clicar em links
         function initMobileMenu() {
-            // Seleciona o botão de abertura/fechamento do menu
             const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
-            // Seleciona o container com os links de navegação
             const navLinks = document.querySelector('.nav-links');
+            const overlay = document.querySelector('.menu-overlay');
 
-            // Alterna a exibição do menu e atualiza o estado do botão
-            function toggleMenu() {
-                // Adiciona ou remove a classe .active para exibir/ocultar o menu
-                navLinks.classList.toggle('active');
-                // Verifica se o menu está aberto após o toggle
-                const isOpen = navLinks.classList.contains('active');
-                // Adiciona a classe .open no botão quando o menu está aberto
-                mobileMenuBtn.classList.toggle('open', isOpen);
-                // Troca o ícone entre ☰ (fechado) e ✕ (aberto)
-                mobileMenuBtn.textContent = isOpen ? '✕' : '☰';
+            function closeMenu() {
+                navLinks.classList.remove('active');
+                mobileMenuBtn.classList.remove('open');
+                mobileMenuBtn.textContent = '☰';
+                if (overlay) overlay.classList.remove('active');
             }
 
-            // Listener no botão para abrir/fechar o menu ao toque/clique
+            function toggleMenu() {
+                navLinks.classList.toggle('active');
+                const isOpen = navLinks.classList.contains('active');
+                mobileMenuBtn.classList.toggle('open', isOpen);
+                mobileMenuBtn.textContent = isOpen ? '✕' : '☰';
+                if (overlay) overlay.classList.toggle('active', isOpen);
+            }
+
             mobileMenuBtn.addEventListener('click', toggleMenu);
 
-            // Fecha o menu ao clicar em qualquer link interno
             navLinks.querySelectorAll('a').forEach(function(link) {
-                link.addEventListener('click', function() {
-                    // Remove a classe .active para ocultar o menu
-                    navLinks.classList.remove('active');
-                    // Remove a classe .open do botão
-                    mobileMenuBtn.classList.remove('open');
-                    // Restaura o ícone para o estado ☰
-                    mobileMenuBtn.textContent = '☰';
-                });
+                link.addEventListener('click', closeMenu);
             });
+
+            if (overlay) {
+                overlay.addEventListener('click', closeMenu);
+            }
         }
+
+        // === CARROSSEL DE DEPOIMENTOS ===
+        function initDepoimentosCarousel() {
+            const track = document.querySelector('.carousel-track');
+            if (!track) return;
+            const viewport = track.parentElement;
+            const cards = track.querySelectorAll('.depoimento-card');
+            const prevBtn = document.querySelector('.carousel-arrow-prev');
+            const nextBtn = document.querySelector('.carousel-arrow-next');
+            const dotsContainer = document.querySelector('.carousel-dots');
+            if (!cards.length) return;
+            let current = 0;
+
+            // Cria os dots (um por card)
+            dotsContainer.innerHTML = '';
+            cards.forEach((_, i) => {
+                const dot = document.createElement('button');
+                dot.className = 'carousel-dot';
+                dot.setAttribute('aria-label', 'Ir para o depoimento ' + (i + 1));
+                dot.addEventListener('click', function() { goTo(i); });
+                dotsContainer.appendChild(dot);
+            });
+
+            function update() {
+                var cardWidth = cards[0].offsetWidth;
+                var gap = 24;
+                var viewportWidth = viewport.offsetWidth;
+                var offset = -(current * (cardWidth + gap)) + (viewportWidth - cardWidth) / 2;
+                track.style.transform = 'translateX(' + offset + 'px)';
+
+                cards.forEach(function(card, i) {
+                    card.classList.toggle('active', i === current);
+                });
+                document.querySelectorAll('.carousel-dot').forEach(function(dot, i) {
+                    dot.classList.toggle('active', i === current);
+                });
+                prevBtn.classList.toggle('visible', current > 0);
+                nextBtn.classList.toggle('visible', current < cards.length - 1);
+            }
+
+            function goTo(i) {
+                current = Math.max(0, Math.min(i, cards.length - 1));
+                update();
+            }
+
+            prevBtn.addEventListener('click', function() { goTo(current - 1); });
+            nextBtn.addEventListener('click', function() { goTo(current + 1); });
+            window.addEventListener('resize', update);
+            update();
+        }
+
+        document.addEventListener('DOMContentLoaded', initDepoimentosCarousel);
 
         // Inicializa o menu mobile quando o DOM está pronto
         document.addEventListener('DOMContentLoaded', initMobileMenu);
