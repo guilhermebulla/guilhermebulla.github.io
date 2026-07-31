@@ -100,6 +100,14 @@
             text-decoration: none;
         }
 
+        a:focus-visible, button:focus-visible, input:focus-visible,
+        summary:focus-visible, .rep-chip:focus-visible, .rep-lang-chip:focus-visible,
+        .carousel-dot:focus-visible {
+            outline: 2px solid var(--gold);
+            outline-offset: 2px;
+            border-radius: 4px;
+        }
+
         .container {
             width: 100%;
             max-width: 1200px;
@@ -363,7 +371,35 @@
             flex-shrink: 0;
             margin-top: 2px;
         }
-        .sobre-divider-top {
+        .highlights a {
+            color: var(--gold);
+            text-decoration: underline;
+            text-underline-offset: 2px;
+            transition: color 0.2s ease;
+        }
+        .highlights a:hover {
+            color: var(--gold-hover);
+        }
+        .mapa-badge-wrapper {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+        .mapa-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            border: 1px solid var(--gold);
+            border-radius: 100px;
+            color: var(--gold);
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: background 0.2s ease;
+        }
+        .mapa-badge:hover {
+            background: var(--gold-soft);
+        }
+        .section-divider-top {
             border: none;
             height: 40px;
             background: radial-gradient(ellipse 100% 100% at 50% 100%, rgba(212, 168, 83, 0.3) 0%, rgba(212, 168, 83, 0.15) 30%, transparent 70%);
@@ -371,7 +407,7 @@
             margin-bottom: 12px;
             position: relative;
         }
-        .sobre-divider-top::after {
+        .section-divider-top::after {
             content: '';
             position: absolute;
             bottom: 0;
@@ -418,31 +454,10 @@
             letter-spacing: 0.5px;
         }
 
-        /* Divider da seção Performance */
-        .performance-divider-top {
-            border: none;
-            height: 40px;
-            background: radial-gradient(ellipse 100% 100% at 50% 100%, rgba(212, 168, 83, 0.3) 0%, rgba(212, 168, 83, 0.15) 30%, transparent 70%);
-            margin-top: -20px;
-            margin-bottom: 12px;
-            position: relative;
-        }
-        
-        .performance-divider-top::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background: linear-gradient(to right, transparent 0%, var(--gold) 50%, transparent 100%);
-        }
-
         /* Repertório */
         .rep-intro {
             text-align: center;
             margin-bottom: 40px;
-            margin-top: -20px;
         }
         .rep-count {
             display: flex;
@@ -475,23 +490,6 @@
             vertical-align: super;
             position: relative;
             top: -14px;
-        }
-        .rep-divider-top {
-            border: none;
-            height: 40px;
-            background: radial-gradient(ellipse 100% 100% at 50% 100%, rgba(212, 168, 83, 0.3) 0%, rgba(212, 168, 83, 0.15) 30%, transparent 70%);
-            margin-bottom: 12px;
-            position: relative;
-        }
-        
-        .rep-divider-top::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background: linear-gradient(to right, transparent 0%, var(--gold) 50%, transparent 100%);
         }
 
         details {
@@ -599,43 +597,7 @@
             width: 28%;
         }
 
-        .rider-divider-top {
-            border: none;
-            height: 40px;
-            background: radial-gradient(ellipse 100% 100% at 50% 100%, rgba(212, 168, 83, 0.3) 0%, rgba(212, 168, 83, 0.15) 30%, transparent 70%);
-            margin-top: -20px;
-            margin-bottom: 12px;
-            position: relative;
-        }
-        
-        .rider-divider-top::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background: linear-gradient(to right, transparent 0%, var(--gold) 50%, transparent 100%);
-        }
-
         /* === Depoimentos (Carrossel) === */
-        .depoimentos-divider-top {
-            border: none;
-            height: 40px;
-            background: radial-gradient(ellipse 100% 100% at 50% 100%, rgba(212, 168, 83, 0.3) 0%, rgba(212, 168, 83, 0.15) 30%, transparent 70%);
-            margin-top: -20px;
-            margin-bottom: 12px;
-            position: relative;
-        }
-        .depoimentos-divider-top::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background: linear-gradient(to right, transparent 0%, var(--gold) 50%, transparent 100%);
-        }
         .carousel-wrapper {
             position: relative;
             margin-bottom: 24px;
@@ -852,26 +814,6 @@
             font-weight: 400;
         }
 
-        /* Divider da seção Contato */
-        .contato-divider-top {
-            border: none;
-            height: 40px;
-            background: radial-gradient(ellipse 100% 100% at 50% 100%, rgba(212, 168, 83, 0.3) 0%, rgba(212, 168, 83, 0.15) 30%, transparent 70%);
-            margin-top: -20px;
-            margin-bottom: 12px;
-            position: relative;
-        }
-        
-        .contato-divider-top::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background: linear-gradient(to right, transparent 0%, var(--gold) 50%, transparent 100%);
-        }
-
         .footer-social {
             display: flex;
             gap: 20px;
@@ -954,6 +896,36 @@
         /* CTA flutuante (mobile apenas) */
         .sticky-cta {
             display: none;
+        }
+
+        /* Botão voltar ao topo */
+        .back-to-top {
+            display: none;
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            color: var(--gold);
+            font-size: 1.3rem;
+            cursor: pointer;
+            z-index: 997;
+            opacity: 0;
+            transition: opacity 0.3s ease, transform 0.3s ease, border-color 0.2s ease;
+            pointer-events: none;
+            align-items: center;
+            justify-content: center;
+        }
+        .back-to-top.visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .back-to-top:hover {
+            border-color: var(--gold);
+            transform: translateY(-2px);
         }
 
         /* Responsive */
@@ -1182,6 +1154,60 @@
         .rep-results::-webkit-scrollbar-track { background: transparent; }
         .rep-results::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
         @media (max-width: 600px) { .rep-result-item { flex-direction: column; align-items: flex-start; } .rep-result-tags { margin-top: 4px; } }
+        /* Estilos de impressão */
+        @media print {
+            header, footer, .mobile-menu-btn, .nav-cta, .sticky-cta, .back-to-top,
+            .hero-buttons, .carousel-arrow, .carousel-dots, .depoimento-cta,
+            .menu-overlay, .rep-search, .video-grid, .cta-box, .badge-original,
+            .depoimento-video, .footer-social, .rep-divider {
+                display: none !important;
+            }
+            body {
+                background: white !important;
+                color: black !important;
+                font-size: 12pt;
+                line-height: 1.5;
+            }
+            section {
+                padding: 16px 0;
+                page-break-inside: avoid;
+            }
+            .hero {
+                min-height: auto;
+                background: none;
+                padding-top: 0;
+            }
+            .hero h1 em, .section-title, .stat-card strong, .highlights h3,
+            .rider-table th, .contact-info h3, .mapa-badge {
+                color: #8a6d2a !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+            .stat-card, .rider-table, details {
+                border: 1px solid #ccc !important;
+                background: white !important;
+                box-shadow: none !important;
+            }
+            .stat-card span, .highlights li, .rider-table td,
+            .contact-list a, .section-subtitle, .rep-content p,
+            .depoimento-name, .depoimento-role {
+                color: #444 !important;
+            }
+            .mapa-badge {
+                border-color: #8a6d2a !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+            a {
+                text-decoration: underline;
+            }
+            a[href^="#"]:after {
+                content: "";
+            }
+            .rider-table {
+                page-break-inside: avoid;
+            }
+        }
         @media (prefers-reduced-motion: reduce) {
             *, *::before, *::after {
                 animation-duration: 0.01ms !important;
@@ -1196,6 +1222,7 @@
     <a href="#inicio" class="skip-link">Pular para o conteúdo</a>
     <div class="menu-overlay"></div>
     <a href="#contato" class="sticky-cta">Contratar Show</a>
+    <button class="back-to-top" aria-label="Voltar ao topo">↑</button>
     <header>
         <div class="container">
             <nav>
@@ -1233,7 +1260,7 @@
         <section id="performance" class="performance">
             <div class="container">
                 <h2 class="section-title">Ao Vivo</h2>
-                <div class="performance-divider-top"></div>
+                <div class="section-divider-top"></div>
                 <p class="section-subtitle">Do homestudio ao palco — confira a energia do show.</p>
                 <div class="video-grid">
                     <div class="video-wrapper">
@@ -1253,7 +1280,7 @@
         <section id="sobre" class="sobre">
             <div class="container">
                 <h2 class="section-title">Sobre</h2>
-                <div class="sobre-divider-top"></div>
+                <div class="section-divider-top"></div>
                 <p class="section-subtitle">28 anos de estrada, formação musical desde os 7 anos e alcance global — do Sul do Brasil aos cinco continentes.</p>
 
                 <div class="stats-grid">
@@ -1273,6 +1300,9 @@
                         <strong>Profissionalismo</strong>
                         <span>Segurança contratual, NF MEI e formação em Direito pela FURG</span>
                     </div>
+                </div>
+                <div class="mapa-badge-wrapper">
+                    <a href="https://mapa.cultura.es.gov.br/agente/3334223/#info" target="_blank" rel="noopener noreferrer" class="mapa-badge">✓ Perfil verificado no Mapa Cultural ES</a>
                 </div>
                 <div class="highlights">
                     <h3>Trajetória</h3>
@@ -1301,6 +1331,10 @@
                             <span class="icon">⚖</span>
                             <span>Bacharel em Direito pela FURG — segurança contratual e profissionalismo</span>
                         </li>
+                        <li>
+                            <span class="icon">🏛</span>
+                            <span>Perfil verificado no <a href="https://mapa.cultura.es.gov.br/agente/3334223/#info" target="_blank" rel="noopener noreferrer">Mapa Cultural ES</a></span>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -1310,7 +1344,7 @@
             <div class="container">
                 <h2 class="section-title">Repertório</h2>
                 <div class="rep-intro">
-                    <div class="rep-divider-top"></div>
+                    <div class="section-divider-top"></div>
                     <div class="rep-count">1200+<span>músicas</span></div>
                     <p class="section-subtitle">Repertório vasto e adaptável, do clássico ao contemporâneo, do nacional ao internacional.</p>
                 </div>
@@ -1346,7 +1380,7 @@
                 <hr class="rep-divider">
                 <div class="rep-search">
                     <h3 class="rep-search-title">Busca no repertório completo</h3>
-                    <input type="text" id="repSearchInput" class="rep-search-field" placeholder="Digite nome da música ou artista...">
+                    <input type="text" id="repSearchInput" class="rep-search-field" placeholder="Digite nome da música ou artista..." aria-label="Buscar no repertório por nome de música ou artista">
                     <div id="repStyleFilters" class="rep-filters"></div>
                     <div class="rep-filters lang-filters">
                         <span class="rep-lang-chip" data-lang="Português"><input type="checkbox"> 🇧🇷 Português</span>
@@ -1368,7 +1402,7 @@
         <section id="rider" class="rider">
             <div class="container">
                 <h2 class="section-title">Rider Técnico</h2>
-                <div class="rider-divider-top"></div>
+                <div class="section-divider-top"></div>
                 <p class="section-subtitle">Estrutura simples e objetiva para uma performance solo de qualidade.</p>
                 <table class="rider-table">
                     <thead>
@@ -1410,7 +1444,7 @@
         <section id="depoimentos" class="depoimentos">
             <div class="container">
                 <h2 class="section-title">O que diz quem já contratou</h2>
-                <div class="depoimentos-divider-top"></div>
+                <div class="section-divider-top"></div>
                 <div class="carousel-wrapper">
                     <button class="carousel-arrow carousel-arrow-prev" aria-label="Depoimento anterior">‹</button>
                     <div class="carousel-viewport">
@@ -1444,7 +1478,7 @@
         <section id="contato" class="contato">
             <div class="container">
                 <h2 class="section-title">Contato</h2>
-                <div class="contato-divider-top"></div>
+                <div class="section-divider-top"></div>
                 <p class="section-subtitle">Fale diretamente e tire seu evento do papel.</p>
                 <div class="contact-grid">
                     <div class="contact-info">
@@ -1624,8 +1658,6 @@
             update();
         }
 
-        document.addEventListener('DOMContentLoaded', initDepoimentosCarousel);
-
         // === CTA FLUTUANTE (MOBILE) + PULSO DO HEADER (DESKTOP) ===
         function initStickyCTA() {
             const heroCTA = document.querySelector('.hero-buttons .btn-primary');
@@ -1661,8 +1693,6 @@
             }
         }
 
-        document.addEventListener('DOMContentLoaded', initStickyCTA);
-
         // === ACTIVE NAV HIGHLIGHTING ===
         function initNavHighlight() {
             const sections = document.querySelectorAll('section[id]');
@@ -1682,10 +1712,6 @@
 
             sections.forEach(function(section) { observer.observe(section); });
         }
-        document.addEventListener('DOMContentLoaded', initNavHighlight);
-
-        // Inicializa o menu mobile quando o DOM está pronto
-        document.addEventListener('DOMContentLoaded', initMobileMenu);
 
         // === BUSCA NO REPERTÓRIO ===
         let repData = [];
@@ -1815,7 +1841,38 @@
             if (repData && repData.length) { generarFiltros(); aplicarFiltros(); }
         }
 
-        document.addEventListener('DOMContentLoaded', carregarRepertorio);
+        // === VOLTAR AO TOPO ===
+        function initBackToTop() {
+            const btn = document.querySelector('.back-to-top');
+            if (!btn) return;
+            const hero = document.querySelector('#inicio');
+            if (!hero) return;
+            const observer = new IntersectionObserver(function(entries) {
+                entries.forEach(function(entry) {
+                    if (!entry.isIntersecting) {
+                        btn.style.display = 'flex';
+                        requestAnimationFrame(function() { btn.classList.add('visible'); });
+                    } else {
+                        btn.classList.remove('visible');
+                        setTimeout(function() { btn.style.display = 'none'; }, 300);
+                    }
+                });
+            }, { threshold: 0 });
+            observer.observe(hero);
+            btn.addEventListener('click', function() {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        }
+
+        // === INICIALIZAÇÃO ÚNICA ===
+        document.addEventListener('DOMContentLoaded', function() {
+            initMobileMenu();
+            initDepoimentosCarousel();
+            initStickyCTA();
+            initNavHighlight();
+            initBackToTop();
+            carregarRepertorio();
+        });
     </script>
 </body>
 </html>
