@@ -224,9 +224,26 @@
             position: relative;
             background: radial-gradient(circle at 70% 40%, rgba(212, 168, 83, 0.15), transparent 55%);
         }
-
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 60%;
+            height: 100%;
+            background-image: url('hero-bg.png');
+            background-size: cover;
+            background-position: center;
+            opacity: 0.3;
+            -webkit-mask-image: linear-gradient(to right, black 0%, black 20%, transparent 90%);
+            mask-image: linear-gradient(to right, black 0%, black 20%, transparent 90%);
+            pointer-events: none;
+            z-index: 0;
+        }
         .hero-content {
             max-width: 1200px;
+            position: relative;
+            z-index: 1;
         }
 
         .hero-tag {
@@ -1119,6 +1136,12 @@
         @media (max-width: 768px) {
             .video-grid {
                 grid-template-columns: 1fr;
+            }
+            .hero::before {
+                opacity: 0.12;
+                width: 100%;
+                -webkit-mask-image: linear-gradient(to bottom, black 0%, transparent 70%);
+                mask-image: linear-gradient(to bottom, black 0%, transparent 70%);
             }
         }
 
