@@ -1209,11 +1209,75 @@
             }
         }
 
+        /* === Toggle Busca Avançada === */
+        .rep-search-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            width: 100%;
+            padding: 20px 56px 20px 28px;
+            background: var(--gold-soft);
+            border: 1.5px solid var(--gold);
+            border-radius: 12px;
+            color: var(--gold);
+            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+            margin-bottom: 0;
+        }
+        .rep-search-toggle:hover {
+            background: rgba(212, 168, 83, 0.18);
+            transform: translateY(-2px);
+        }
+        .rep-search-toggle .chevron {
+            position: absolute;
+            right: 28px;
+            top: 50%;
+            transform: translateY(-50%);
+            transition: transform 0.2s ease;
+            color: var(--gold);
+        }
+        .rep-search-toggle.open .chevron {
+            transform: translateY(-50%) rotate(180deg);
+        }
+        .rep-toggle-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .rep-search-toggle svg {
+            width: 18px;
+            height: 18px;
+            flex-shrink: 0;
+        }
+        .rep-brand {
+            font-family: 'Playfair Display', serif;
+            text-transform: none;
+            letter-spacing: -0.5px;
+            font-weight: 700;
+        }
+        .rep-brand-accent {
+            color: var(--text);
+            font-weight: 400;
+        }
+        .rep-search-collapsible {
+            display: none;
+        }
+        .rep-search-collapsible.open {
+            display: block;
+            margin-top: 16px;
+        }
+
         /* Estilos de impressão */
         @media print {
             header, footer, .mobile-menu-btn, .nav-cta, .sticky-cta, .back-to-top,
             .hero-buttons, .carousel-arrow, .carousel-dots, .depoimento-cta,
-             .menu-overlay, .rep-search, .video-grid, .entrevistas-grid, .cta-box, .badge-original,
+             .menu-overlay, .rep-search, .rep-search-toggle, .rep-search-collapsible, .video-grid, .entrevistas-grid, .cta-box, .badge-original,
             .depoimento-video, .footer-social, .rep-divider {
                 display: none !important;
             }
@@ -1434,8 +1498,15 @@
                 </details>
 
                 <hr class="rep-divider">
+                <button class="rep-search-toggle" id="repSearchToggle" aria-expanded="false" aria-controls="repSearchCollapsible">
+                    <span class="rep-toggle-label">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                        <span>Busca avançada no repertório <span class="rep-brand">Bulla<span class="rep-brand-accent">Acoustic</span></span></span>
+                    </span>
+                    <span class="chevron">⌄</span>
+                </button>
+                <div class="rep-search-collapsible" id="repSearchCollapsible">
                 <div class="rep-search">
-                    <h3 class="rep-search-title">Busca no repertório completo</h3>
                     <input type="text" id="repSearchInput" class="rep-search-field" placeholder="Digite nome da música ou artista..." aria-label="Buscar no repertório por nome de música ou artista">
                     <div id="repStyleFilters" class="rep-filters"></div>
                     <div class="rep-filters lang-filters">
@@ -1447,7 +1518,7 @@
                     <p id="repCounter" class="rep-counter">Carregando repertório...</p>
                     <div id="repResults" class="rep-results"></div>
                 </div>
-
+                </div>
                 <div class="cta-box">
                     <h3>Quer esse repertório no seu evento?</h3>
                     <a href="#contato" class="btn btn-primary">Contratar Show</a>
@@ -1954,6 +2025,18 @@
             });
         }
 
+        // === TOGGLE BUSCA AVANÇADA ===
+        function initRepSearchToggle() {
+            const toggle = document.getElementById('repSearchToggle');
+            const content = document.getElementById('repSearchCollapsible');
+            if (!toggle || !content) return;
+            toggle.addEventListener('click', function() {
+                const isOpen = content.classList.toggle('open');
+                toggle.classList.toggle('open', isOpen);
+                toggle.setAttribute('aria-expanded', isOpen);
+            });
+        }
+
         // === INICIALIZAÇÃO ÚNICA ===
         document.addEventListener('DOMContentLoaded', function() {
             initMobileMenu();
@@ -1961,6 +2044,7 @@
             initStickyCTA();
             initNavHighlight();
             initBackToTop();
+            initRepSearchToggle();
             carregarRepertorio();
         });
     </script>
