@@ -1178,11 +1178,42 @@
         .rep-results::-webkit-scrollbar-track { background: transparent; }
         .rep-results::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
         @media (max-width: 600px) { .rep-result-item { flex-direction: column; align-items: flex-start; } .rep-result-tags { margin-top: 4px; } }
+
+        /* === Entrevistas === */
+        .entrevistas-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 32px;
+        }
+        .entrevista-card {
+            display: flex;
+            flex-direction: column;
+        }
+        .entrevista-info {
+            padding: 20px 0 0;
+        }
+        .entrevista-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.25rem;
+            color: var(--gold);
+            margin-bottom: 6px;
+        }
+        .entrevista-desc {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+        @media (max-width: 768px) {
+            .entrevistas-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
         /* Estilos de impressão */
         @media print {
             header, footer, .mobile-menu-btn, .nav-cta, .sticky-cta, .back-to-top,
             .hero-buttons, .carousel-arrow, .carousel-dots, .depoimento-cta,
-            .menu-overlay, .rep-search, .video-grid, .cta-box, .badge-original,
+             .menu-overlay, .rep-search, .video-grid, .entrevistas-grid, .cta-box, .badge-original,
             .depoimento-video, .footer-social, .rep-divider {
                 display: none !important;
             }
@@ -1258,6 +1289,7 @@
                     <li><a href="#repertorio">Repertório</a></li>
                     <li><a href="#rider">Rider</a></li>
                     <li><a href="#depoimentos">Depoimentos</a></li>
+                    <li><a href="#entrevistas">Entrevistas</a></li>
                     <li><a href="#contato">Contato</a></li>
                 </ul>
                 <a href="#contato" class="nav-cta">Contratar Show</a>
@@ -1505,7 +1537,33 @@
                 </div>
             </div>
         </section>
-
+        <section id="entrevistas" class="entrevistas">
+            <div class="container">
+                <h2 class="section-title">Entrevistas</h2>
+                <div class="section-divider-top"></div>
+                <p class="section-subtitle">A cena musical fala sobre o BullaAcoustic.</p>
+                <div class="entrevistas-grid">
+                    <div class="entrevista-card">
+                        <div class="video-wrapper">
+                            <iframe loading="lazy" src="https://www.youtube.com/embed/2BVfUBnXK5E" title="Entrevista — Esquina da Cultura Brasileira" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                        </div>
+                        <div class="entrevista-info">
+                            <h3 class="entrevista-title">Esquina da Cultura Brasileira</h3>
+                            <p class="entrevista-desc">Fernando Waschburger — gravado no histórico Bar do Nito, Porto Alegre</p>
+                        </div>
+                    </div>
+                    <div class="entrevista-card">
+                        <div class="video-wrapper">
+                            <iframe loading="lazy" src="https://www.youtube.com/embed/z3w7CnSvS70" title="Entrevista — Estúdio do Rafa" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                        </div>
+                        <div class="entrevista-info">
+                            <h3 class="entrevista-title">Estúdio do Rafa</h3>
+                            <p class="entrevista-desc">Rafael Brasil, músico e produtor, entrevista Guilherme Bulla em série de entrevistas com expoentes da música gaúcha</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
         <section id="contato" class="contato">
             <div class="container">
                 <h2 class="section-title">Contato</h2>
@@ -1572,6 +1630,7 @@
                     <a href="#repertorio">Repertório</a>
                     <a href="#rider">Rider</a>
                     <a href="#depoimentos">Depoimentos</a>
+                    <a href="#entrevistas">Entrevistas</a>
                     <a href="#contato">Contato</a>
                 </nav>
                 <div class="footer-legal">
