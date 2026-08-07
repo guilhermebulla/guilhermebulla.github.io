@@ -4,26 +4,27 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Repertório | BullaAcoustic — Guilherme Bulla</title>
-
     <meta name="description" content="Explore mais de 1.200 músicas do repertório do BullaAcoustic e baixe sua seleção em PDF.">
     <meta property="og:title" content="Repertório | BullaAcoustic">
     <meta property="og:description" content="Explore mais de 1.200 músicas e baixe sua seleção em PDF.">
     <meta property="og:type" content="website">
-
     <!-- Favicon: usar o mesmo caminho do index.html -->
     <link rel="icon" href="favicon.ico" type="image/x-icon">
-
     <!-- Fontes (mesmas do site principal) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-
     <style>
         /* ===== RESET ===== */
         *, *::before, *::after {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+        }
+
+        /* === NOVO: scroll-padding-top (igual index debug-12) === */
+        html {
+            scroll-padding-top: 80px;
         }
 
         /* ===== VARIÁVEIS ===== */
@@ -46,7 +47,6 @@
             --radius-sm: 8px;
             --transition: 0.25s ease;
         }
-
         /* ===== BASE ===== */
         body {
             background: var(--bg);
@@ -55,15 +55,30 @@
             line-height: 1.6;
             min-height: 100vh;
         }
-
         a {
             color: var(--gold);
             text-decoration: none;
             transition: color var(--transition);
         }
-
         a:hover {
             color: var(--gold-light);
+        }
+
+        /* === NOVO: Skip-link (acessibilidade) === */
+        .skip-link {
+            position: absolute;
+            top: -40px;
+            left: 0;
+            background: var(--gold);
+            color: var(--bg);
+            padding: 8px 16px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            z-index: 1000;
+            transition: top 0.2s ease;
+        }
+        .skip-link:focus {
+            top: 0;
         }
 
         /* ===== HEADER ===== */
@@ -79,7 +94,6 @@
             backdrop-filter: blur(10px);
             border-bottom: 1px solid var(--border);
         }
-
         .rep-back {
             display: inline-flex;
             align-items: center;
@@ -88,11 +102,9 @@
             font-size: 0.9rem;
             transition: color var(--transition);
         }
-
         .rep-back:hover {
             color: var(--gold);
         }
-
         .rep-logo {
             font-family: 'Playfair Display', serif;
             font-size: 1.1rem;
@@ -100,7 +112,6 @@
             color: var(--gold);
             letter-spacing: 0.5px;
         }
-
         .rep-counter-badge {
             font-family: 'Inter', sans-serif;
             font-size: 0.8rem;
@@ -111,14 +122,12 @@
             border: 1px solid var(--border);
             white-space: nowrap;
         }
-
         /* ===== MAIN ===== */
         .rep-main {
             max-width: 1100px;
             margin: 0 auto;
             padding: 2rem 1.5rem 4rem;
         }
-
         .rep-title {
             font-family: 'Playfair Display', serif;
             font-size: 2.5rem;
@@ -126,15 +135,26 @@
             color: var(--gold);
             text-align: center;
             margin-bottom: 0.5rem;
+            /* === NOVO: gradient separator line (igual index debug-12) === */
+            position: relative;
+            padding-bottom: 1.25rem;
         }
-
+        .rep-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--gold), transparent);
+        }
         .rep-subtitle {
             color: var(--text-muted);
             font-size: 0.95rem;
             text-align: center;
             margin-bottom: 2.5rem;
         }
-
         /* ===== PAINEL DE FILTROS ===== */
         .filter-panel {
             background: var(--bg-alt);
@@ -143,7 +163,6 @@
             padding: 1.5rem;
             margin-bottom: 2rem;
         }
-
         /* Rótulo de seção */
         .filter-label {
             display: block;
@@ -153,7 +172,6 @@
             color: var(--text-dim);
             margin-bottom: 0.75rem;
         }
-
         /* Pills de estilo */
         .style-pills {
             display: flex;
@@ -161,7 +179,6 @@
             gap: 8px;
             margin-bottom: 1.5rem;
         }
-
         .style-pill {
             display: inline-flex;
             align-items: center;
@@ -174,31 +191,26 @@
             color: var(--text-muted);
             user-select: none;
         }
-
         .style-pill input {
             position: absolute;
             opacity: 0;
             pointer-events: none;
         }
-
         .style-pill:hover {
             border-color: var(--gold);
             color: var(--gold);
         }
-
         .style-pill:has(input:checked) {
             background: var(--gold);
             border-color: var(--gold);
             color: var(--bg);
             font-weight: 500;
         }
-
         /* Busca livre */
         .search-box {
             position: relative;
             margin-bottom: 1.5rem;
         }
-
         .search-box input {
             width: 100%;
             padding: 12px 16px 12px 44px;
@@ -210,16 +222,13 @@
             font-size: 0.95rem;
             transition: border-color var(--transition);
         }
-
         .search-box input:focus {
             outline: none;
             border-color: var(--gold);
         }
-
         .search-box input::placeholder {
             color: var(--text-dim);
         }
-
         .search-icon {
             position: absolute;
             left: 14px;
@@ -228,13 +237,11 @@
             color: var(--text-dim);
             pointer-events: none;
         }
-
         /* Filtro de artistas (3 estados) */
         .artist-filter {
             border-top: 1px solid var(--border);
             padding-top: 1.5rem;
         }
-
         .artist-search {
             width: 100%;
             padding: 10px 14px;
@@ -247,16 +254,13 @@
             margin-bottom: 1rem;
             transition: border-color var(--transition);
         }
-
         .artist-search:focus {
             outline: none;
             border-color: var(--gold);
         }
-
         .artist-search::placeholder {
             color: var(--text-dim);
         }
-
         .artist-list {
             max-height: 300px;
             overflow-y: auto;
@@ -264,20 +268,16 @@
             border-radius: var(--radius-sm);
             padding: 0.5rem;
         }
-
         .artist-list::-webkit-scrollbar {
             width: 6px;
         }
-
         .artist-list::-webkit-scrollbar-track {
             background: var(--bg);
         }
-
         .artist-list::-webkit-scrollbar-thumb {
             background: var(--border-light);
             border-radius: 3px;
         }
-
         .artist-item {
             display: flex;
             align-items: center;
@@ -286,21 +286,17 @@
             border-radius: 6px;
             transition: background var(--transition);
         }
-
         .artist-item:hover {
             background: var(--bg);
         }
-
         .artist-name {
             font-size: 0.85rem;
             color: var(--text-muted);
         }
-
         .artist-toggles {
             display: flex;
             gap: 4px;
         }
-
         .artist-toggle {
             width: 28px;
             height: 28px;
@@ -315,30 +311,25 @@
             justify-content: center;
             transition: all var(--transition);
         }
-
         .artist-toggle:hover {
             border-color: var(--gold);
         }
-
         .artist-toggle.active-fav {
             background: var(--green-bg);
             border-color: var(--green);
             color: var(--green);
         }
-
         .artist-toggle.active-veto {
             background: var(--red-bg);
             border-color: var(--red);
             color: var(--red);
         }
-
         .artist-placeholder {
             padding: 2rem;
             text-align: center;
             color: var(--text-dim);
             font-size: 0.85rem;
         }
-
         /* Botão limpar filtros */
         .clear-filters {
             display: inline-block;
@@ -353,19 +344,16 @@
             cursor: pointer;
             transition: all var(--transition);
         }
-
         .clear-filters:hover {
             border-color: var(--gold);
             color: var(--gold);
         }
-
         /* ===== ÁREA DE RESULTADOS ===== */
         .results-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
             gap: 12px;
         }
-
         .result-card {
             display: flex;
             align-items: flex-start;
@@ -376,33 +364,27 @@
             padding: 12px 16px;
             transition: border-color var(--transition);
         }
-
         .result-card:hover {
             border-color: var(--border-light);
         }
-
         .result-info {
             flex: 1;
         }
-
         .result-song {
             font-size: 0.95rem;
             color: var(--text);
             margin-bottom: 2px;
         }
-
         .result-artist {
             font-size: 0.8rem;
             color: var(--text-muted);
             margin-bottom: 6px;
         }
-
         .result-tags {
             display: flex;
             flex-wrap: wrap;
             gap: 4px;
         }
-
         .result-tag {
             font-size: 0.7rem;
             padding: 2px 8px;
@@ -410,7 +392,6 @@
             background: var(--bg-elevated);
             color: var(--text-dim);
         }
-
         /* Sinalização individual de músicas */
         .song-signals {
             display: flex;
@@ -419,7 +400,6 @@
             flex-shrink: 0;
             margin-left: 8px;
         }
-
         .song-signal {
             width: 26px;
             height: 26px;
@@ -434,23 +414,19 @@
             justify-content: center;
             transition: all var(--transition);
         }
-
         .song-signal:hover {
             border-color: var(--gold);
         }
-
         .song-signal.active-pref {
             background: var(--green-bg);
             border-color: var(--green);
             color: var(--green);
         }
-
         .song-signal.active-avoid {
             background: var(--red-bg);
             border-color: var(--red);
             color: var(--red);
         }
-
         /* Estado vazio */
         .results-empty {
             grid-column: 1 / -1;
@@ -459,7 +435,6 @@
             color: var(--text-dim);
             font-size: 0.9rem;
         }
-
         /* ===== SEÇÃO DE DOWNLOAD ===== */
         .download-section {
             margin-top: 3rem;
@@ -469,7 +444,6 @@
             border-radius: var(--radius);
             text-align: center;
         }
-
         .disclaimer {
             font-size: 0.8rem;
             color: var(--text-muted);
@@ -477,8 +451,8 @@
             max-width: 600px;
             margin: 0 auto 1.5rem;
         }
-
-        .btn-download {
+        /* === ALTERADO: .btn-download → .btn-primary (padronização com index) === */
+        .btn-primary {
             display: inline-flex;
             align-items: center;
             gap: 8px;
@@ -493,71 +467,140 @@
             cursor: pointer;
             transition: all var(--transition);
         }
-
-        .btn-download:hover {
+        .btn-primary:hover {
             background: var(--gold-light);
             transform: translateY(-1px);
         }
-
-        .btn-download:disabled {
+        .btn-primary:disabled {
             opacity: 0.5;
             cursor: not-allowed;
             transform: none;
         }
 
+        /* === NOVO: Sticky download flutuante (estilo sticky-cta do index) === */
+        .sticky-download {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            background: var(--gold);
+            color: var(--bg);
+            border: none;
+            border-radius: 50px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+            z-index: 90;
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(20px);
+            transition: all 0.3s ease;
+        }
+        .sticky-download.visible {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateY(0);
+        }
+        .sticky-download:hover {
+            background: var(--gold-light);
+            transform: translateY(-2px);
+        }
+        .sticky-download:disabled {
+            opacity: 0;
+            pointer-events: none;
+        }
+
         /* ===== FOOTER ===== */
         .rep-footer {
             border-top: 1px solid var(--border);
-            padding: 1.5rem 2rem;
+            padding: 2rem;
             text-align: center;
         }
-
+        /* === NOVO: social links no footer === */
+        .footer-social {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        .footer-social a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            border: 1px solid var(--border);
+            border-radius: 50%;
+            color: var(--text-muted);
+            transition: all var(--transition);
+        }
+        .footer-social a:hover {
+            border-color: var(--gold);
+            color: var(--gold);
+        }
         .rep-footer p {
             font-size: 0.75rem;
             color: var(--text-dim);
+            margin-top: 0.3rem;
         }
-
         /* ===== RESPONSIVO ===== */
         @media (max-width: 768px) {
             .rep-header {
                 padding: 0.75rem 1rem;
             }
-
             .rep-main {
                 padding: 1.5rem 1rem 3rem;
             }
-
             .rep-title {
                 font-size: 1.75rem;
             }
-
             .filter-panel {
                 padding: 1rem;
             }
-
             .results-grid {
                 grid-template-columns: 1fr;
             }
-
             .download-section {
                 padding: 1.5rem 1rem;
             }
-
             .rep-counter-badge {
                 font-size: 0.7rem;
                 padding: 3px 10px;
             }
+            /* === NOVO: sticky download mobile === */
+            .sticky-download {
+                bottom: 16px;
+                right: 16px;
+                padding: 10px 20px;
+                font-size: 0.85rem;
+            }
         }
-
         /* ===== PRINT ===== */
         @media print {
             body { background: white; color: black; }
             .rep-header, .filter-panel, .download-section,
-            .rep-footer, .song-signals { display: none; }
+            .rep-footer, .song-signals, .sticky-download, .skip-link { display: none; }
+        }
+
+        /* === NOVO: prefers-reduced-motion (acessibilidade, igual index debug-12) === */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
         }
     </style>
 </head>
 <body>
+    <!-- === NOVO: Skip-link (acessibilidade) === -->
+    <a href="#rep-main" class="skip-link">Pular para conteúdo</a>
 
     <!-- ===== HEADER ===== -->
     <header class="rep-header">
@@ -565,22 +608,17 @@
         <span class="rep-logo">BullaAcoustic</span>
         <span class="rep-counter-badge" id="counter">Carregando...</span>
     </header>
-
     <!-- ===== MAIN ===== -->
-    <main class="rep-main">
-
+    <main class="rep-main" id="rep-main">
         <h1 class="rep-title">Repertório</h1>
         <p class="rep-subtitle">Explore mais de 1.200 músicas e baixe sua seleção em PDF</p>
-
         <!-- ===== PAINEL DE FILTROS ===== -->
         <div class="filter-panel">
-
             <!-- 1. Filtro por estilo -->
             <span class="filter-label">Estilos</span>
             <div class="style-pills" id="styleFilters">
                 <!-- Pills geradas dinamicamente via JS a partir das tags do JSON -->
             </div>
-
             <!-- 2. Busca livre (filtra resultados) -->
             <div class="search-box">
                 <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -589,7 +627,6 @@
                 </svg>
                 <input type="text" id="searchInput" placeholder="Digite nome da música ou artista...">
             </div>
-
             <!-- 3. Filtro por artista (3 estados) -->
             <div class="artist-filter">
                 <span class="filter-label">Artistas — favoritar ou vetar</span>
@@ -601,477 +638,45 @@
                     </div>
                 </div>
             </div>
-
             <!-- 4. Limpar filtros -->
             <button class="clear-filters" id="clearFilters">Limpar filtros</button>
-
         </div>
-
         <!-- ===== ÁREA DE RESULTADOS ===== -->
         <div class="results-grid" id="results">
             <div class="results-empty">
                 O repertório será exibido aqui após o carregamento.
             </div>
         </div>
-
         <!-- ===== SEÇÃO DE DOWNLOAD ===== -->
         <div class="download-section">
             <p class="disclaimer">
                 O repertório filtrado reflete suas seleções. A curadoria final do setlist considera a ocasião, o público e a viabilidade artística — converse com o artista sobre suas preferências.
             </p>
-            <button class="btn-download" id="downloadBtn" disabled>Baixar seleção em PDF</button>
+            <!-- === ALTERADO: class="btn-download" → class="btn-primary" === -->
+            <button class="btn-primary" id="downloadBtn" disabled>Baixar seleção em PDF</button>
         </div>
-
     </main>
-
     <!-- ===== FOOTER ===== -->
+    <!-- === MELHORADO: social links + legal (igual index debug-12) === -->
     <footer class="rep-footer">
-        <p>BullaAcoustic · guilhermebulla.github.io · WhatsApp (51) 98444.0402 · @guilhermebulla</p>
-    </footer>
-
-    <!-- ===== JAVASCRIPT (Fases 3-6) ===== -->
-    <script>
-        // ============================================
-        // FASE 3+4+5+6: JSON + Busca + Estilo + Artista + Sinalização + PDF
-        // ============================================
-
-        // --- ESTADO GLOBAL ---
-        let allSongs = [];
-        let filteredSongs = [];
-        let uniqueArtists = [];
-        let displayLimit = 100;
-        let artistStates = {};
-        let songStates = {};
-
-        // --- ELEMENTOS DOM ---
-        const searchInput = document.getElementById('searchInput');
-        const artistSearch = document.getElementById('artistSearch');
-        const artistList = document.getElementById('artistList');
-        const styleFilters = document.getElementById('styleFilters');
-        const clearFiltersBtn = document.getElementById('clearFilters');
-        const counter = document.getElementById('counter');
-        const results = document.getElementById('results');
-        const downloadBtn = document.getElementById('downloadBtn');
-
-        // --- CARREGAR REPERTÓRIO ---
-        async function loadRepertorio() {
-            try {
-                let response = await fetch('repertorio.json');
-                if (!response.ok) {
-                    response = await fetch('json-setlist.txt');
-                }
-                if (!response.ok) throw new Error('Arquivo não encontrado');
-
-                allSongs = await response.json();
-
-                const artistSet = new Set(allSongs.map(s => s.artista));
-                uniqueArtists = [...artistSet].sort((a, b) =>
-                    a.localeCompare(b, 'pt-BR')
-                );
-
-                uniqueArtists.forEach(a => { artistStates[a] = 'neutral'; });
-
-                renderStylePills();
-                renderArtistList(uniqueArtists);
-                applyFilters();
-
-            } catch (error) {
-                counter.textContent = 'Erro ao carregar';
-                console.error('Erro:', error);
-            }
-        }
-
-        // --- RENDERIZAR PILLS DE ESTILO ---
-        function renderStylePills() {
-            const tagSet = new Set();
-            allSongs.forEach(song => {
-                const estilos = Array.isArray(song.estilo)
-                    ? song.estilo
-                    : (typeof song.estilo === 'string'
-                        ? song.estilo.split(',').map(s => s.trim())
-                        : []);
-                estilos.forEach(e => tagSet.add(e));
-            });
-
-            const sortedTags = [...tagSet].sort((a, b) =>
-                a.localeCompare(b, 'pt-BR')
-            );
-
-            styleFilters.innerHTML = sortedTags.map(tag =>
-                '<label class="style-pill">' +
-                    '<input type="checkbox" value="' + escapeHtml(tag) + '">' +
-                    '<span>' + escapeHtml(tag) + '</span>' +
-                '</label>'
-            ).join('');
-        }
-
-        // --- RENDERIZAR LISTA DE ARTISTAS (3 estados) ---
-        function renderArtistList(artists) {
-            if (artists.length === 0) {
-                artistList.innerHTML = '<div class="artist-placeholder">Nenhum artista encontrado.</div>';
-                return;
-            }
-            artistList.innerHTML = artists.map(artist => {
-                const state = artistStates[artist] || 'neutral';
-                const favClass = state === 'favorite' ? ' active-fav' : '';
-                const vetoClass = state === 'vetoed' ? ' active-veto' : '';
-                return (
-                    '<div class="artist-item">' +
-                        '<span class="artist-name">' + escapeHtml(artist) + '</span>' +
-                        '<div class="artist-toggles">' +
-                            '<button class="artist-toggle' + favClass + '" ' +
-                                'data-artist="' + escapeHtml(artist) + '" data-action="favorite" ' +
-                                'title="Favoritar — sempre inclui">✅</button>' +
-                            '<button class="artist-toggle' + vetoClass + '" ' +
-                                'data-artist="' + escapeHtml(artist) + '" data-action="veto" ' +
-                                'title="Vetar — sempre exclui">🚫</button>' +
-                        '</div>' +
-                    '</div>'
-                );
-            }).join('');
-        }
-
-        // --- VERIFICAR SE MÚSICA CORRESPONDE AOS ESTILOS ---
-        function songMatchesStyles(song, selectedTags) {
-            if (selectedTags.length === 0) return true;
-            const estilos = Array.isArray(song.estilo)
-                ? song.estilo
-                : (typeof song.estilo === 'string'
-                    ? song.estilo.split(',').map(s => s.trim())
-                    : []);
-            return selectedTags.some(tag => estilos.includes(tag));
-        }
-
-        // --- APLICAR FILTROS ---
-        function applyFilters() {
-            const searchTerm = searchInput.value.toLowerCase().trim();
-
-            const selectedStyles = Array.from(
-                document.querySelectorAll('#styleFilters input[type="checkbox"]:checked')
-            ).map(cb => cb.value);
-
-            filteredSongs = allSongs.filter(song => {
-                const artistState = artistStates[song.artista] || 'neutral';
-
-                // VETO: exclui incondicionalmente
-                if (artistState === 'vetoed') return false;
-
-                // FAVORITO: bypassa filtro de estilo (mas não busca)
-                if (artistState !== 'favorite') {
-                    if (!songMatchesStyles(song, selectedStyles)) return false;
-                }
-
-                // Busca livre: aplica a TODOS
-                if (searchTerm) {
-                    const inSong = song.musica.toLowerCase().includes(searchTerm);
-                    const inArtist = song.artista.toLowerCase().includes(searchTerm);
-                    if (!inSong && !inArtist) return false;
-                }
-
-                return true;
-            });
-
-            filteredSongs.sort((a, b) => {
-                const artistCmp = a.artista.localeCompare(b.artista, 'pt-BR');
-                if (artistCmp !== 0) return artistCmp;
-                return a.musica.localeCompare(b.musica, 'pt-BR');
-            });
-
-            displayLimit = 100;
-            renderResults();
-        }
-
-        // --- RENDERIZAR RESULTADOS ---
-        function renderResults() {
-            if (filteredSongs.length === 0) {
-                results.innerHTML = '<div class="results-empty">Nenhuma música encontrada.</div>';
-                counter.textContent = '0 de ' + allSongs.length;
-                downloadBtn.disabled = true;
-                return;
-            }
-
-            counter.textContent = filteredSongs.length + ' de ' + allSongs.length;
-            downloadBtn.disabled = false;
-
-            const visible = filteredSongs.slice(0, displayLimit);
-            let html = visible.map(song => {
-                const estilos = Array.isArray(song.estilo)
-                    ? song.estilo
-                    : (typeof song.estilo === 'string'
-                        ? song.estilo.split(',').map(s => s.trim())
-                        : []);
-
-                const tags = estilos.map(e =>
-                    '<span class="result-tag">' + escapeHtml(e) + '</span>'
-                ).join('');
-
-                const key = song.artista + '|' + song.musica;
-                const songState = songStates[key] || 'neutral';
-                const prefClass = songState === 'pref' ? ' active-pref' : '';
-                const avoidClass = songState === 'avoid' ? ' active-avoid' : '';
-
-                let cardStyle = '';
-                if (songState === 'pref') {
-                    cardStyle = ' style="border-color: var(--green);"';
-                } else if (songState === 'avoid') {
-                    cardStyle = ' style="opacity: 0.35; border-color: var(--red);"';
-                }
-
-                return (
-                    '<div class="result-card"' + cardStyle + '>' +
-                        '<div class="result-info">' +
-                            '<div class="result-song">' + escapeHtml(song.musica) + '</div>' +
-                            '<div class="result-artist">' + escapeHtml(song.artista) + '</div>' +
-                            '<div class="result-tags">' + tags + '</div>' +
-                        '</div>' +
-                        '<div class="song-signals">' +
-                            '<button class="song-signal' + prefClass + '" ' +
-                                'data-artist="' + escapeHtml(song.artista) + '" ' +
-                                'data-song="' + escapeHtml(song.musica) + '" data-action="pref" ' +
-                                'title="Preferir">✅</button>' +
-                            '<button class="song-signal' + avoidClass + '" ' +
-                                'data-artist="' + escapeHtml(song.artista) + '" ' +
-                                'data-song="' + escapeHtml(song.musica) + '" data-action="avoid" ' +
-                                'title="Evitar">🚫</button>' +
-                        '</div>' +
-                    '</div>'
-                );
-            }).join('');
-
-            if (filteredSongs.length > displayLimit) {
-                const remaining = filteredSongs.length - displayLimit;
-                html += (
-                    '<div class="results-empty" id="showMore" ' +
-                    'style="cursor:pointer;grid-column:1/-1;padding:1.5rem;color:var(--gold);">' +
-                    'Mostrar mais (' + remaining + ' restantes)' +
-                    '</div>'
-                );
-            }
-
-            results.innerHTML = html;
-
-            const showMoreBtn = document.getElementById('showMore');
-            if (showMoreBtn) {
-                showMoreBtn.addEventListener('click', () => {
-                    displayLimit += 100;
-                    renderResults();
-                });
-            }
-        }
-
-        // ============================================
-        // FASE 6: GERAÇÃO DE PDF (window.print + CSS dedicado)
-        // ============================================
-
-        function generatePDF() {
-            // 1. Excluir músicas marcadas como "avoid"
-            const pdfSongs = filteredSongs.filter(song => {
-                const key = song.artista + '|' + song.musica;
-                return songStates[key] !== 'avoid';
-            });
-
-            if (pdfSongs.length === 0) {
-                alert('Não há músicas para incluir no PDF. Ajuste seus filtros.');
-                return;
-            }
-
-            // 2. Ordenar: artista A→Z, música A→Z
-            const sorted = [...pdfSongs].sort((a, b) => {
-                const artistCmp = a.artista.localeCompare(b.artista, 'pt-BR');
-                if (artistCmp !== 0) return artistCmp;
-                return a.musica.localeCompare(b.musica, 'pt-BR');
-            });
-
-            // 3. Agrupar por primeira letra do artista (normalizada)
-            const letterGroups = {};
-            sorted.forEach(song => {
-                let firstChar = song.artista.charAt(0).toUpperCase();
-                const normalized = firstChar.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-                let letter = /[A-Z]/.test(normalized) ? normalized : '#';
-                if (!letterGroups[letter]) letterGroups[letter] = [];
-                letterGroups[letter].push(song);
-            });
-
-            // 4. Construir HTML do corpo (agrupado por letra → artista → músicas)
-            let bodyHtml = '';
-            Object.keys(letterGroups).sort().forEach(letter => {
-                const songs = letterGroups[letter];
-
-                // Agrupar por artista dentro da letra
-                const artistGroups = {};
-                songs.forEach(song => {
-                    if (!artistGroups[song.artista]) artistGroups[song.artista] = [];
-                    artistGroups[song.artista].push(song);
-                });
-
-                const sortedArtists = Object.keys(artistGroups).sort((a, b) =>
-                    a.localeCompare(b, 'pt-BR')
-                );
-
-                bodyHtml += '<div class="letter-group">';
-                bodyHtml += '<span class="watermark">' + escapeHtml(letter) + '</span>';
-
-                sortedArtists.forEach(artist => {
-                    bodyHtml += '<div class="artist-block">';
-                    bodyHtml += '<div class="artist-name">' + escapeHtml(artist) + '</div>';
-
-                    const artistSongs = artistGroups[artist].sort((a, b) =>
-                        a.musica.localeCompare(b.musica, 'pt-BR')
-                    );
-
-                    artistSongs.forEach(song => {
-                        bodyHtml += '<div class="song-line">— ' + escapeHtml(song.musica) + '</div>';
-                    });
-
-                    bodyHtml += '</div>';
-                });
-
-                bodyHtml += '<div style="clear:both;"></div>';
-                bodyHtml += '</div>';
-            });
-
-            // 5. Construir documento HTML completo para impressão
-            const printHtml =
-                '<!DOCTYPE html>' +
-                '<html lang="pt-BR">' +
-                '<head>' +
-                    '<meta charset="UTF-8">' +
-                    '<title>Repertório — BullaAcoustic</title>' +
-                    '<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">' +
-                    '<style>' +
-                        '@page { margin: 1.5cm 1.5cm 2cm 1.5cm; }' +
-                        'body { font-family: "Inter", sans-serif; color: #333; line-height: 1.15; margin: 0; padding: 0; }' +
-                        '.header { text-align: center; margin-bottom: 1.2rem; border-bottom: 1px solid #d4a853; padding-bottom: 0.5rem; }' +
-                        '.header h1 { font-family: "Playfair Display", serif; font-size: 22pt; color: #d4a853; margin: 0; font-weight: 700; }' +
-                        '.header .subtitle { font-family: "Inter", sans-serif; font-size: 10pt; color: #555555; margin-top: 3px; }' +
-                        '.content { column-count: 2; column-gap: 25px; }' +
-                        '.letter-group { margin-bottom: 6px; }' +
-                        '.watermark { float: left; font-family: "Playfair Display", serif; font-size: 42pt; font-weight: bold; color: #f0e8d5; line-height: 1; margin: -5px 8px -15px 0; }' +
-                        '.artist-block { margin-bottom: 4px; break-inside: avoid; }' +
-                        '.artist-name { font-weight: bold; font-size: 10.5pt; color: #333; }' +
-                        '.song-line { font-size: 9.5pt; color: #444; line-height: 1.15; padding-left: 2px; }' +
-                        '.footer { position: fixed; bottom: 0; left: 0; right: 0; text-align: center; font-size: 7.5pt; color: #999; padding: 5px 0; border-top: 1px solid #eee; }' +
-                    '</style>' +
-                '</head>' +
-                '<body>' +
-                    '<div class="header">' +
-                        '<h1>REPERTÓRIO</h1>' +
-                        '<div class="subtitle">BullaAcoustic · Guilherme Bulla — Voz &amp; Violão</div>' +
-                    '</div>' +
-                    '<div class="content">' +
-                        bodyHtml +
-                    '</div>' +
-                    '<div class="footer">BullaAcoustic · guilhermebulla.github.io · WhatsApp (51) 98444.0402 · @guilhermebulla</div>' +
-                    '<script>' +
-                        'window.onload = function() {' +
-                            'setTimeout(function() { window.print(); }, 600);' +
-                        '};' +
-                    '<\/script>' +
-                '</body>' +
-                '</html>';
-
-            // 6. Abrir janela e imprimir
-            const printWindow = window.open('', '_blank');
-            if (!printWindow) {
-                alert('Permita pop-ups para baixar o PDF.');
-                return;
-            }
-            printWindow.document.write(printHtml);
-            printWindow.document.close();
-        }
-
-        // --- ESCAPE HTML ---
-        function escapeHtml(text) {
-            if (!text) return '';
-            return String(text)
-                .replace(/&/g, '&amp;')
-                .replace(/</g, '&lt;')
-                .replace(/>/g, '&gt;')
-                .replace(/"/g, '&quot;')
-                .replace(/'/g, '&#039;');
-        }
-
-        // --- EVENT LISTENERS ---
-
-        // Busca livre com debounce (300ms)
-        let searchDebounce;
-        searchInput.addEventListener('input', () => {
-            clearTimeout(searchDebounce);
-            searchDebounce = setTimeout(applyFilters, 300);
-        });
-
-        // Filtro por estilo (delegação)
-        document.getElementById('styleFilters').addEventListener('change', applyFilters);
-
-        // Busca dentro da lista de artistas
-        artistSearch.addEventListener('input', () => {
-            const term = artistSearch.value.toLowerCase().trim();
-            const filtered = uniqueArtists.filter(a =>
-                a.toLowerCase().includes(term)
-            );
-            renderArtistList(filtered);
-        });
-
-        // Toggles de artista (3 estados) — delegação
-        artistList.addEventListener('click', (e) => {
-            const btn = e.target.closest('.artist-toggle');
-            if (!btn) return;
-
-            const artist = btn.dataset.artist;
-            const action = btn.dataset.action;
-
-            if (action === 'favorite') {
-                artistStates[artist] = artistStates[artist] === 'favorite' ? 'neutral' : 'favorite';
-            } else if (action === 'veto') {
-                artistStates[artist] = artistStates[artist] === 'vetoed' ? 'neutral' : 'vetoed';
-            }
-
-            const term = artistSearch.value.toLowerCase().trim();
-            const currentList = uniqueArtists.filter(a =>
-                a.toLowerCase().includes(term)
-            );
-            renderArtistList(currentList);
-
-            applyFilters();
-        });
-
-        // Sinalização individual de músicas — delegação
-        results.addEventListener('click', (e) => {
-            const btn = e.target.closest('.song-signal');
-            if (!btn) return;
-
-            const artist = btn.dataset.artist;
-            const songName = btn.dataset.song;
-            const action = btn.dataset.action;
-            const key = artist + '|' + songName;
-
-            if (action === 'pref') {
-                songStates[key] = songStates[key] === 'pref' ? 'neutral' : 'pref';
-            } else if (action === 'avoid') {
-                songStates[key] = songStates[key] === 'avoid' ? 'neutral' : 'avoid';
-            }
-
-            renderResults();
-        });
-
-        // Botão de download (PDF)
-        downloadBtn.addEventListener('click', generatePDF);
-
-        // Limpar filtros
-        clearFiltersBtn.addEventListener('click', () => {
-            searchInput.value = '';
-            artistSearch.value = '';
-            document.querySelectorAll('#styleFilters input[type="checkbox"]')
-                .forEach(cb => cb.checked = false);
-            uniqueArtists.forEach(a => { artistStates[a] = 'neutral'; });
-            songStates = {};
-            renderArtistList(uniqueArtists);
-            applyFilters();
-        });
-
-        // --- INICIALIZAÇÃO ---
-        document.addEventListener('DOMContentLoaded', loadRepertorio);
-    </script>
-
-</body>
-</html>
+        <div class="footer-social">
+            <a href="https://instagram.com/guilhermebulla" target="_blank" rel="noopener" aria-label="Instagram">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                    <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                </svg>
+            </a>
+            <a href="https://twitch.tv/bullaacoustic" target="_blank" rel="noopener" aria-label="Twitch">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714z"></path>
+                </svg>
+            </a>
+            <a href="https://youtube.com/MrGuilhermeBulla" target="_blank" rel="noopener" aria-label="YouTube">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"></path>
+                </svg>
+            </a>
+            <a href="https://wa.me/5551984440402" target="_blank" rel="noopener" aria-label="WhatsApp">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 
