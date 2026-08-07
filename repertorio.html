@@ -95,9 +95,21 @@
 
         .rep-logo {
             font-family: 'Playfair Display', serif;
-            font-size: 1.25rem;
+            font-size: 1.1rem;
+            font-weight: 700;
             color: var(--gold);
             letter-spacing: 0.5px;
+        }
+
+        .rep-counter-badge {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            background: var(--bg-alt);
+            padding: 4px 14px;
+            border-radius: 50px;
+            border: 1px solid var(--border);
+            white-space: nowrap;
         }
 
         /* ===== MAIN ===== */
@@ -109,15 +121,18 @@
 
         .rep-title {
             font-family: 'Playfair Display', serif;
-            font-size: 2rem;
+            font-size: 2.5rem;
+            font-weight: 700;
             color: var(--gold);
+            text-align: center;
             margin-bottom: 0.5rem;
         }
 
         .rep-subtitle {
             color: var(--text-muted);
             font-size: 0.95rem;
-            margin-bottom: 2rem;
+            text-align: center;
+            margin-bottom: 2.5rem;
         }
 
         /* ===== PAINEL DE FILTROS ===== */
@@ -127,42 +142,6 @@
             border-radius: var(--radius);
             padding: 1.5rem;
             margin-bottom: 2rem;
-        }
-
-        /* Busca livre */
-        .search-box {
-            position: relative;
-            margin-bottom: 1.5rem;
-        }
-
-        .search-box input {
-            width: 100%;
-            padding: 12px 16px 12px 44px;
-            background: var(--bg);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-sm);
-            color: var(--text);
-            font-family: 'Inter', sans-serif;
-            font-size: 0.95rem;
-            transition: border-color var(--transition);
-        }
-
-        .search-box input:focus {
-            outline: none;
-            border-color: var(--gold);
-        }
-
-        .search-box input::placeholder {
-            color: var(--text-dim);
-        }
-
-        .search-icon {
-            position: absolute;
-            left: 14px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--text-dim);
-            pointer-events: none;
         }
 
         /* Rótulo de seção */
@@ -212,6 +191,42 @@
             border-color: var(--gold);
             color: var(--bg);
             font-weight: 500;
+        }
+
+        /* Busca livre */
+        .search-box {
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 12px 16px 12px 44px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem;
+            transition: border-color var(--transition);
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: var(--gold);
+        }
+
+        .search-box input::placeholder {
+            color: var(--text-dim);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-dim);
+            pointer-events: none;
         }
 
         /* Filtro de artistas (3 estados) */
@@ -345,18 +360,6 @@
         }
 
         /* ===== ÁREA DE RESULTADOS ===== */
-        .results-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 1rem;
-        }
-
-        .results-count {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-        }
-
         .results-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -408,7 +411,7 @@
             color: var(--text-dim);
         }
 
-        /* Sinalização individual de músicas (Fase 5) */
+        /* Sinalização individual de músicas */
         .song-signals {
             display: flex;
             flex-direction: column;
@@ -525,7 +528,7 @@
             }
 
             .rep-title {
-                font-size: 1.5rem;
+                font-size: 1.75rem;
             }
 
             .filter-panel {
@@ -539,9 +542,14 @@
             .download-section {
                 padding: 1.5rem 1rem;
             }
+
+            .rep-counter-badge {
+                font-size: 0.7rem;
+                padding: 3px 10px;
+            }
         }
 
-        /* ===== PRINT (placeholder — Fase 6) ===== */
+        /* ===== PRINT ===== */
         @media print {
             body { background: white; color: black; }
             .rep-header, .filter-panel, .download-section,
@@ -553,20 +561,27 @@
 
     <!-- ===== HEADER ===== -->
     <header class="rep-header">
-        <a href="index.html" class="rep-back">← Voltar ao site</a>
+        <a href="index.html" class="rep-back">← Voltar</a>
         <span class="rep-logo">BullaAcoustic</span>
+        <span class="rep-counter-badge" id="counter">Carregando...</span>
     </header>
 
     <!-- ===== MAIN ===== -->
     <main class="rep-main">
 
-        <h1 class="rep-title">Repertório Interativo</h1>
+        <h1 class="rep-title">Repertório</h1>
         <p class="rep-subtitle">Explore mais de 1.200 músicas e baixe sua seleção em PDF</p>
 
         <!-- ===== PAINEL DE FILTROS ===== -->
         <div class="filter-panel">
 
-            <!-- Busca livre -->
+            <!-- 1. Filtro por estilo -->
+            <span class="filter-label">Estilos</span>
+            <div class="style-pills" id="styleFilters">
+                <!-- Pills geradas dinamicamente via JS a partir das tags do JSON -->
+            </div>
+
+            <!-- 2. Busca livre (filtra resultados) -->
             <div class="search-box">
                 <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <circle cx="11" cy="11" r="8"></circle>
@@ -575,36 +590,27 @@
                 <input type="text" id="searchInput" placeholder="Digite nome da música ou artista...">
             </div>
 
-            <!-- Filtro por estilo (9 categorias) -->
-            <span class="filter-label">Estilos</span>
-            <div class="style-pills" id="styleFilters">
-                <!-- Pills geradas dinamicamente via JS a partir das tags do JSON -->
-            </div>
-
-            <!-- Filtro por artista (3 estados) -->
+            <!-- 3. Filtro por artista (3 estados) -->
             <div class="artist-filter">
-                <span class="filter-label">Artistas</span>
-                <input type="text" class="artist-search" id="artistSearch" placeholder="Buscar artista...">
+                <span class="filter-label">Artistas — favoritar ou vetar</span>
+                <input type="text" class="artist-search" id="artistSearch" placeholder="Buscar artista na lista...">
                 <div class="artist-list" id="artistList">
                     <div class="artist-placeholder">
                         A lista de artistas será carregada automaticamente<br>
-                        quando o repertório for carregado (Fase 3).
+                        quando o repertório for carregado.
                     </div>
                 </div>
             </div>
 
-            <!-- Limpar filtros -->
+            <!-- 4. Limpar filtros -->
             <button class="clear-filters" id="clearFilters">Limpar filtros</button>
 
         </div>
 
         <!-- ===== ÁREA DE RESULTADOS ===== -->
-        <div class="results-header">
-            <span class="results-count" id="counter">Carregando repertório...</span>
-        </div>
         <div class="results-grid" id="results">
             <div class="results-empty">
-                O repertório será exibido aqui após o carregamento (Fase 3).
+                O repertório será exibido aqui após o carregamento.
             </div>
         </div>
 
@@ -670,7 +676,7 @@
                 applyFilters();
 
             } catch (error) {
-                counter.textContent = 'Erro ao carregar o repertório. Verifique se o arquivo JSON está no servidor.';
+                counter.textContent = 'Erro ao carregar';
                 console.error('Erro:', error);
             }
         }
@@ -779,12 +785,12 @@
         function renderResults() {
             if (filteredSongs.length === 0) {
                 results.innerHTML = '<div class="results-empty">Nenhuma música encontrada.</div>';
-                counter.textContent = '0 de ' + allSongs.length + ' músicas';
+                counter.textContent = '0 de ' + allSongs.length;
                 downloadBtn.disabled = true;
                 return;
             }
 
-            counter.textContent = filteredSongs.length + ' de ' + allSongs.length + ' músicas';
+            counter.textContent = filteredSongs.length + ' de ' + allSongs.length;
             downloadBtn.disabled = false;
 
             const visible = filteredSongs.slice(0, displayLimit);
