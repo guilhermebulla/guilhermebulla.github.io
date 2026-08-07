@@ -8,9 +8,7 @@
     <meta property="og:title" content="Repertório | BullaAcoustic">
     <meta property="og:description" content="Explore mais de 1.200 músicas e baixe sua seleção em PDF.">
     <meta property="og:type" content="website">
-    <!-- Favicon: usar o mesmo caminho do index.html -->
     <link rel="icon" href="favicon.ico" type="image/x-icon">
-    <!-- Fontes (mesmas do site principal) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -21,12 +19,10 @@
             padding: 0;
             box-sizing: border-box;
         }
-
         /* === NOVO: scroll-padding-top (igual index debug-12) === */
         html {
             scroll-padding-top: 80px;
         }
-
         /* ===== VARIÁVEIS ===== */
         :root {
             --bg: #0f0f0f;
@@ -63,7 +59,6 @@
         a:hover {
             color: var(--gold-light);
         }
-
         /* === NOVO: Skip-link (acessibilidade) === */
         .skip-link {
             position: absolute;
@@ -80,7 +75,6 @@
         .skip-link:focus {
             top: 0;
         }
-
         /* ===== HEADER ===== */
         .rep-header {
             position: sticky;
@@ -163,7 +157,6 @@
             padding: 1.5rem;
             margin-bottom: 2rem;
         }
-        /* Rótulo de seção */
         .filter-label {
             display: block;
             font-size: 0.8rem;
@@ -172,7 +165,6 @@
             color: var(--text-dim);
             margin-bottom: 0.75rem;
         }
-        /* Pills de estilo */
         .style-pills {
             display: flex;
             flex-wrap: wrap;
@@ -206,7 +198,6 @@
             color: var(--bg);
             font-weight: 500;
         }
-        /* Busca livre */
         .search-box {
             position: relative;
             margin-bottom: 1.5rem;
@@ -237,7 +228,6 @@
             color: var(--text-dim);
             pointer-events: none;
         }
-        /* Filtro de artistas (3 estados) */
         .artist-filter {
             border-top: 1px solid var(--border);
             padding-top: 1.5rem;
@@ -330,7 +320,6 @@
             color: var(--text-dim);
             font-size: 0.85rem;
         }
-        /* Botão limpar filtros */
         .clear-filters {
             display: inline-block;
             margin-top: 1rem;
@@ -392,7 +381,6 @@
             background: var(--bg-elevated);
             color: var(--text-dim);
         }
-        /* Sinalização individual de músicas */
         .song-signals {
             display: flex;
             flex-direction: column;
@@ -427,7 +415,6 @@
             border-color: var(--red);
             color: var(--red);
         }
-        /* Estado vazio */
         .results-empty {
             grid-column: 1 / -1;
             text-align: center;
@@ -476,8 +463,7 @@
             cursor: not-allowed;
             transform: none;
         }
-
-        /* === NOVO: Sticky download flutuante (estilo sticky-cta do index) === */
+        /* === NOVO: Sticky download flutuante === */
         .sticky-download {
             position: fixed;
             bottom: 20px;
@@ -514,14 +500,12 @@
             opacity: 0;
             pointer-events: none;
         }
-
         /* ===== FOOTER ===== */
         .rep-footer {
             border-top: 1px solid var(--border);
             padding: 2rem;
             text-align: center;
         }
-        /* === NOVO: social links no footer === */
         .footer-social {
             display: flex;
             justify-content: center;
@@ -572,7 +556,6 @@
                 font-size: 0.7rem;
                 padding: 3px 10px;
             }
-            /* === NOVO: sticky download mobile === */
             .sticky-download {
                 bottom: 16px;
                 right: 16px;
@@ -586,8 +569,7 @@
             .rep-header, .filter-panel, .download-section,
             .rep-footer, .song-signals, .sticky-download, .skip-link { display: none; }
         }
-
-        /* === NOVO: prefers-reduced-motion (acessibilidade, igual index debug-12) === */
+        /* === NOVO: prefers-reduced-motion (igual index debug-12) === */
         @media (prefers-reduced-motion: reduce) {
             *, *::before, *::after {
                 animation-duration: 0.01ms !important;
@@ -601,7 +583,6 @@
 <body>
     <!-- === NOVO: Skip-link (acessibilidade) === -->
     <a href="#rep-main" class="skip-link">Pular para conteúdo</a>
-
     <!-- ===== HEADER ===== -->
     <header class="rep-header">
         <a href="index.html" class="rep-back">← Voltar</a>
@@ -614,12 +595,8 @@
         <p class="rep-subtitle">Explore mais de 1.200 músicas e baixe sua seleção em PDF</p>
         <!-- ===== PAINEL DE FILTROS ===== -->
         <div class="filter-panel">
-            <!-- 1. Filtro por estilo -->
             <span class="filter-label">Estilos</span>
-            <div class="style-pills" id="styleFilters">
-                <!-- Pills geradas dinamicamente via JS a partir das tags do JSON -->
-            </div>
-            <!-- 2. Busca livre (filtra resultados) -->
+            <div class="style-pills" id="styleFilters"></div>
             <div class="search-box">
                 <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <circle cx="11" cy="11" r="8"></circle>
@@ -627,7 +604,6 @@
                 </svg>
                 <input type="text" id="searchInput" placeholder="Digite nome da música ou artista...">
             </div>
-            <!-- 3. Filtro por artista (3 estados) -->
             <div class="artist-filter">
                 <span class="filter-label">Artistas — favoritar ou vetar</span>
                 <input type="text" class="artist-search" id="artistSearch" placeholder="Buscar artista na lista...">
@@ -638,7 +614,6 @@
                     </div>
                 </div>
             </div>
-            <!-- 4. Limpar filtros -->
             <button class="clear-filters" id="clearFilters">Limpar filtros</button>
         </div>
         <!-- ===== ÁREA DE RESULTADOS ===== -->
@@ -652,12 +627,10 @@
             <p class="disclaimer">
                 O repertório filtrado reflete suas seleções. A curadoria final do setlist considera a ocasião, o público e a viabilidade artística — converse com o artista sobre suas preferências.
             </p>
-            <!-- === ALTERADO: class="btn-download" → class="btn-primary" === -->
             <button class="btn-primary" id="downloadBtn" disabled>Baixar seleção em PDF</button>
         </div>
     </main>
-    <!-- ===== FOOTER ===== -->
-    <!-- === MELHORADO: social links + legal (igual index debug-12) === -->
+    <!-- ===== FOOTER (com social links) ===== -->
     <footer class="rep-footer">
         <div class="footer-social">
             <a href="https://instagram.com/guilhermebulla" target="_blank" rel="noopener" aria-label="Instagram">
@@ -679,4 +652,394 @@
             </a>
             <a href="https://wa.me/5551984440402" target="_blank" rel="noopener" aria-label="WhatsApp">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 
+                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.608.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"></path>
+                </svg>
+            </a>
+        </div>
+        <p>BullaAcoustic · guilhermebulla.github.io · WhatsApp (51) 98444.0402 · @guilhermebulla</p>
+    </footer>
+    <!-- === NOVO: Sticky download flutuante === -->
+    <button class="sticky-download" id="stickyDownload" disabled>📥 Baixar PDF</button>
+    <!-- ===== JAVASCRIPT (preservado integralmente do debug-1 + adições) ===== -->
+    <script>
+        // 
+        // FASE 3+4+5+6: JSON + Busca + Estilo + Artista + Sinalização + PDF
+        // 
+        // --- ESTADO GLOBAL ---
+        let allSongs = [];
+        let filteredSongs = [];
+        let uniqueArtists = [];
+        let displayLimit = 100;
+        let artistStates = {};
+        let songStates = {};
+        // --- ELEMENTOS DOM ---
+        const searchInput = document.getElementById('searchInput');
+        const artistSearch = document.getElementById('artistSearch');
+        const artistList = document.getElementById('artistList');
+        const styleFilters = document.getElementById('styleFilters');
+        const clearFiltersBtn = document.getElementById('clearFilters');
+        const counter = document.getElementById('counter');
+        const results = document.getElementById('results');
+        const downloadBtn = document.getElementById('downloadBtn');
+        const stickyDownload = document.getElementById('stickyDownload');
+        // --- CARREGAR REPERTÓRIO ---
+        async function loadRepertorio() {
+            try {
+                let response = await fetch('repertorio.json');
+                if (!response.ok) {
+                    response = await fetch('json-setlist.txt');
+                }
+                if (!response.ok) throw new Error('Arquivo não encontrado');
+                allSongs = await response.json();
+                const artistSet = new Set(allSongs.map(s => s.artista));
+                uniqueArtists = [...artistSet].sort((a, b) =>
+                    a.localeCompare(b, 'pt-BR')
+                );
+                uniqueArtists.forEach(a => { artistStates[a] = 'neutral'; });
+                renderStylePills();
+                renderArtistList(uniqueArtists);
+                applyFilters();
+            } catch (error) {
+                counter.textContent = 'Erro ao carregar';
+                console.error('Erro:', error);
+            }
+        }
+        // --- RENDERIZAR PILLS DE ESTILO ---
+        function renderStylePills() {
+            const tagSet = new Set();
+            allSongs.forEach(song => {
+                const estilos = Array.isArray(song.estilo)
+                    ? song.estilo
+                    : (typeof song.estilo === 'string'
+                        ? song.estilo.split(',').map(s => s.trim())
+                        : []);
+                estilos.forEach(e => tagSet.add(e));
+            });
+            const sortedTags = [...tagSet].sort((a, b) =>
+                a.localeCompare(b, 'pt-BR')
+            );
+            styleFilters.innerHTML = sortedTags.map(tag =>
+                '<label class="style-pill">' +
+                    '<input type="checkbox" value="' + escapeHtml(tag) + '">' +
+                    '<span>' + escapeHtml(tag) + '</span>' +
+                '</label>'
+            ).join('');
+        }
+        // --- RENDERIZAR LISTA DE ARTISTAS (3 estados) ---
+        function renderArtistList(artists) {
+            if (artists.length === 0) {
+                artistList.innerHTML = '<div class="artist-placeholder">Nenhum artista encontrado.</div>';
+                return;
+            }
+            artistList.innerHTML = artists.map(artist => {
+                const state = artistStates[artist] || 'neutral';
+                const favClass = state === 'favorite' ? ' active-fav' : '';
+                const vetoClass = state === 'vetoed' ? ' active-veto' : '';
+                return (
+                    '<div class="artist-item">' +
+                        '<span class="artist-name">' + escapeHtml(artist) + '</span>' +
+                        '<div class="artist-toggles">' +
+                            '<button class="artist-toggle' + favClass + '" ' +
+                                'data-artist="' + escapeHtml(artist) + '" data-action="favorite" ' +
+                                'title="Favoritar — sempre inclui">✅</button>' +
+                            '<button class="artist-toggle' + vetoClass + '" ' +
+                                'data-artist="' + escapeHtml(artist) + '" data-action="veto" ' +
+                                'title="Vetar — sempre exclui">🚫</button>' +
+                        '</div>' +
+                    '</div>'
+                );
+            }).join('');
+        }
+        // --- VERIFICAR SE MÚSICA CORRESPONDE AOS ESTILOS ---
+        function songMatchesStyles(song, selectedTags) {
+            if (selectedTags.length === 0) return true;
+            const estilos = Array.isArray(song.estilo)
+                ? song.estilo
+                : (typeof song.estilo === 'string'
+                    ? song.estilo.split(',').map(s => s.trim())
+                    : []);
+            return selectedTags.some(tag => estilos.includes(tag));
+        }
+        // --- APLICAR FILTROS ---
+        function applyFilters() {
+            const searchTerm = searchInput.value.toLowerCase().trim();
+            const selectedStyles = Array.from(
+                document.querySelectorAll('#styleFilters input[type="checkbox"]:checked')
+            ).map(cb => cb.value);
+            filteredSongs = allSongs.filter(song => {
+                const artistState = artistStates[song.artista] || 'neutral';
+                if (artistState === 'vetoed') return false;
+                if (artistState !== 'favorite') {
+                    if (!songMatchesStyles(song, selectedStyles)) return false;
+                }
+                if (searchTerm) {
+                    const inSong = song.musica.toLowerCase().includes(searchTerm);
+                    const inArtist = song.artista.toLowerCase().includes(searchTerm);
+                    if (!inSong && !inArtist) return false;
+                }
+                return true;
+            });
+            filteredSongs.sort((a, b) => {
+                const artistCmp = a.artista.localeCompare(b.artista, 'pt-BR');
+                if (artistCmp !== 0) return artistCmp;
+                return a.musica.localeCompare(b.musica, 'pt-BR');
+            });
+            displayLimit = 100;
+            renderResults();
+        }
+        // --- RENDERIZAR RESULTADOS ---
+        function renderResults() {
+            if (filteredSongs.length === 0) {
+                results.innerHTML = '<div class="results-empty">Nenhuma música encontrada.</div>';
+                counter.textContent = '0 de ' + allSongs.length;
+                downloadBtn.disabled = true;
+                stickyDownload.disabled = true;
+                return;
+            }
+            counter.textContent = filteredSongs.length + ' de ' + allSongs.length;
+            downloadBtn.disabled = false;
+            stickyDownload.disabled = false;
+            const visible = filteredSongs.slice(0, displayLimit);
+            let html = visible.map(song => {
+                const estilos = Array.isArray(song.estilo)
+                    ? song.estilo
+                    : (typeof song.estilo === 'string'
+                        ? song.estilo.split(',').map(s => s.trim())
+                        : []);
+                const tags = estilos.map(e =>
+                    '<span class="result-tag">' + escapeHtml(e) + '</span>'
+                ).join('');
+                const key = song.artista + '|' + song.musica;
+                const songState = songStates[key] || 'neutral';
+                const prefClass = songState === 'pref' ? ' active-pref' : '';
+                const avoidClass = songState === 'avoid' ? ' active-avoid' : '';
+                let cardStyle = '';
+                if (songState === 'pref') {
+                    cardStyle = ' style="border-color: var(--green);"';
+                } else if (songState === 'avoid') {
+                    cardStyle = ' style="opacity: 0.35; border-color: var(--red);"';
+                }
+                return (
+                    '<div class="result-card"' + cardStyle + '>' +
+                        '<div class="result-info">' +
+                            '<div class="result-song">' + escapeHtml(song.musica) + '</div>' +
+                            '<div class="result-artist">' + escapeHtml(song.artista) + '</div>' +
+                            '<div class="result-tags">' + tags + '</div>' +
+                        '</div>' +
+                        '<div class="song-signals">' +
+                            '<button class="song-signal' + prefClass + '" ' +
+                                'data-artist="' + escapeHtml(song.artista) + '" ' +
+                                'data-song="' + escapeHtml(song.musica) + '" data-action="pref" ' +
+                                'title="Preferir">✅</button>' +
+                            '<button class="song-signal' + avoidClass + '" ' +
+                                'data-artist="' + escapeHtml(song.artista) + '" ' +
+                                'data-song="' + escapeHtml(song.musica) + '" data-action="avoid" ' +
+                                'title="Evitar">🚫</button>' +
+                        '</div>' +
+                    '</div>'
+                );
+            }).join('');
+            if (filteredSongs.length > displayLimit) {
+                const remaining = filteredSongs.length - displayLimit;
+                html += (
+                    '<div class="results-empty" id="showMore" ' +
+                    'style="cursor:pointer;grid-column:1/-1;padding:1.5rem;color:var(--gold);">' +
+                    'Mostrar mais (' + remaining + ' restantes)' +
+                    '</div>'
+                );
+            }
+            results.innerHTML = html;
+            const showMoreBtn = document.getElementById('showMore');
+            if (showMoreBtn) {
+                showMoreBtn.addEventListener('click', () => {
+                    displayLimit += 100;
+                    renderResults();
+                });
+            }
+        }
+        // 
+        // FASE 6: GERAÇÃO DE PDF (window.print + CSS dedicado)
+        // 
+        function generatePDF() {
+            const pdfSongs = filteredSongs.filter(song => {
+                const key = song.artista + '|' + song.musica;
+                return songStates[key] !== 'avoid';
+            });
+            if (pdfSongs.length === 0) {
+                alert('Não há músicas para incluir no PDF. Ajuste seus filtros.');
+                return;
+            }
+            const sorted = [...pdfSongs].sort((a, b) => {
+                const artistCmp = a.artista.localeCompare(b.artista, 'pt-BR');
+                if (artistCmp !== 0) return artistCmp;
+                return a.musica.localeCompare(b.musica, 'pt-BR');
+            });
+            const letterGroups = {};
+            sorted.forEach(song => {
+                let firstChar = song.artista.charAt(0).toUpperCase();
+                const normalized = firstChar.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+                let letter = /[A-Z]/.test(normalized) ? normalized : '#';
+                if (!letterGroups[letter]) letterGroups[letter] = [];
+                letterGroups[letter].push(song);
+            });
+            let bodyHtml = '';
+            Object.keys(letterGroups).sort().forEach(letter => {
+                const songs = letterGroups[letter];
+                const artistGroups = {};
+                songs.forEach(song => {
+                    if (!artistGroups[song.artista]) artistGroups[song.artista] = [];
+                    artistGroups[song.artista].push(song);
+                });
+                const sortedArtists = Object.keys(artistGroups).sort((a, b) =>
+                    a.localeCompare(b, 'pt-BR')
+                );
+                bodyHtml += '<div class="letter-group">';
+                bodyHtml += '<span class="watermark">' + escapeHtml(letter) + '</span>';
+                sortedArtists.forEach(artist => {
+                    bodyHtml += '<div class="artist-block">';
+                    bodyHtml += '<div class="artist-name">' + escapeHtml(artist) + '</div>';
+                    const artistSongs = artistGroups[artist].sort((a, b) =>
+                        a.musica.localeCompare(b.musica, 'pt-BR')
+                    );
+                    artistSongs.forEach(song => {
+                        bodyHtml += '<div class="song-line">— ' + escapeHtml(song.musica) + '</div>';
+                    });
+                    bodyHtml += '</div>';
+                });
+                bodyHtml += '<div style="clear:both;"></div>';
+                bodyHtml += '</div>';
+            });
+            const printHtml =
+                '<!DOCTYPE html>' +
+                '<html lang="pt-BR">' +
+                '<head>' +
+                    '<meta charset="UTF-8">' +
+                    '<title>Repertório — BullaAcoustic</title>' +
+                    '<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">' +
+                    '<style>' +
+                        '@page { margin: 1.5cm 1.5cm 2cm 1.5cm; }' +
+                        'body { font-family: "Inter", sans-serif; color: #333; line-height: 1.15; margin: 0; padding: 0; }' +
+                        '.header { text-align: center; margin-bottom: 1.2rem; border-bottom: 1px solid #d4a853; padding-bottom: 0.5rem; }' +
+                        '.header h1 { font-family: "Playfair Display", serif; font-size: 22pt; color: #d4a853; margin: 0; font-weight: 700; }' +
+                        '.header .subtitle { font-family: "Inter", sans-serif; font-size: 10pt; color: #555555; margin-top: 3px; }' +
+                        '.content { column-count: 2; column-gap: 25px; }' +
+                        '.letter-group { margin-bottom: 6px; }' +
+                        '.watermark { float: left; font-family: "Playfair Display", serif; font-size: 42pt; font-weight: bold; color: #f0e8d5; line-height: 1; margin: -5px 8px -15px 0; }' +
+                        '.artist-block { margin-bottom: 4px; break-inside: avoid; }' +
+                        '.artist-name { font-weight: bold; font-size: 10.5pt; color: #333; }' +
+                        '.song-line { font-size: 9.5pt; color: #444; line-height: 1.15; padding-left: 2px; }' +
+                        '.footer { position: fixed; bottom: 0; left: 0; right: 0; text-align: center; font-size: 7.5pt; color: #999; padding: 5px 0; border-top: 1px solid #eee; }' +
+                    '</style>' +
+                '</head>' +
+                '<body>' +
+                    '<div class="header">' +
+                        '<h1>REPERTÓRIO</h1>' +
+                        '<div class="subtitle">BullaAcoustic · Guilherme Bulla — Voz &amp; Violão</div>' +
+                    '</div>' +
+                    '<div class="content">' +
+                        bodyHtml +
+                    '</div>' +
+                    '<div class="footer">BullaAcoustic · guilhermebulla.github.io · WhatsApp (51) 98444.0402 · @guilhermebulla</div>' +
+                    '<script>' +
+                        'window.onload = function() {' +
+                            'setTimeout(function() { window.print(); }, 600);' +
+                        '};' +
+                    '&lt;\/script>' +
+                '</body>' +
+                '</html>';
+            const printWindow = window.open('', '_blank');
+            if (!printWindow) {
+                alert('Permita pop-ups para baixar o PDF.');
+                return;
+            }
+            printWindow.document.write(printHtml);
+            printWindow.document.close();
+        }
+        // --- ESCAPE HTML ---
+        function escapeHtml(text) {
+            if (!text) return '';
+            return String(text)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        }
+        // --- EVENT LISTENERS ---
+        let searchDebounce;
+        searchInput.addEventListener('input', () => {
+            clearTimeout(searchDebounce);
+            searchDebounce = setTimeout(applyFilters, 300);
+        });
+        document.getElementById('styleFilters').addEventListener('change', applyFilters);
+        artistSearch.addEventListener('input', () => {
+            const term = artistSearch.value.toLowerCase().trim();
+            const filtered = uniqueArtists.filter(a =>
+                a.toLowerCase().includes(term)
+            );
+            renderArtistList(filtered);
+        });
+        artistList.addEventListener('click', (e) => {
+            const btn = e.target.closest('.artist-toggle');
+            if (!btn) return;
+            const artist = btn.dataset.artist;
+            const action = btn.dataset.action;
+            if (action === 'favorite') {
+                artistStates[artist] = artistStates[artist] === 'favorite' ? 'neutral' : 'favorite';
+            } else if (action === 'veto') {
+                artistStates[artist] = artistStates[artist] === 'vetoed' ? 'neutral' : 'vetoed';
+            }
+            const term = artistSearch.value.toLowerCase().trim();
+            const currentList = uniqueArtists.filter(a =>
+                a.toLowerCase().includes(term)
+            );
+            renderArtistList(currentList);
+            applyFilters();
+        });
+        results.addEventListener('click', (e) => {
+            const btn = e.target.closest('.song-signal');
+            if (!btn) return;
+            const artist = btn.dataset.artist;
+            const songName = btn.dataset.song;
+            const action = btn.dataset.action;
+            const key = artist + '|' + songName;
+            if (action === 'pref') {
+                songStates[key] = songStates[key] === 'pref' ? 'neutral' : 'pref';
+            } else if (action === 'avoid') {
+                songStates[key] = songStates[key] === 'avoid' ? 'neutral' : 'avoid';
+            }
+            renderResults();
+        });
+        downloadBtn.addEventListener('click', generatePDF);
+        // === NOVO: sticky download também chama generatePDF ===
+        stickyDownload.addEventListener('click', generatePDF);
+        clearFiltersBtn.addEventListener('click', () => {
+            searchInput.value = '';
+            artistSearch.value = '';
+            document.querySelectorAll('#styleFilters input[type="checkbox"]')
+                .forEach(cb => cb.checked = false);
+            uniqueArtists.forEach(a => { artistStates[a] = 'neutral'; });
+            songStates = {};
+            renderArtistList(uniqueArtists);
+            applyFilters();
+        });
+        // === NOVO: IntersectionObserver para mostrar/esconder sticky download ===
+        // Aparece quando o painel de filtros sai da viewport (usuário rolou para os resultados)
+        const filterPanel = document.querySelector('.filter-panel');
+        if (filterPanel) {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (!entry.isIntersecting) {
+                        stickyDownload.classList.add('visible');
+                    } else {
+                        stickyDownload.classList.remove('visible');
+                    }
+                });
+            }, { threshold: 0 });
+            observer.observe(filterPanel);
+        }
+        // --- INICIALIZAÇÃO ---
+        document.addEventListener('DOMContentLoaded', loadRepertorio);
+    </script>
+</body>
+</html>
