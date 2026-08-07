@@ -626,7 +626,7 @@
     <!-- ===== JAVASCRIPT (Fases 3-6) ===== -->
     <script>
         // ============================================
-        // FASE 3 + 4: Carregar JSON + Renderizar + Busca Livre + Filtro por Estilo
+        // FASE 3+4+5: JSON + Busca + Estilo + Artista (3 estados) + Sinalização
         // ============================================
 
         // --- ESTADO GLOBAL ---
@@ -634,6 +634,8 @@
         let filteredSongs = [];
         let uniqueArtists = [];
         let displayLimit = 100;
+        let artistStates = {};  // { 'Artista': 'neutral' | 'favorite' | 'vetoed' }
+        let songStates = {};    // { 'Artista|Música': 'neutral' | 'pref' | 'avoid' }
 
         // --- ELEMENTOS DOM ---
         const searchInput = document.getElementById('searchInput');
@@ -661,6 +663,9 @@
                     a.localeCompare(b, 'pt-BR')
                 );
 
+                // Inicializar estados como neutro
+                uniqueArtists.forEach(a => { artistStates[a] = 'neutral'; });
+
                 renderStylePills();
                 renderArtistList(uniqueArtists);
                 applyFilters();
@@ -671,7 +676,7 @@
             }
         }
 
-        // --- RENDERIZAR PILLS DE ESTILO DINAMICAMENTE ---
+        // --- RENDERIZAR PILLS DE ESTILO ---
         function renderStylePills() {
             const tagSet = new Set();
             allSongs.forEach(song => {
@@ -695,29 +700,40 @@
             ).join('');
         }
 
-        // --- RENDERIZAR LISTA DE ARTISTAS ---
+        // --- RENDERIZAR LISTA DE ARTISTAS (com toggles 3 estados) ---
         function renderArtistList(artists) {
             if (artists.length === 0) {
                 artistList.innerHTML = '<div class="artist-placeholder">Nenhum artista encontrado.</div>';
                 return;
             }
-            artistList.innerHTML = artists.map(artist =>
-                '<div class="artist-item">' +
-                    '<span class="artist-name">' + escapeHtml(artist) + '</span>' +
-                '</div>'
-            ).join('');
+            artistList.innerHTML = artists.map(artist => {
+                const state = artistStates[artist] || 'neutral';
+                const favClass = state === 'favorite' ? ' active-fav' : '';
+                const vetoClass = state === 'vetoed' ? ' active-veto' : '';
+                return (
+                    '<div class="artist-item">' +
+                        '<span class="artist-name">' + escapeHtml(artist) + '</span>' +
+                        '<div class="artist-toggles">' +
+                            '<button class="artist-toggle' + favClass + '" ' +
+                                'data-artist="' + escapeHtml(artist) + '" data-action="favorite" ' +
+                                'title="Favoritar — sempre inclui">✅</button>' +
+                            '<button class="artist-toggle' + vetoClass + '" ' +
+                                'data-artist="' + escapeHtml(artist) + '" data-action="veto" ' +
+                                'title="Vetar — sempre exclui">🚫</button>' +
+                        '</div>' +
+                    '</div>'
+                );
+            }).join('');
         }
 
-        // --- VERIFICAR SE MÚSICA CORRESPONDE AOS ESTILOS SELECIONADOS ---
+        // --- VERIFICAR SE MÚSICA CORRESPONDE AOS ESTILOS ---
         function songMatchesStyles(song, selectedTags) {
             if (selectedTags.length === 0) return true;
-
             const estilos = Array.isArray(song.estilo)
                 ? song.estilo
                 : (typeof song.estilo === 'string'
                     ? song.estilo.split(',').map(s => s.trim())
                     : []);
-
             return selectedTags.some(tag => estilos.includes(tag));
         }
 
@@ -725,26 +741,32 @@
         function applyFilters() {
             const searchTerm = searchInput.value.toLowerCase().trim();
 
-            // Obter estilos selecionados (checkboxes ativos)
             const selectedStyles = Array.from(
                 document.querySelectorAll('#styleFilters input[type="checkbox"]:checked')
             ).map(cb => cb.value);
 
             filteredSongs = allSongs.filter(song => {
-                // Busca livre: música OU artista
+                const artistState = artistStates[song.artista] || 'neutral';
+
+                // VETO: artista vetado → exclui incondicionalmente
+                if (artistState === 'vetoed') return false;
+
+                // FAVORITO: bypassa filtro de estilo (mas NÃO bypassa busca)
+                if (artistState !== 'favorite') {
+                    if (!songMatchesStyles(song, selectedStyles)) return false;
+                }
+
+                // Busca livre: aplica a TODOS (inclusive favoritos)
                 if (searchTerm) {
                     const inSong = song.musica.toLowerCase().includes(searchTerm);
                     const inArtist = song.artista.toLowerCase().includes(searchTerm);
                     if (!inSong && !inArtist) return false;
                 }
 
-                // Filtro por estilo (inclusão — OR entre selecionados)
-                if (!songMatchesStyles(song, selectedStyles)) return false;
-
                 return true;
             });
 
-            // Ordenar: artista A→Z, depois música A→Z dentro de cada artista
+            // Ordenar: artista A→Z, depois música A→Z
             filteredSongs.sort((a, b) => {
                 const artistCmp = a.artista.localeCompare(b.artista, 'pt-BR');
                 if (artistCmp !== 0) return artistCmp;
@@ -777,12 +799,36 @@
                     '<span class="result-tag">' + escapeHtml(e) + '</span>'
                 ).join('');
 
+                // Estado individual da música
+                const key = song.artista + '|' + song.musica;
+                const songState = songStates[key] || 'neutral';
+                const prefClass = songState === 'pref' ? ' active-pref' : '';
+                const avoidClass = songState === 'avoid' ? ' active-avoid' : '';
+
+                // Estilo visual do card conforme estado
+                let cardStyle = '';
+                if (songState === 'pref') {
+                    cardStyle = ' style="border-color: var(--green);"';
+                } else if (songState === 'avoid') {
+                    cardStyle = ' style="opacity: 0.35; border-color: var(--red);"';
+                }
+
                 return (
-                    '<div class="result-card">' +
+                    '<div class="result-card"' + cardStyle + '>' +
                         '<div class="result-info">' +
                             '<div class="result-song">' + escapeHtml(song.musica) + '</div>' +
                             '<div class="result-artist">' + escapeHtml(song.artista) + '</div>' +
                             '<div class="result-tags">' + tags + '</div>' +
+                        '</div>' +
+                        '<div class="song-signals">' +
+                            '<button class="song-signal' + prefClass + '" ' +
+                                'data-artist="' + escapeHtml(song.artista) + '" ' +
+                                'data-song="' + escapeHtml(song.musica) + '" data-action="pref" ' +
+                                'title="Preferir">✅</button>' +
+                            '<button class="song-signal' + avoidClass + '" ' +
+                                'data-artist="' + escapeHtml(song.artista) + '" ' +
+                                'data-song="' + escapeHtml(song.musica) + '" data-action="avoid" ' +
+                                'title="Evitar">🚫</button>' +
                         '</div>' +
                     '</div>'
                 );
@@ -810,7 +856,7 @@
             }
         }
 
-        // --- ESCAPE HTML (segurança) ---
+        // --- ESCAPE HTML ---
         function escapeHtml(text) {
             if (!text) return '';
             return String(text)
@@ -830,7 +876,7 @@
             searchDebounce = setTimeout(applyFilters, 300);
         });
 
-        // Filtro por estilo (delegação — funciona com pills dinâmicas)
+        // Filtro por estilo (delegação — pills dinâmicas)
         document.getElementById('styleFilters').addEventListener('change', applyFilters);
 
         // Busca dentro da lista de artistas
@@ -842,12 +888,58 @@
             renderArtistList(filtered);
         });
 
+        // Toggles de artista (3 estados) — delegação
+        artistList.addEventListener('click', (e) => {
+            const btn = e.target.closest('.artist-toggle');
+            if (!btn) return;
+
+            const artist = btn.dataset.artist;
+            const action = btn.dataset.action;
+
+            if (action === 'favorite') {
+                artistStates[artist] = artistStates[artist] === 'favorite' ? 'neutral' : 'favorite';
+            } else if (action === 'veto') {
+                artistStates[artist] = artistStates[artist] === 'vetoed' ? 'neutral' : 'vetoed';
+            }
+
+            // Re-renderizar lista para atualizar botões
+            const term = artistSearch.value.toLowerCase().trim();
+            const currentList = uniqueArtists.filter(a =>
+                a.toLowerCase().includes(term)
+            );
+            renderArtistList(currentList);
+
+            applyFilters();
+        });
+
+        // Sinalização individual de músicas — delegação
+        results.addEventListener('click', (e) => {
+            const btn = e.target.closest('.song-signal');
+            if (!btn) return;
+
+            const artist = btn.dataset.artist;
+            const songName = btn.dataset.song;
+            const action = btn.dataset.action;
+            const key = artist + '|' + songName;
+
+            if (action === 'pref') {
+                songStates[key] = songStates[key] === 'pref' ? 'neutral' : 'pref';
+            } else if (action === 'avoid') {
+                songStates[key] = songStates[key] === 'avoid' ? 'neutral' : 'avoid';
+            }
+
+            // Só re-renderiza visual (preserva displayLimit)
+            renderResults();
+        });
+
         // Limpar filtros
         clearFiltersBtn.addEventListener('click', () => {
             searchInput.value = '';
             artistSearch.value = '';
             document.querySelectorAll('#styleFilters input[type="checkbox"]')
                 .forEach(cb => cb.checked = false);
+            uniqueArtists.forEach(a => { artistStates[a] = 'neutral'; });
+            songStates = {};
             renderArtistList(uniqueArtists);
             applyFilters();
         });
@@ -856,7 +948,6 @@
         document.addEventListener('DOMContentLoaded', loadRepertorio);
 
         // ============================================
-        // FASE 5: Filtro por artista (3 estados) + sinalização — a implementar
         // FASE 6: Geração de PDF — a implementar
         // ============================================
     </script>
