@@ -1335,6 +1335,34 @@
                 scroll-behavior: auto !important;
             }
         }
+
+        /* === Botão para página de repertório interativo === */
+        .repertoire-link {
+            display: flex;
+            justify-content: center;
+            margin: 2rem 0;
+        }
+
+        .repertoire-link a {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 28px;
+            border: 1.5px solid #d4a853;
+            border-radius: 50px;
+            color: #d4a853;
+            text-decoration: none;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        .repertoire-link a:hover {
+            background: #d4a853;
+            color: #0f0f0f;
+        }
+
     </style>
 </head>
 <body>
@@ -1519,6 +1547,9 @@
                     <div id="repResults" class="rep-results"></div>
                 </div>
                 </div>
+    		<div class="repertoire-link">
+   		     <a href="repertorio.html">Personalize sua experiência →</a>
+  	        </div>
                 <div class="cta-box">
                     <h3>Quer esse repertório no seu evento?</h3>
                     <a href="#contato" class="btn btn-primary">Contratar Show</a>
