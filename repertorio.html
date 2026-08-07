@@ -626,7 +626,7 @@
     <!-- ===== JAVASCRIPT (Fases 3-6) ===== -->
     <script>
         // ============================================
-        // FASE 3+4+5: JSON + Busca + Estilo + Artista (3 estados) + Sinalização
+        // FASE 3+4+5+6: JSON + Busca + Estilo + Artista + Sinalização + PDF
         // ============================================
 
         // --- ESTADO GLOBAL ---
@@ -634,8 +634,8 @@
         let filteredSongs = [];
         let uniqueArtists = [];
         let displayLimit = 100;
-        let artistStates = {};  // { 'Artista': 'neutral' | 'favorite' | 'vetoed' }
-        let songStates = {};    // { 'Artista|Música': 'neutral' | 'pref' | 'avoid' }
+        let artistStates = {};
+        let songStates = {};
 
         // --- ELEMENTOS DOM ---
         const searchInput = document.getElementById('searchInput');
@@ -645,6 +645,7 @@
         const clearFiltersBtn = document.getElementById('clearFilters');
         const counter = document.getElementById('counter');
         const results = document.getElementById('results');
+        const downloadBtn = document.getElementById('downloadBtn');
 
         // --- CARREGAR REPERTÓRIO ---
         async function loadRepertorio() {
@@ -657,13 +658,11 @@
 
                 allSongs = await response.json();
 
-                // Extrair artistas únicos (A→Z)
                 const artistSet = new Set(allSongs.map(s => s.artista));
                 uniqueArtists = [...artistSet].sort((a, b) =>
                     a.localeCompare(b, 'pt-BR')
                 );
 
-                // Inicializar estados como neutro
                 uniqueArtists.forEach(a => { artistStates[a] = 'neutral'; });
 
                 renderStylePills();
@@ -700,7 +699,7 @@
             ).join('');
         }
 
-        // --- RENDERIZAR LISTA DE ARTISTAS (com toggles 3 estados) ---
+        // --- RENDERIZAR LISTA DE ARTISTAS (3 estados) ---
         function renderArtistList(artists) {
             if (artists.length === 0) {
                 artistList.innerHTML = '<div class="artist-placeholder">Nenhum artista encontrado.</div>';
@@ -748,15 +747,15 @@
             filteredSongs = allSongs.filter(song => {
                 const artistState = artistStates[song.artista] || 'neutral';
 
-                // VETO: artista vetado → exclui incondicionalmente
+                // VETO: exclui incondicionalmente
                 if (artistState === 'vetoed') return false;
 
-                // FAVORITO: bypassa filtro de estilo (mas NÃO bypassa busca)
+                // FAVORITO: bypassa filtro de estilo (mas não busca)
                 if (artistState !== 'favorite') {
                     if (!songMatchesStyles(song, selectedStyles)) return false;
                 }
 
-                // Busca livre: aplica a TODOS (inclusive favoritos)
+                // Busca livre: aplica a TODOS
                 if (searchTerm) {
                     const inSong = song.musica.toLowerCase().includes(searchTerm);
                     const inArtist = song.artista.toLowerCase().includes(searchTerm);
@@ -766,7 +765,6 @@
                 return true;
             });
 
-            // Ordenar: artista A→Z, depois música A→Z
             filteredSongs.sort((a, b) => {
                 const artistCmp = a.artista.localeCompare(b.artista, 'pt-BR');
                 if (artistCmp !== 0) return artistCmp;
@@ -782,10 +780,12 @@
             if (filteredSongs.length === 0) {
                 results.innerHTML = '<div class="results-empty">Nenhuma música encontrada.</div>';
                 counter.textContent = '0 de ' + allSongs.length + ' músicas';
+                downloadBtn.disabled = true;
                 return;
             }
 
             counter.textContent = filteredSongs.length + ' de ' + allSongs.length + ' músicas';
+            downloadBtn.disabled = false;
 
             const visible = filteredSongs.slice(0, displayLimit);
             let html = visible.map(song => {
@@ -799,13 +799,11 @@
                     '<span class="result-tag">' + escapeHtml(e) + '</span>'
                 ).join('');
 
-                // Estado individual da música
                 const key = song.artista + '|' + song.musica;
                 const songState = songStates[key] || 'neutral';
                 const prefClass = songState === 'pref' ? ' active-pref' : '';
                 const avoidClass = songState === 'avoid' ? ' active-avoid' : '';
 
-                // Estilo visual do card conforme estado
                 let cardStyle = '';
                 if (songState === 'pref') {
                     cardStyle = ' style="border-color: var(--green);"';
@@ -834,7 +832,6 @@
                 );
             }).join('');
 
-            // Botão "Mostrar mais"
             if (filteredSongs.length > displayLimit) {
                 const remaining = filteredSongs.length - displayLimit;
                 html += (
@@ -854,6 +851,127 @@
                     renderResults();
                 });
             }
+        }
+
+        // ============================================
+        // FASE 6: GERAÇÃO DE PDF (window.print + CSS dedicado)
+        // ============================================
+
+        function generatePDF() {
+            // 1. Excluir músicas marcadas como "avoid"
+            const pdfSongs = filteredSongs.filter(song => {
+                const key = song.artista + '|' + song.musica;
+                return songStates[key] !== 'avoid';
+            });
+
+            if (pdfSongs.length === 0) {
+                alert('Não há músicas para incluir no PDF. Ajuste seus filtros.');
+                return;
+            }
+
+            // 2. Ordenar: artista A→Z, música A→Z
+            const sorted = [...pdfSongs].sort((a, b) => {
+                const artistCmp = a.artista.localeCompare(b.artista, 'pt-BR');
+                if (artistCmp !== 0) return artistCmp;
+                return a.musica.localeCompare(b.musica, 'pt-BR');
+            });
+
+            // 3. Agrupar por primeira letra do artista (normalizada)
+            const letterGroups = {};
+            sorted.forEach(song => {
+                let firstChar = song.artista.charAt(0).toUpperCase();
+                const normalized = firstChar.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+                let letter = /[A-Z]/.test(normalized) ? normalized : '#';
+                if (!letterGroups[letter]) letterGroups[letter] = [];
+                letterGroups[letter].push(song);
+            });
+
+            // 4. Construir HTML do corpo (agrupado por letra → artista → músicas)
+            let bodyHtml = '';
+            Object.keys(letterGroups).sort().forEach(letter => {
+                const songs = letterGroups[letter];
+
+                // Agrupar por artista dentro da letra
+                const artistGroups = {};
+                songs.forEach(song => {
+                    if (!artistGroups[song.artista]) artistGroups[song.artista] = [];
+                    artistGroups[song.artista].push(song);
+                });
+
+                const sortedArtists = Object.keys(artistGroups).sort((a, b) =>
+                    a.localeCompare(b, 'pt-BR')
+                );
+
+                bodyHtml += '<div class="letter-group">';
+                bodyHtml += '<span class="watermark">' + escapeHtml(letter) + '</span>';
+
+                sortedArtists.forEach(artist => {
+                    bodyHtml += '<div class="artist-block">';
+                    bodyHtml += '<div class="artist-name">' + escapeHtml(artist) + '</div>';
+
+                    const artistSongs = artistGroups[artist].sort((a, b) =>
+                        a.musica.localeCompare(b.musica, 'pt-BR')
+                    );
+
+                    artistSongs.forEach(song => {
+                        bodyHtml += '<div class="song-line">— ' + escapeHtml(song.musica) + '</div>';
+                    });
+
+                    bodyHtml += '</div>';
+                });
+
+                bodyHtml += '<div style="clear:both;"></div>';
+                bodyHtml += '</div>';
+            });
+
+            // 5. Construir documento HTML completo para impressão
+            const printHtml =
+                '<!DOCTYPE html>' +
+                '<html lang="pt-BR">' +
+                '<head>' +
+                    '<meta charset="UTF-8">' +
+                    '<title>Repertório — BullaAcoustic</title>' +
+                    '<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">' +
+                    '<style>' +
+                        '@page { margin: 1.5cm 1.5cm 2cm 1.5cm; }' +
+                        'body { font-family: "Inter", sans-serif; color: #333; line-height: 1.15; margin: 0; padding: 0; }' +
+                        '.header { text-align: center; margin-bottom: 1.2rem; border-bottom: 1px solid #d4a853; padding-bottom: 0.5rem; }' +
+                        '.header h1 { font-family: "Playfair Display", serif; font-size: 22pt; color: #d4a853; margin: 0; font-weight: 700; }' +
+                        '.header .subtitle { font-family: "Inter", sans-serif; font-size: 10pt; color: #555555; margin-top: 3px; }' +
+                        '.content { column-count: 2; column-gap: 25px; }' +
+                        '.letter-group { margin-bottom: 6px; }' +
+                        '.watermark { float: left; font-family: "Playfair Display", serif; font-size: 42pt; font-weight: bold; color: #f0e8d5; line-height: 1; margin: -5px 8px -15px 0; }' +
+                        '.artist-block { margin-bottom: 4px; break-inside: avoid; }' +
+                        '.artist-name { font-weight: bold; font-size: 10.5pt; color: #333; }' +
+                        '.song-line { font-size: 9.5pt; color: #444; line-height: 1.15; padding-left: 2px; }' +
+                        '.footer { position: fixed; bottom: 0; left: 0; right: 0; text-align: center; font-size: 7.5pt; color: #999; padding: 5px 0; border-top: 1px solid #eee; }' +
+                    '</style>' +
+                '</head>' +
+                '<body>' +
+                    '<div class="header">' +
+                        '<h1>REPERTÓRIO</h1>' +
+                        '<div class="subtitle">BullaAcoustic · Guilherme Bulla — Voz &amp; Violão</div>' +
+                    '</div>' +
+                    '<div class="content">' +
+                        bodyHtml +
+                    '</div>' +
+                    '<div class="footer">BullaAcoustic · guilhermebulla.github.io · WhatsApp (51) 98444.0402 · @guilhermebulla</div>' +
+                    '<script>' +
+                        'window.onload = function() {' +
+                            'setTimeout(function() { window.print(); }, 600);' +
+                        '};' +
+                    '<\/script>' +
+                '</body>' +
+                '</html>';
+
+            // 6. Abrir janela e imprimir
+            const printWindow = window.open('', '_blank');
+            if (!printWindow) {
+                alert('Permita pop-ups para baixar o PDF.');
+                return;
+            }
+            printWindow.document.write(printHtml);
+            printWindow.document.close();
         }
 
         // --- ESCAPE HTML ---
@@ -876,7 +994,7 @@
             searchDebounce = setTimeout(applyFilters, 300);
         });
 
-        // Filtro por estilo (delegação — pills dinâmicas)
+        // Filtro por estilo (delegação)
         document.getElementById('styleFilters').addEventListener('change', applyFilters);
 
         // Busca dentro da lista de artistas
@@ -902,7 +1020,6 @@
                 artistStates[artist] = artistStates[artist] === 'vetoed' ? 'neutral' : 'vetoed';
             }
 
-            // Re-renderizar lista para atualizar botões
             const term = artistSearch.value.toLowerCase().trim();
             const currentList = uniqueArtists.filter(a =>
                 a.toLowerCase().includes(term)
@@ -928,9 +1045,11 @@
                 songStates[key] = songStates[key] === 'avoid' ? 'neutral' : 'avoid';
             }
 
-            // Só re-renderiza visual (preserva displayLimit)
             renderResults();
         });
+
+        // Botão de download (PDF)
+        downloadBtn.addEventListener('click', generatePDF);
 
         // Limpar filtros
         clearFiltersBtn.addEventListener('click', () => {
@@ -946,10 +1065,6 @@
 
         // --- INICIALIZAÇÃO ---
         document.addEventListener('DOMContentLoaded', loadRepertorio);
-
-        // ============================================
-        // FASE 6: Geração de PDF — a implementar
-        // ============================================
     </script>
 
 </body>
