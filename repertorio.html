@@ -578,42 +578,7 @@
             <!-- Filtro por estilo (9 categorias) -->
             <span class="filter-label">Estilos</span>
             <div class="style-pills" id="styleFilters">
-                <label class="style-pill">
-                    <input type="checkbox" value="MPB">
-                    <span>MPB</span>
-                </label>
-                <label class="style-pill">
-                    <input type="checkbox" value="Pop/Rock Nacional">
-                    <span>Pop/Rock Nacional</span>
-                </label>
-                <label class="style-pill">
-                    <input type="checkbox" value="Pop/Rock Internacional">
-                    <span>Pop/Rock Internacional</span>
-                </label>
-                <label class="style-pill">
-                    <input type="checkbox" value="Soul/R&B/Reggae">
-                    <span>Soul/R&B/Reggae</span>
-                </label>
-                <label class="style-pill">
-                    <input type="checkbox" value="Rap">
-                    <span>Rap</span>
-                </label>
-                <label class="style-pill">
-                    <input type="checkbox" value="Disco">
-                    <span>Disco</span>
-                </label>
-                <label class="style-pill">
-                    <input type="checkbox" value="Bossa Nova">
-                    <span>Bossa Nova</span>
-                </label>
-                <label class="style-pill">
-                    <input type="checkbox" value="Forró">
-                    <span>Forró</span>
-                </label>
-                <label class="style-pill">
-                    <input type="checkbox" value="Punk">
-                    <span>Punk</span>
-                </label>
+                <!-- Pills geradas dinamicamente via JS a partir das tags do JSON -->
             </div>
 
             <!-- Filtro por artista (3 estados) -->
@@ -661,7 +626,7 @@
     <!-- ===== JAVASCRIPT (Fases 3-6) ===== -->
     <script>
         // ============================================
-        // FASE 3: Carregar JSON + Renderizar + Busca Livre
+        // FASE 3 + 4: Carregar JSON + Renderizar + Busca Livre + Filtro por Estilo
         // ============================================
 
         // --- ESTADO GLOBAL ---
@@ -674,6 +639,7 @@
         const searchInput = document.getElementById('searchInput');
         const artistSearch = document.getElementById('artistSearch');
         const artistList = document.getElementById('artistList');
+        const styleFilters = document.getElementById('styleFilters');
         const clearFiltersBtn = document.getElementById('clearFilters');
         const counter = document.getElementById('counter');
         const results = document.getElementById('results');
@@ -695,6 +661,7 @@
                     a.localeCompare(b, 'pt-BR')
                 );
 
+                renderStylePills();
                 renderArtistList(uniqueArtists);
                 applyFilters();
 
@@ -702,6 +669,30 @@
                 counter.textContent = 'Erro ao carregar o repertório. Verifique se o arquivo JSON está no servidor.';
                 console.error('Erro:', error);
             }
+        }
+
+        // --- RENDERIZAR PILLS DE ESTILO DINAMICAMENTE ---
+        function renderStylePills() {
+            const tagSet = new Set();
+            allSongs.forEach(song => {
+                const estilos = Array.isArray(song.estilo)
+                    ? song.estilo
+                    : (typeof song.estilo === 'string'
+                        ? song.estilo.split(',').map(s => s.trim())
+                        : []);
+                estilos.forEach(e => tagSet.add(e));
+            });
+
+            const sortedTags = [...tagSet].sort((a, b) =>
+                a.localeCompare(b, 'pt-BR')
+            );
+
+            styleFilters.innerHTML = sortedTags.map(tag =>
+                '<label class="style-pill">' +
+                    '<input type="checkbox" value="' + escapeHtml(tag) + '">' +
+                    '<span>' + escapeHtml(tag) + '</span>' +
+                '</label>'
+            ).join('');
         }
 
         // --- RENDERIZAR LISTA DE ARTISTAS ---
@@ -717,9 +708,27 @@
             ).join('');
         }
 
+        // --- VERIFICAR SE MÚSICA CORRESPONDE AOS ESTILOS SELECIONADOS ---
+        function songMatchesStyles(song, selectedTags) {
+            if (selectedTags.length === 0) return true;
+
+            const estilos = Array.isArray(song.estilo)
+                ? song.estilo
+                : (typeof song.estilo === 'string'
+                    ? song.estilo.split(',').map(s => s.trim())
+                    : []);
+
+            return selectedTags.some(tag => estilos.includes(tag));
+        }
+
         // --- APLICAR FILTROS ---
         function applyFilters() {
             const searchTerm = searchInput.value.toLowerCase().trim();
+
+            // Obter estilos selecionados (checkboxes ativos)
+            const selectedStyles = Array.from(
+                document.querySelectorAll('#styleFilters input[type="checkbox"]:checked')
+            ).map(cb => cb.value);
 
             filteredSongs = allSongs.filter(song => {
                 // Busca livre: música OU artista
@@ -728,6 +737,10 @@
                     const inArtist = song.artista.toLowerCase().includes(searchTerm);
                     if (!inSong && !inArtist) return false;
                 }
+
+                // Filtro por estilo (inclusão — OR entre selecionados)
+                if (!songMatchesStyles(song, selectedStyles)) return false;
+
                 return true;
             });
 
@@ -754,7 +767,6 @@
 
             const visible = filteredSongs.slice(0, displayLimit);
             let html = visible.map(song => {
-                // Normalizar estilo (array ou string separada por vírgula)
                 const estilos = Array.isArray(song.estilo)
                     ? song.estilo
                     : (typeof song.estilo === 'string'
@@ -776,7 +788,7 @@
                 );
             }).join('');
 
-            // Botão "Mostrar mais" (criado via JS, sem mexer no HTML)
+            // Botão "Mostrar mais"
             if (filteredSongs.length > displayLimit) {
                 const remaining = filteredSongs.length - displayLimit;
                 html += (
@@ -818,6 +830,9 @@
             searchDebounce = setTimeout(applyFilters, 300);
         });
 
+        // Filtro por estilo (delegação — funciona com pills dinâmicas)
+        document.getElementById('styleFilters').addEventListener('change', applyFilters);
+
         // Busca dentro da lista de artistas
         artistSearch.addEventListener('input', () => {
             const term = artistSearch.value.toLowerCase().trim();
@@ -841,7 +856,6 @@
         document.addEventListener('DOMContentLoaded', loadRepertorio);
 
         // ============================================
-        // FASE 4: Filtro por estilo (checkboxes) — a implementar
         // FASE 5: Filtro por artista (3 estados) + sinalização — a implementar
         // FASE 6: Geração de PDF — a implementar
         // ============================================
