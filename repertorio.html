@@ -38,16 +38,14 @@
             position: sticky;
             top: 0;
             z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem 2rem;
             background: rgba(15, 15, 15, 0.72);
             backdrop-filter: blur(14px);
             -webkit-backdrop-filter: blur(14px);
             border-bottom: 1px solid var(--border);
-        }
-        .rep-header .container {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            height: 72px;
         }
         .rep-back {
             display: inline-flex;
@@ -85,7 +83,32 @@
             margin: 0 auto;
             padding: 2rem 1.5rem 4rem;
         }
-        /* section-title e section-subtitle vêm do base.css */
+        .rep-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2rem, 5vw, 2.75rem);
+            font-weight: 700;
+            color: var(--gold);
+            text-align: center;
+            margin-bottom: 0.5rem;
+            position: relative;
+            padding-bottom: 1.25rem;
+        }
+        .rep-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--gold), transparent);
+        }
+        .rep-subtitle {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
         .section-divider-top {
             border: none;
             height: 40px;
@@ -491,6 +514,26 @@
             margin: 0 auto 1.5rem;
         }
         /* .btn e .btn-primary vêm do base.css — só override de disabled */
+        .btn-download {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 32px;
+            background: var(--gold);
+            color: var(--bg);
+            border: none;
+            border-radius: 50px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 500;
+            cursor: pointer;
+            box-shadow: 0 4px 24px rgba(212, 168, 83, 0.25);
+            transition: all var(--transition);
+        }
+        .btn-download:hover {
+            background: var(--gold-hover);
+            transform: translateY(-1px);
+        }
         .btn-download:disabled {
             opacity: 0.5;
             cursor: not-allowed;
@@ -503,11 +546,21 @@
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            padding: 14px 28px;
+            padding: 12px 24px;
             background: var(--gold);
-            color: #0f0f0f;
+            color: var(--bg);
             border: none;
-            border-radius: 100px;
+            border-radius: 50px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+            z-index: 90;
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(20px);
+            transition: all 0.3s ease;
         }
         .sticky-download.visible {
             opacity: 1;
@@ -522,7 +575,10 @@
             opacity: 0;
             pointer-events: none;
         }
-        /* footer, .footer-content, .footer-social, .footer-nav, .footer-legal vêm do base.css */
+        /* footer (elemento) vem do base.css — complemento para rep-footer */
+        .rep-footer {
+            text-align: center;
+        }
         /* ===== SEARCH MODE — SEÇÕES SPLIT ===== */
         .search-sections { display: flex; flex-direction: column; gap: 2rem; }
         .search-section-header {
