@@ -19,19 +19,21 @@
             padding: 0;
             box-sizing: border-box;
         }
-        /* === NOVO: scroll-padding-top (igual index debug-12) === */
+        /* ===== BASE (alinhado com base.css) ===== */
         html {
+            scroll-behavior: smooth;
             scroll-padding-top: 80px;
         }
-        /* ===== VARIÁVEIS ===== */
+        /* ===== VARIÁVEIS (alinhadas com base.css) ===== */
         :root {
             --bg: #0f0f0f;
-            --bg-alt: #1a1a1a;
-            --bg-elevated: #222222;
+            --bg-card: #1a1a1a;
+            --bg-elevated: #171717;
             --gold: #d4a853;
-            --gold-light: #f0e8d5;
+            --gold-hover: #b88d3e;
+            --gold-soft: rgba(212, 168, 83, 0.12);
             --text: #f5f5f5;
-            --text-muted: #888888;
+            --text-muted: #a3a3a3;
             --text-dim: #666666;
             --border: #2a2a2a;
             --border-light: #3a3a3a;
@@ -43,13 +45,13 @@
             --radius-sm: 8px;
             --transition: 0.25s ease;
         }
-        /* ===== BASE ===== */
         body {
             background: var(--bg);
             color: var(--text);
             font-family: 'Inter', sans-serif;
             line-height: 1.6;
             min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
         }
         a {
             color: var(--gold);
@@ -57,19 +59,26 @@
             transition: color var(--transition);
         }
         a:hover {
-            color: var(--gold-light);
+            color: var(--gold-hover);
         }
-        /* === NOVO: Skip-link (acessibilidade) === */
+        a:focus-visible,
+        button:focus-visible,
+        input:focus-visible {
+            outline: 2px solid var(--gold);
+            outline-offset: 2px;
+            border-radius: 4px;
+        }
+        /* ===== SKIP-LINK (alinhado com base.css) ===== */
         .skip-link {
             position: absolute;
-            top: -40px;
+            top: -100px;
             left: 0;
             background: var(--gold);
-            color: var(--bg);
-            padding: 8px 16px;
-            font-size: 0.85rem;
-            font-weight: 500;
-            z-index: 1000;
+            color: #0f0f0f;
+            padding: 12px 24px;
+            border-radius: 0 0 8px 0;
+            font-weight: 600;
+            z-index: 1100;
             transition: top 0.2s ease;
         }
         .skip-link:focus {
@@ -101,16 +110,20 @@
         }
         .rep-logo {
             font-family: 'Playfair Display', serif;
-            font-size: 1.1rem;
+            font-size: 1.5rem;
             font-weight: 700;
             color: var(--gold);
-            letter-spacing: 0.5px;
+            letter-spacing: -0.5px;
+        }
+        .rep-logo span {
+            color: var(--text);
+            font-weight: 400;
         }
         .rep-counter-badge {
             font-family: 'Inter', sans-serif;
             font-size: 0.8rem;
             color: var(--text-muted);
-            background: var(--bg-alt);
+            background: var(--bg-card);
             padding: 4px 14px;
             border-radius: 50px;
             border: 1px solid var(--border);
@@ -124,12 +137,11 @@
         }
         .rep-title {
             font-family: 'Playfair Display', serif;
-            font-size: 2.5rem;
+            font-size: clamp(2rem, 5vw, 2.75rem);
             font-weight: 700;
             color: var(--gold);
             text-align: center;
             margin-bottom: 0.5rem;
-            /* === NOVO: gradient separator line (igual index debug-12) === */
             position: relative;
             padding-bottom: 1.25rem;
         }
@@ -151,7 +163,7 @@
         }
         /* ===== PAINEL DE FILTROS ===== */
         .filter-panel {
-            background: var(--bg-alt);
+            background: var(--bg-card);
             border: 1px solid var(--border);
             border-radius: var(--radius);
             padding: 1.5rem;
@@ -347,7 +359,7 @@
             display: flex;
             align-items: flex-start;
             justify-content: space-between;
-            background: var(--bg-alt);
+            background: var(--bg-card);
             border: 1px solid var(--border);
             border-radius: var(--radius-sm);
             padding: 12px 16px;
@@ -426,7 +438,7 @@
         .download-section {
             margin-top: 3rem;
             padding: 2rem;
-            background: var(--bg-alt);
+            background: var(--bg-card);
             border: 1px solid var(--border);
             border-radius: var(--radius);
             text-align: center;
@@ -438,8 +450,7 @@
             max-width: 600px;
             margin: 0 auto 1.5rem;
         }
-        /* === ALTERADO: .btn-download → .btn-primary (padronização com index) === */
-        .btn-primary {
+        .btn-download {
             display: inline-flex;
             align-items: center;
             gap: 8px;
@@ -452,18 +463,18 @@
             font-size: 0.95rem;
             font-weight: 500;
             cursor: pointer;
+            box-shadow: 0 4px 24px rgba(212, 168, 83, 0.25);
             transition: all var(--transition);
         }
-        .btn-primary:hover {
-            background: var(--gold-light);
+        .btn-download:hover {
+            background: var(--gold-hover);
             transform: translateY(-1px);
         }
-        .btn-primary:disabled {
+        .btn-download:disabled {
             opacity: 0.5;
             cursor: not-allowed;
             transform: none;
         }
-        /* === NOVO: Sticky download flutuante === */
         .sticky-download {
             position: fixed;
             bottom: 20px;
@@ -493,44 +504,62 @@
             transform: translateY(0);
         }
         .sticky-download:hover {
-            background: var(--gold-light);
+            background: var(--gold-hover);
             transform: translateY(-2px);
         }
         .sticky-download:disabled {
             opacity: 0;
             pointer-events: none;
         }
-        /* ===== FOOTER ===== */
+        /* ===== FOOTER (alinhado com base.css) ===== */
         .rep-footer {
+            background: #0a0a0a;
             border-top: 1px solid var(--border);
-            padding: 2rem;
+            padding: 48px 0 32px;
             text-align: center;
         }
         .footer-social {
             display: flex;
             justify-content: center;
-            gap: 1.5rem;
-            margin-bottom: 1rem;
+            gap: 20px;
+            margin-bottom: 8px;
         }
         .footer-social a {
-            display: inline-flex;
+            display: flex;
             align-items: center;
-            justify-content: center;
-            width: 36px;
-            height: 36px;
-            border: 1px solid var(--border);
-            border-radius: 50%;
             color: var(--text-muted);
-            transition: all var(--transition);
+            transition: color var(--transition);
         }
         .footer-social a:hover {
-            border-color: var(--gold);
             color: var(--gold);
         }
-        .rep-footer p {
-            font-size: 0.75rem;
-            color: var(--text-dim);
-            margin-top: 0.3rem;
+        .footer-social svg {
+            width: 22px;
+            height: 22px;
+        }
+        .footer-nav {
+            display: flex;
+            gap: 28px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 24px;
+        }
+        .footer-nav a {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            transition: color var(--transition);
+        }
+        .footer-nav a:hover {
+            color: var(--gold);
+        }
+        .footer-legal {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            opacity: 0.7;
+        }
+        .footer-legal p {
+            margin-bottom: 6px;
         }
         /* ===== RESPONSIVO ===== */
         @media (max-width: 768px) {
@@ -539,9 +568,6 @@
             }
             .rep-main {
                 padding: 1.5rem 1rem 3rem;
-            }
-            .rep-title {
-                font-size: 1.75rem;
             }
             .filter-panel {
                 padding: 1rem;
@@ -569,7 +595,7 @@
             .rep-header, .filter-panel, .download-section,
             .rep-footer, .song-signals, .sticky-download, .skip-link { display: none; }
         }
-        /* === NOVO: prefers-reduced-motion (igual index debug-12) === */
+        /* ===== REDUCED MOTION ===== */
         @media (prefers-reduced-motion: reduce) {
             *, *::before, *::after {
                 animation-duration: 0.01ms !important;
@@ -581,22 +607,19 @@
     </style>
 </head>
 <body>
-    <!-- === NOVO: Skip-link (acessibilidade) === -->
     <a href="#rep-main" class="skip-link">Pular para conteúdo</a>
-    <!-- ===== HEADER ===== -->
     <header class="rep-header">
         <a href="index.html" class="rep-back">← Voltar</a>
-        <span class="rep-logo">BullaAcoustic</span>
+        <span class="rep-logo">Bulla<span>Acoustic</span></span>
         <span class="rep-counter-badge" id="counter">Carregando...</span>
     </header>
-    <!-- ===== MAIN ===== -->
     <main class="rep-main" id="rep-main">
         <h1 class="rep-title">Repertório</h1>
         <p class="rep-subtitle">Explore mais de 1.200 músicas e baixe sua seleção em PDF</p>
-        <!-- ===== PAINEL DE FILTROS ===== -->
         <div class="filter-panel">
             <span class="filter-label">Estilos</span>
-            <div class="style-pills" id="styleFilters"></div>
+            <div class="style-pills" id="styleFilters">
+            </div>
             <div class="search-box">
                 <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <circle cx="11" cy="11" r="8"></circle>
@@ -616,21 +639,18 @@
             </div>
             <button class="clear-filters" id="clearFilters">Limpar filtros</button>
         </div>
-        <!-- ===== ÁREA DE RESULTADOS ===== -->
         <div class="results-grid" id="results">
             <div class="results-empty">
                 O repertório será exibido aqui após o carregamento.
             </div>
         </div>
-        <!-- ===== SEÇÃO DE DOWNLOAD ===== -->
         <div class="download-section">
             <p class="disclaimer">
                 O repertório filtrado reflete suas seleções. A curadoria final do setlist considera a ocasião, o público e a viabilidade artística — converse com o artista sobre suas preferências.
             </p>
-            <button class="btn-primary" id="downloadBtn" disabled>Baixar seleção em PDF</button>
+            <button class="btn-download" id="downloadBtn" disabled>Baixar seleção em PDF</button>
         </div>
     </main>
-    <!-- ===== FOOTER (com social links) ===== -->
     <footer class="rep-footer">
         <div class="footer-social">
             <a href="https://instagram.com/guilhermebulla" target="_blank" rel="noopener" aria-label="Instagram">
@@ -652,27 +672,29 @@
             </a>
             <a href="https://wa.me/5551984440402" target="_blank" rel="noopener" aria-label="WhatsApp">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.608.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"></path>
+                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.885 3.488"></path>
                 </svg>
             </a>
         </div>
-        <p>BullaAcoustic · guilhermebulla.github.io · WhatsApp (51) 98444.0402 · @guilhermebulla</p>
+        <nav class="footer-nav">
+            <a href="index.html#sobre">Sobre</a>
+            <a href="index.html#performance">Performance</a>
+            <a href="index.html#repertorio">Repertório</a>
+            <a href="index.html#contato">Contato</a>
+        </nav>
+        <div class="footer-legal">
+            <p>© 2026 BullaAcoustic — Guilherme Bulla</p>
+            <p>Cantor e violonista • 28 anos de carreira</p>
+        </div>
     </footer>
-    <!-- === NOVO: Sticky download flutuante === -->
     <button class="sticky-download" id="stickyDownload" disabled>📥 Baixar PDF</button>
-    <!-- ===== JAVASCRIPT (preservado integralmente do debug-1 + adições) ===== -->
     <script>
-        // 
-        // FASE 3+4+5+6: JSON + Busca + Estilo + Artista + Sinalização + PDF
-        // 
-        // --- ESTADO GLOBAL ---
         let allSongs = [];
         let filteredSongs = [];
         let uniqueArtists = [];
         let displayLimit = 100;
         let artistStates = {};
         let songStates = {};
-        // --- ELEMENTOS DOM ---
         const searchInput = document.getElementById('searchInput');
         const artistSearch = document.getElementById('artistSearch');
         const artistList = document.getElementById('artistList');
@@ -682,7 +704,7 @@
         const results = document.getElementById('results');
         const downloadBtn = document.getElementById('downloadBtn');
         const stickyDownload = document.getElementById('stickyDownload');
-        // --- CARREGAR REPERTÓRIO ---
+
         async function loadRepertorio() {
             try {
                 let response = await fetch('repertorio.json');
@@ -704,7 +726,7 @@
                 console.error('Erro:', error);
             }
         }
-        // --- RENDERIZAR PILLS DE ESTILO ---
+
         function renderStylePills() {
             const tagSet = new Set();
             allSongs.forEach(song => {
@@ -725,7 +747,7 @@
                 '</label>'
             ).join('');
         }
-        // --- RENDERIZAR LISTA DE ARTISTAS (3 estados) ---
+
         function renderArtistList(artists) {
             if (artists.length === 0) {
                 artistList.innerHTML = '<div class="artist-placeholder">Nenhum artista encontrado.</div>';
@@ -750,7 +772,7 @@
                 );
             }).join('');
         }
-        // --- VERIFICAR SE MÚSICA CORRESPONDE AOS ESTILOS ---
+
         function songMatchesStyles(song, selectedTags) {
             if (selectedTags.length === 0) return true;
             const estilos = Array.isArray(song.estilo)
@@ -760,7 +782,7 @@
                     : []);
             return selectedTags.some(tag => estilos.includes(tag));
         }
-        // --- APLICAR FILTROS ---
+
         function applyFilters() {
             const searchTerm = searchInput.value.toLowerCase().trim();
             const selectedStyles = Array.from(
@@ -787,7 +809,7 @@
             displayLimit = 100;
             renderResults();
         }
-        // --- RENDERIZAR RESULTADOS ---
+
         function renderResults() {
             if (filteredSongs.length === 0) {
                 results.innerHTML = '<div class="results-empty">Nenhuma música encontrada.</div>';
@@ -857,9 +879,7 @@
                 });
             }
         }
-        // 
-        // FASE 6: GERAÇÃO DE PDF (window.print + CSS dedicado)
-        // 
+
         function generatePDF() {
             const pdfSongs = filteredSongs.filter(song => {
                 const key = song.artista + '|' + song.musica;
@@ -940,11 +960,11 @@
                         bodyHtml +
                     '</div>' +
                     '<div class="footer">BullaAcoustic · guilhermebulla.github.io · WhatsApp (51) 98444.0402 · @guilhermebulla</div>' +
-                    '<script>' +
+                    '<scr' + 'ipt>' +
                         'window.onload = function() {' +
                             'setTimeout(function() { window.print(); }, 600);' +
                         '};' +
-                    '&lt;\/script>' +
+                    '<\/scr' + 'ipt>' +
                 '</body>' +
                 '</html>';
             const printWindow = window.open('', '_blank');
@@ -955,7 +975,7 @@
             printWindow.document.write(printHtml);
             printWindow.document.close();
         }
-        // --- ESCAPE HTML ---
+
         function escapeHtml(text) {
             if (!text) return '';
             return String(text)
@@ -965,7 +985,7 @@
                 .replace(/"/g, '&quot;')
                 .replace(/'/g, '&#039;');
         }
-        // --- EVENT LISTENERS ---
+
         let searchDebounce;
         searchInput.addEventListener('input', () => {
             clearTimeout(searchDebounce);
@@ -1011,7 +1031,6 @@
             renderResults();
         });
         downloadBtn.addEventListener('click', generatePDF);
-        // === NOVO: sticky download também chama generatePDF ===
         stickyDownload.addEventListener('click', generatePDF);
         clearFiltersBtn.addEventListener('click', () => {
             searchInput.value = '';
@@ -1023,8 +1042,6 @@
             renderArtistList(uniqueArtists);
             applyFilters();
         });
-        // === NOVO: IntersectionObserver para mostrar/esconder sticky download ===
-        // Aparece quando o painel de filtros sai da viewport (usuário rolou para os resultados)
         const filterPanel = document.querySelector('.filter-panel');
         if (filterPanel) {
             const observer = new IntersectionObserver((entries) => {
@@ -1038,7 +1055,6 @@
             }, { threshold: 0 });
             observer.observe(filterPanel);
         }
-        // --- INICIALIZAÇÃO ---
         document.addEventListener('DOMContentLoaded', loadRepertorio);
     </script>
 </body>
