@@ -534,6 +534,26 @@
             background: var(--gold-hover);
             transform: translateY(-1px);
         }
+        .btn-download {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 32px;
+            background: var(--gold);
+            color: var(--bg);
+            border: none;
+            border-radius: 50px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 500;
+            cursor: pointer;
+            box-shadow: 0 4px 24px rgba(212, 168, 83, 0.25);
+            transition: all var(--transition);
+        }
+        .btn-download:hover {
+            background: var(--gold-hover);
+            transform: translateY(-1px);
+        }
         .btn-download:disabled {
             opacity: 0.5;
             cursor: not-allowed;
@@ -575,9 +595,12 @@
             opacity: 0;
             pointer-events: none;
         }
-        /* footer (elemento) vem do base.css — complemento para rep-footer */
+        /* footer base vem do base.css — overrides abaixo */
         .rep-footer {
             text-align: center;
+        }
+        .rep-footer .footer-social {
+            justify-content: center;
         }
         /* ===== SEARCH MODE — SEÇÕES SPLIT ===== */
         .search-sections { display: flex; flex-direction: column; gap: 2rem; }
