@@ -1,7 +1,6 @@
 /* ===== REPERTORIO.JS — Lógica da página de repertório ===== */
 /* Separado de repertorio.html em 09/08/2026 */
 /* Dependências: repertorio.html (DOM) + repertorio.json */
-
 let allSongs = [];
 let filteredSongs = [];
 let uniqueArtists = [];
@@ -19,7 +18,6 @@ const results = document.getElementById('results');
 const downloadBtn = document.getElementById('downloadBtn');
 const stickyDownload = document.getElementById('stickyDownload');
 const filterSummary = document.getElementById('filterSummary');
-
 async function loadRepertorio() {
     try {
         const response = await fetch('repertorio.json');
@@ -41,7 +39,6 @@ async function loadRepertorio() {
         console.error('Erro:', error);
     }
 }
-
 function renderStylePills() {
     const tagSet = new Set();
     allSongs.forEach(song => {
@@ -62,7 +59,6 @@ function renderStylePills() {
         '</label>'
     ).join('');
 }
-
 function renderLangPills() {
     const langSet = new Set();
     allSongs.forEach(song => {
@@ -94,7 +90,6 @@ function renderLangPills() {
         '</label>';
     }).join('');
 }
-
 function renderArtistList(artists) {
     if (artists.length === 0) {
         artistList.innerHTML = '<div class="artist-placeholder">Nenhum artista encontrado.</div>';
@@ -119,7 +114,6 @@ function renderArtistList(artists) {
         );
     }).join('');
 }
-
 function songMatchesStyles(song, selectedTags) {
     if (selectedTags.length === 0) return true;
     const estilos = Array.isArray(song.estilo)
@@ -129,7 +123,6 @@ function songMatchesStyles(song, selectedTags) {
             : []);
     return selectedTags.some(tag => estilos.includes(tag));
 }
-
 function songMatchesLangs(song, selectedLangs) {
     if (selectedLangs.length === 0) return true;
     const idiomas = Array.isArray(song.idioma)
@@ -139,7 +132,6 @@ function songMatchesLangs(song, selectedLangs) {
             : []);
     return selectedLangs.some(lang => idiomas.includes(lang));
 }
-
 function applyFilters() {
     const searchTerm = searchInput.value.toLowerCase().trim();
     const selectedStyles = Array.from(
@@ -172,7 +164,6 @@ function applyFilters() {
     updateSectionBadges();
     updateFilterSummary();
 }
-
 function renderResults() {
     if (filteredSongs.length === 0) {
         results.innerHTML = '<div class="results-empty">Nenhuma música encontrada.</div>';
@@ -207,7 +198,9 @@ function renderResults() {
         return (
             '<div class="result-card"' + cardStyle + '>' +
                 '<div class="result-info">' +
-                    '<div class="result-song">' + escapeHtml(song.musica) + '</div>' +
+                    '<div class="result-song">' + escapeHtml(song.musica) +
+                        (song.ano ? ' <span class="result-year">' + escapeHtml(song.ano) + '</span>' : '') +
+                    '</div>' +
                     '<div class="result-artist">' + escapeHtml(song.artista) + '</div>' +
                     '<div class="result-tags">' + tags + '</div>' +
                 '</div>' +
@@ -242,9 +235,7 @@ function renderResults() {
         });
     }
 }
-
 function updateSectionBadges() {
-    // Estilos
     const styleCount = document.querySelectorAll('#styleFilters input[type="checkbox"]:checked').length;
     const styleBadge = document.getElementById('styleBadge');
     const styleSection = document.getElementById('styleSection');
@@ -255,7 +246,6 @@ function updateSectionBadges() {
         styleBadge.textContent = '';
         styleSection.classList.remove('has-filters');
     }
-    // Idiomas
     const langCount = document.querySelectorAll('#langFilters input[type="checkbox"]:checked').length;
     const langBadge = document.getElementById('langBadge');
     const langSection = document.getElementById('langSection');
@@ -266,7 +256,6 @@ function updateSectionBadges() {
         langBadge.textContent = '';
         langSection.classList.remove('has-filters');
     }
-    // Artistas
     const favCount = Object.values(artistStates).filter(s => s === 'favorite').length;
     const vetoCount = Object.values(artistStates).filter(s => s === 'vetoed').length;
     const artistBadge = document.getElementById('artistBadge');
@@ -279,7 +268,6 @@ function updateSectionBadges() {
         artistSection.classList.remove('has-filters');
     }
 }
-
 function updateFilterSummary() {
     const parts = [];
     const styleCount = document.querySelectorAll('#styleFilters input[type="checkbox"]:checked').length;
@@ -299,7 +287,6 @@ function updateFilterSummary() {
         filterSummary.classList.remove('visible');
     }
 }
-
 function clearSectionFilters(section) {
     if (section === 'styles') {
         document.querySelectorAll('#styleFilters input[type="checkbox"]').forEach(cb => cb.checked = false);
@@ -312,7 +299,6 @@ function clearSectionFilters(section) {
     }
     applyFilters();
 }
-
 function generatePDF() {
     const pdfSongs = filteredSongs.filter(song => {
         const key = song.artista + '|' + song.musica;
@@ -408,7 +394,6 @@ function generatePDF() {
     printWindow.document.write(printHtml);
     printWindow.document.close();
 }
-
 function escapeHtml(text) {
     if (!text) return '';
     return String(text)
@@ -418,15 +403,12 @@ function escapeHtml(text) {
         .replace(/"/g, '&quot;')
         .replace(/'/g, '&#039;');
 }
-
 // ===== EVENT LISTENERS =====
 let searchDebounce;
 searchInput.addEventListener('input', () => {
     clearTimeout(searchDebounce);
     searchDebounce = setTimeout(applyFilters, 300);
 });
-
-// Toggle collapsível
 document.querySelectorAll('.filter-section-toggle').forEach(btn => {
     btn.addEventListener('click', () => {
         const targetId = btn.dataset.target;
@@ -436,22 +418,14 @@ document.querySelectorAll('.filter-section-toggle').forEach(btn => {
         btn.setAttribute('aria-expanded', expanded);
     });
 });
-
-// Limpar por seção
 document.querySelectorAll('.filter-section-clear').forEach(btn => {
     btn.addEventListener('click', (e) => {
         e.stopPropagation();
         clearSectionFilters(btn.dataset.clear);
     });
 });
-
-// Filtro de estilos
 document.getElementById('styleFilters').addEventListener('change', applyFilters);
-
-// Filtro de idiomas
 document.getElementById('langFilters').addEventListener('change', applyFilters);
-
-// Busca de artista
 artistSearch.addEventListener('input', () => {
     const term = artistSearch.value.toLowerCase().trim();
     const filtered = uniqueArtists.filter(a =>
@@ -459,8 +433,6 @@ artistSearch.addEventListener('input', () => {
     );
     renderArtistList(filtered);
 });
-
-// Fav/veto artista
 artistList.addEventListener('click', (e) => {
     const btn = e.target.closest('.artist-toggle');
     if (!btn) return;
@@ -478,8 +450,6 @@ artistList.addEventListener('click', (e) => {
     renderArtistList(currentList);
     applyFilters();
 });
-
-// Pref/avoid música
 results.addEventListener('click', (e) => {
     const btn = e.target.closest('.song-signal');
     if (!btn) return;
@@ -494,12 +464,8 @@ results.addEventListener('click', (e) => {
     }
     renderResults();
 });
-
-// Download
 downloadBtn.addEventListener('click', generatePDF);
 stickyDownload.addEventListener('click', generatePDF);
-
-// Limpar tudo
 clearFiltersBtn.addEventListener('click', () => {
     searchInput.value = '';
     artistSearch.value = '';
@@ -512,8 +478,6 @@ clearFiltersBtn.addEventListener('click', () => {
     renderArtistList(uniqueArtists);
     applyFilters();
 });
-
-// Sticky download visibility
 const filterPanel = document.querySelector('.filter-panel');
 if (filterPanel) {
     const observer = new IntersectionObserver((entries) => {
@@ -527,5 +491,4 @@ if (filterPanel) {
     }, { threshold: 0 });
     observer.observe(filterPanel);
 }
-
 document.addEventListener('DOMContentLoaded', loadRepertorio);
