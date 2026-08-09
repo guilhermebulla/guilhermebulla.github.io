@@ -1,6 +1,6 @@
 /* ===== REPERTORIO.JS — Lógica da página de repertório ===== */
 /* Separado de repertorio.html em 09/08/2026 */
-/* Dependências: repertorio.html (DOM) + json-setlist.txt (ou repertorio.json) */
+/* Dependências: repertorio.html (DOM) + repertorio.json */
 
 let allSongs = [];
 let filteredSongs = [];
@@ -22,10 +22,7 @@ const filterSummary = document.getElementById('filterSummary');
 
 async function loadRepertorio() {
     try {
-        let response = await fetch('repertorio.json');
-        if (!response.ok) {
-            response = await fetch('json-setlist.txt');
-        }
+        const response = await fetch('repertorio.json');
         if (!response.ok) throw new Error('Arquivo não encontrado');
         const buffer = await response.arrayBuffer();
         const text = new TextDecoder('utf-8').decode(buffer);
