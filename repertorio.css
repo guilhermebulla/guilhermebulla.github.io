@@ -12,7 +12,7 @@
     --red-bg: #5a2d2d;
     --radius: 12px;
     --radius-sm: 8px;
-    --transition: 0.2s ease;
+    --transition: 0.25s ease;
 }
 
 /* ===== BODY (complementar ao base.css) ===== */
@@ -23,6 +23,7 @@ body {
 /* ===== LINKS (override do base.css — repertório usa gold como cor padrão) ===== */
 a {
     color: var(--gold);
+    text-decoration: none;
     transition: color var(--transition);
 }
 a:hover {
@@ -39,7 +40,7 @@ a:hover {
     justify-content: space-between;
     padding: 1rem 2rem;
     background: rgba(15, 15, 15, 0.95);
-    backdrop-filter: blur(14px);
+    backdrop-filter: blur(10px);
     border-bottom: 1px solid var(--border);
 }
 .rep-back {
@@ -418,6 +419,13 @@ a:hover {
     color: var(--text-muted);
     margin-bottom: 6px;
 }
+.result-year {
+    color: var(--text-muted);
+    font-size: 0.75rem;
+    font-weight: 400;
+    opacity: 0.6;
+    margin-left: 4px;
+}
 .result-tags {
     display: flex;
     flex-wrap: wrap;
@@ -551,14 +559,56 @@ a:hover {
 }
 
 /* ===== FOOTER (repertorio-specific) ===== */
+/* base.css já estiliza footer, .footer-social, .footer-nav, .footer-legal */
+/* .rep-footer adiciona text-align: center e regras com --transition */
 .rep-footer {
+    background: #0a0a0a;
+    border-top: 1px solid var(--border);
+    padding: 48px 0 32px;
     text-align: center;
 }
 .footer-social {
+    display: flex;
     justify-content: center;
+    gap: 20px;
+    margin-bottom: 8px;
+}
+.footer-social a {
+    display: flex;
+    align-items: center;
+    color: var(--text-muted);
+    transition: color var(--transition);
+}
+.footer-social a:hover {
+    color: var(--gold);
+}
+.footer-social svg {
+    width: 22px;
+    height: 22px;
 }
 .footer-nav {
+    display: flex;
+    gap: 28px;
+    flex-wrap: wrap;
+    justify-content: center;
     margin-bottom: 24px;
+}
+.footer-nav a {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    transition: color var(--transition);
+}
+.footer-nav a:hover {
+    color: var(--gold);
+}
+.footer-legal {
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    opacity: 0.7;
+}
+.footer-legal p {
+    margin-bottom: 6px;
 }
 
 /* ===== RESPONSIVO ===== */
@@ -601,6 +651,6 @@ a:hover {
 /* ===== PRINT (elementos específicos do repertório) ===== */
 /* base.css já esconde header, footer, .skip-link, .footer-social no print */
 @media print {
-    .filter-panel, .download-section,
-    .song-signals, .sticky-download { display: none; }
+    .rep-header, .filter-panel, .download-section,
+    .rep-footer, .song-signals, .sticky-download, .skip-link { display: none; }
 }
