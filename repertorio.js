@@ -27,7 +27,9 @@ async function loadRepertorio() {
             response = await fetch('json-setlist.txt');
         }
         if (!response.ok) throw new Error('Arquivo não encontrado');
-        allSongs = await response.json();
+        const buffer = await response.arrayBuffer();
+        const text = new TextDecoder('utf-8').decode(buffer);
+        allSongs = JSON.parse(text);
         const artistSet = new Set(allSongs.map(s => s.artista));
         uniqueArtists = [...artistSet].sort((a, b) =>
             a.localeCompare(b, 'pt-BR')
