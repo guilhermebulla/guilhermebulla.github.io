@@ -2281,7 +2281,7 @@
   },
   {
     "musica": "Easy",
-    "artista": "Commodores",
+    "artista": "The Commodores",
     "estilo": [
       "Soul",
       "R&B"
@@ -3703,15 +3703,6 @@
     ],
     "idioma": "Português",
     "ano": "1991"
-  },
-  {
-    "musica": "Easy",
-    "artista": "Faith no More",
-    "estilo": [
-      "Rock"
-    ],
-    "idioma": "Inglês",
-    "ano": "1992"
   },
   {
     "musica": "Avisa",
@@ -11117,5 +11108,33 @@
     ],
     "idioma": "Inglês",
     "ano": "2003"
+  },
+  {
+    "musica": "Dust in the Wind",
+    "artista": "Kansas",
+    "estilo": [
+      "Rock"
+    ],
+    "idioma": "Inglês",
+    "ano": "1977"
+  },
+  {
+    "musica": "Eu bebo sim",
+    "artista": "Elizeth Cardoso",
+    "estilo": [
+      "MPB",
+      "Samba"
+    ],
+    "idioma": "Português",
+    "ano": "1974"
+  },
+  {
+    "musica": "Espanhola",
+    "artista": "Flávio Venturini",
+    "estilo": [
+      "MPB"
+    ],
+    "idioma": "Português",
+    "ano": "1981"
   }
 ]
