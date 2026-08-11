@@ -8850,7 +8850,7 @@
     "ano": "2013"
   },
   {
-    "musica": "Escape (Piña Colada Song)",
+    "musica": "Escape (The Piña Colada Song)",
     "artista": "Rupert Holmes",
     "estilo": [
       "Pop"
@@ -11694,5 +11694,14 @@
     ],
     "idioma": "Inglês",
     "ano": "1980"
+  },
+  {
+    "musica": "Escape (The Piña Colada Song)",
+    "artista": "Jack Johnson",
+    "estilo": [
+      "Pop"
+    ],
+    "idioma": "Inglês",
+    "ano": "2013"
   }
 ]
