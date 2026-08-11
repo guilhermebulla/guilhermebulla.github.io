@@ -6821,7 +6821,7 @@
       "MPB"
     ],
     "idioma": "Português",
-    "ano": "1998"
+    "ano": "1981"
   },
   {
     "musica": "Paula e Bebeto",
@@ -11814,5 +11814,43 @@
     ],
     "idioma": "Português",
     "ano": "2019"
+  },
+  {
+    "musica": "Caçador de mim",
+    "artista": "14 Bis",
+    "estilo": [
+      "MPB"
+    ],
+    "idioma": "Português",
+    "ano": "1980"
+  },
+  {
+    "musica": "Nosso Primeiro Beijo",
+    "artista": "Gloria Groove",
+    "estilo": [
+      "Samba"
+    ],
+    "idioma": "Português",
+    "ano": "2024"
+  },
+  {
+    "musica": "Sinônimos",
+    "artista": "Chitãozinho & Xororó (feat. Zé Ramalho)",
+    "estilo": [
+      "MPB",
+      "Sertanejo"
+    ],
+    "idioma": "Português",
+    "ano": "2004"
+  },
+  {
+    "musica": "Sinônimos",
+    "artista": "Zé Ramalho (feat. Chitãozinho & Xororó)",
+    "estilo": [
+      "MPB",
+      "Sertanejo"
+    ],
+    "idioma": "Português",
+    "ano": "2004"
   }
 ]
