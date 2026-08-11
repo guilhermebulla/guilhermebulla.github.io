@@ -19,7 +19,7 @@
   },
   {
     "musica": "From Yesterday",
-    "artista": "30 Seconds to Mars",
+    "artista": "Thirty Seconds to Mars",
     "estilo": [
       "Rock"
     ],
@@ -28,7 +28,7 @@
   },
   {
     "musica": "Kill",
-    "artista": "30 Seconds to Mars",
+    "artista": "Thirty Seconds to Mars",
     "estilo": [
       "Rock"
     ],
@@ -11605,5 +11605,15 @@
     ],
     "idioma": "Português",
     "ano": "2017"
+  },
+  {
+    "musica": "Fly me to the moon",
+    "artista": "Frank Sinatra",
+    "estilo": [
+      "Jazz",
+      "Pop"
+    ],
+    "idioma": "Inglês",
+    "ano": "1964"
   }
 ]
