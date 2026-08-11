@@ -11713,5 +11713,50 @@
     ],
     "idioma": "Inglês",
     "ano": "2013"
+  },
+  {
+    "musica": "Can you feel the love tonight (The Lion King Soundtrack)",
+    "artista": "Disney",
+    "estilo": [
+      "Pop"
+    ],
+    "idioma": "Inglês",
+    "ano": "1994"
+  },
+  {
+    "musica": "Can you feel the love tonight (The Lion King Soundtrack)",
+    "artista": "Elton John",
+    "estilo": [
+      "Pop"
+    ],
+    "idioma": "Inglês",
+    "ano": "1994"
+  },
+  {
+    "musica": "Nesta Noite o Amor Chegou (Trilha Sonora O Rei Leão)",
+    "artista": "Disney",
+    "estilo": [
+      "Pop"
+    ],
+    "idioma": "Português",
+    "ano": "1994"
+  },
+  {
+    "musica": "You've got a Friend in me (Toy Story Soundtrack)",
+    "artista": "Disney",
+    "estilo": [
+      "Pop"
+    ],
+    "idioma": "Inglês",
+    "ano": "1995"
+  },
+  {
+    "musica": "You've got a Friend in me (Toy Story Soundtrack)",
+    "artista": "Randy Newman",
+    "estilo": [
+      "Pop"
+    ],
+    "idioma": "Inglês",
+    "ano": "1995"
   }
 ]
