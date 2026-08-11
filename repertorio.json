@@ -11852,5 +11852,50 @@
     ],
     "idioma": "Português",
     "ano": "2004"
+  },
+  {
+    "musica": "100 anos",
+    "artista": "Falamansa",
+    "estilo": [
+      "Forró"
+    ],
+    "idioma": "Português",
+    "ano": "2003"
+  },
+  {
+    "musica": "Asa Branca",
+    "artista": "Luiz Gonzaga",
+    "estilo": [
+      "MPB"
+    ],
+    "idioma": "Português",
+    "ano": "1947"
+  },
+  {
+    "musica": "Entre a Serpente e a Estrela",
+    "artista": "Zé Ramalho",
+    "estilo": [
+      "MPB"
+    ],
+    "idioma": "Português",
+    "ano": "1992"
+  },
+  {
+    "musica": "Bebendo Vinho",
+    "artista": "Wander Wildner",
+    "estilo": [
+      "Rock"
+    ],
+    "idioma": "Português",
+    "ano": "1996"
+  },
+  {
+    "musica": "Pra Sonhar",
+    "artista": "Marcelo Jeneci",
+    "estilo": [
+      "MPB"
+    ],
+    "idioma": "Português",
+    "ano": "2010"
   }
 ]
