@@ -2378,7 +2378,8 @@
     "musica": "Four white stallions",
     "artista": "Counting Crows",
     "estilo": [
-      "Rock"
+      "Rock",
+      "Folk"
     ],
     "idioma": "Inglês",
     "ano": "2012"
@@ -2486,7 +2487,7 @@
     "ano": "1999"
   },
   {
-    "musica": "Murder of One, A",
+    "musica": "A Murder of One",
     "artista": "Counting Crows",
     "estilo": [
       "Rock"
@@ -3742,9 +3743,10 @@
   },
   {
     "musica": "Atrasadinha",
-    "artista": "Felipe Araújo",
+    "artista": "Felipe Araújo (feat. Ferrugem)",
     "estilo": [
-      "Sertanejo"
+      "Sertanejo",
+      "Samba"
     ],
     "idioma": "Português",
     "ano": "2018"
@@ -8520,7 +8522,7 @@
   },
   {
     "musica": "Coração Radiante",
-    "artista": "Revelação",
+    "artista": "Grupo Revelação",
     "estilo": [
       "Samba"
     ],
@@ -8529,7 +8531,7 @@
   },
   {
     "musica": "Deixa Acontecer",
-    "artista": "Revelação",
+    "artista": "Grupo Revelação",
     "estilo": [
       "Samba"
     ],
@@ -9993,7 +9995,7 @@
     "ano": "2005"
   },
   {
-    "musica": "Blinding lights",
+    "musica": "Blinding Lights",
     "artista": "The Weeknd",
     "estilo": [
       "Pop"
@@ -11136,5 +11138,453 @@
     ],
     "idioma": "Português",
     "ano": "1981"
+  },
+  {
+    "musica": "Ao vivo e a cores",
+    "artista": "Anitta (feat. Matheus & Kauan)",
+    "estilo": [
+      "Pop",
+      "Sertanejo"
+    ],
+    "idioma": "Português",
+    "ano": "2018"
+  },
+  {
+    "musica": "Ao vivo e a cores",
+    "artista": "Matheus & Kauan (feat. Anitta)",
+    "estilo": [
+      "Pop",
+      "Sertanejo"
+    ],
+    "idioma": "Português",
+    "ano": "2018"
+  },
+  {
+    "musica": "Apaixonadinha",
+    "artista": "Marília Mendonça (feat. Léo Santana)",
+    "estilo": [
+      "Sertanejo",
+      "Axé"
+    ],
+    "idioma": "Português",
+    "ano": "2019"
+  },
+  {
+    "musica": "Bebi Liguei",
+    "artista": "Marília Mendonça",
+    "estilo": [
+      "Sertanejo"
+    ],
+    "idioma": "Português",
+    "ano": "2018"
+  },
+  {
+    "musica": "Bebi minha bicicleta",
+    "artista": "Zé Neto & Cristiano",
+    "estilo": [
+      "Sertanejo"
+    ],
+    "idioma": "Português",
+    "ano": "2019"
+  },
+  {
+    "musica": "Boate Azul",
+    "artista": "Bruno & Marrone",
+    "estilo": [
+      "Sertanejo"
+    ],
+    "idioma": "Português",
+    "ano": "2001"
+  },
+  {
+    "musica": "Chora, me liga",
+    "artista": "João Bosco & Vinícius",
+    "estilo": [
+      "Sertanejo"
+    ],
+    "idioma": "Português",
+    "ano": "2008"
+  },
+  {
+    "musica": "Ciumeira",
+    "artista": "Marília Mendonça",
+    "estilo": [
+      "Sertanejo"
+    ],
+    "idioma": "Português",
+    "ano": "2018"
+  },
+  {
+    "musica": "O Grande amor da minha Vida (Convite de Casamento)",
+    "artista": "Vavá",
+    "estilo": [
+      "Sertanejo",
+      "Samba"
+    ],
+    "idioma": "Português",
+    "ano": "2002"
+  },
+  {
+    "musica": "O Grande amor da minha Vida (Convite de Casamento)",
+    "artista": "Gian & Giovani",
+    "estilo": [
+      "Sertanejo"
+    ],
+    "idioma": "Português",
+    "ano": "1998"
+  },
+  {
+    "musica": "Desculpe, mas eu vou chorar",
+    "artista": "Leandro & Leonardo",
+    "estilo": [
+      "Sertanejo"
+    ],
+    "idioma": "Português",
+    "ano": "1990"
+  },
+  {
+    "musica": "Dona Maria",
+    "artista": "Thiago Brava (feat. Jorge & Mateus)",
+    "estilo": [
+      "Sertanejo",
+      "Samba"
+    ],
+    "idioma": "Português",
+    "ano": "2017"
+  },
+  {
+    "musica": "Estou apaixonado",
+    "artista": "João Paulo & Daniel",
+    "estilo": [
+      "Sertanejo"
+    ],
+    "idioma": "Português",
+    "ano": "1996"
+  },
+  {
+    "musica": "Eu, você, o mar e ela",
+    "artista": "Luan Santana",
+    "estilo": [
+      "Sertanejo",
+      "Pop"
+    ],
+    "idioma": "Português",
+    "ano": "2016"
+  },
+  {
+    "musica": "Eu sei de cor",
+    "artista": "Marília Mendonça",
+    "estilo": [
+      "Sertanejo"
+    ],
+    "idioma": "Português",
+    "ano": "2016"
+  },
+  {
+    "musica": "Garçom",
+    "artista": "Reginaldo Rossi",
+    "estilo": [
+      "Sertanejo"
+    ],
+    "idioma": "Português",
+    "ano": "1987"
+  },
+  {
+    "musica": "Graveto",
+    "artista": "Marília Mendonça",
+    "estilo": [
+      "Sertanejo"
+    ],
+    "idioma": "Português",
+    "ano": "2020"
+  },
+  {
+    "musica": "K.O.",
+    "artista": "Pabllo Vittar",
+    "estilo": [
+      "Pop",
+      "Samba"
+    ],
+    "idioma": "Português",
+    "ano": "2017"
+  },
+  {
+    "musica": "Largado às traças",
+    "artista": "Zé Neto & Cristiano",
+    "estilo": [
+      "Sertanejo"
+    ],
+    "idioma": "Português",
+    "ano": "2018"
+  },
+  {
+    "musica": "Na hora de amar",
+    "artista": "Gusttavo Lima",
+    "estilo": [
+      "Sertanejo"
+    ],
+    "idioma": "Português",
+    "ano": "2018"
+  },
+  {
+    "musica": "Nessas Horas",
+    "artista": "Matheus & Kauan",
+    "estilo": [
+      "Sertanejo",
+      "Pop"
+    ],
+    "idioma": "Português",
+    "ano": "2017"
+  },
+  {
+    "musica": "No dia em que eu saí de casa",
+    "artista": "Zezé Di Camargo & Luciano",
+    "estilo": [
+      "Sertanejo"
+    ],
+    "idioma": "Português",
+    "ano": "1995"
+  },
+  {
+    "musica": "Nosso Santo Bateu",
+    "artista": "Matheus & Kauan",
+    "estilo": [
+      "Sertanejo",
+      "Pop",
+      "Reggae"
+    ],
+    "idioma": "Português",
+    "ano": "2016"
+  },
+  {
+    "musica": "Notificação Preferida",
+    "artista": "Zé Neto & Cristiano",
+    "estilo": [
+      "Sertanejo"
+    ],
+    "idioma": "Português",
+    "ano": "2018"
+  },
+  {
+    "musica": "Quarta Cadeira",
+    "artista": "Matheus & Kauan (feat. Jorge & Mateus)",
+    "estilo": [
+      "Sertanejo"
+    ],
+    "idioma": "Português",
+    "ano": "2019"
+  },
+  {
+    "musica": "Que Pescar Que Nada",
+    "artista": "Bruno & Marrone",
+    "estilo": [
+      "Sertanejo"
+    ],
+    "idioma": "Português",
+    "ano": "2005"
+  },
+  {
+    "musica": "Que Sorte a Nossa",
+    "artista": "Matheus & Kauan",
+    "estilo": [
+      "Sertanejo",
+      "Pop"
+    ],
+    "idioma": "Português",
+    "ano": "2015"
+  },
+  {
+    "musica": "Quem me dera",
+    "artista": "Márcia Fellipe (feat. Jerry Smith)",
+    "estilo": [
+      "Sertanejo",
+      "Reggae"
+    ],
+    "idioma": "Português",
+    "ano": "2018"
+  },
+  {
+    "musica": "Sorte que beija bem",
+    "artista": "Maiara & Maraisa",
+    "estilo": [
+      "Sertanejo"
+    ],
+    "idioma": "Português",
+    "ano": "2017"
+  },
+  {
+    "musica": "Medo Bobo",
+    "artista": "Maiara & Maraisa",
+    "estilo": [
+      "Sertanejo"
+    ],
+    "idioma": "Português",
+    "ano": "2016"
+  },
+  {
+    "musica": "Te Esperando",
+    "artista": "Luan Santana",
+    "estilo": [
+      "Sertanejo"
+    ],
+    "idioma": "Português",
+    "ano": "2013"
+  },
+  {
+    "musica": "Temporal de Amor",
+    "artista": "Leandro & Leonardo",
+    "estilo": [
+      "Sertanejo"
+    ],
+    "idioma": "Português",
+    "ano": "1992"
+  },
+  {
+    "musica": "Tijolão",
+    "artista": "Jorge & Mateus",
+    "estilo": [
+      "Sertanejo"
+    ],
+    "idioma": "Português",
+    "ano": "2019"
+  },
+  {
+    "musica": "Todo mundo vai sofrer",
+    "artista": "Marília Mendonça",
+    "estilo": [
+      "Sertanejo"
+    ],
+    "idioma": "Português",
+    "ano": "2019"
+  },
+  {
+    "musica": "Você partiu meu coração",
+    "artista": "Nego do Borel (feat. Anitta e Wesley Safadão)",
+    "estilo": [
+      "Sertanejo",
+      "Samba"
+    ],
+    "idioma": "Português",
+    "ano": "2017"
+  },
+  {
+    "musica": "Domingo",
+    "artista": "SPC - Só pra Contrariar",
+    "estilo": [
+      "Samba"
+    ],
+    "idioma": "Português",
+    "ano": "1993"
+  },
+  {
+    "musica": "Brilho de Cristal",
+    "artista": "Grupo Pixote",
+    "estilo": [
+      "Samba"
+    ],
+    "idioma": "Português",
+    "ano": "1995"
+  },
+  {
+    "musica": "Cheia de Manias",
+    "artista": "Raça Negra",
+    "estilo": [
+      "Samba"
+    ],
+    "idioma": "Português",
+    "ano": "1992"
+  },
+  {
+    "musica": "Cigana",
+    "artista": "Raça Negra",
+    "estilo": [
+      "Samba"
+    ],
+    "idioma": "Português",
+    "ano": "1992"
+  },
+  {
+    "musica": "Meu jeito de ser",
+    "artista": "SPC - Só pra Contrariar",
+    "estilo": [
+      "Samba"
+    ],
+    "idioma": "Português",
+    "ano": "1994"
+  },
+  {
+    "musica": "Essa tal liberdade",
+    "artista": "SPC - Só pra Contrariar",
+    "estilo": [
+      "Samba"
+    ],
+    "idioma": "Português",
+    "ano": "1994"
+  },
+  {
+    "musica": "Depois do Prazer",
+    "artista": "SPC - Só pra Contrariar",
+    "estilo": [
+      "Samba"
+    ],
+    "idioma": "Português",
+    "ano": "1997"
+  },
+  {
+    "musica": "Que se chama amor",
+    "artista": "SPC - Só pra Contrariar",
+    "estilo": [
+      "Samba"
+    ],
+    "idioma": "Português",
+    "ano": "1993"
+  },
+  {
+    "musica": "Mineirinho",
+    "artista": "SPC - Só pra Contrariar",
+    "estilo": [
+      "Samba"
+    ],
+    "idioma": "Português",
+    "ano": "1997"
+  },
+  {
+    "musica": "Ain't no Sunshine",
+    "artista": "Bill Withers",
+    "estilo": [
+      "Soul",
+      "R&B",
+      "Blues",
+      "Folk"
+    ],
+    "idioma": "Inglês",
+    "ano": "1971"
+  },
+  {
+    "musica": "A Whole New World (Aladdin Soundtrack)",
+    "artista": "Disney",
+    "estilo": [
+      "Pop"
+    ],
+    "idioma": "Inglês",
+    "ano": "1992"
+  },
+  {
+    "musica": "Um Mundo Ideal (Trilha Sonora Aladdin)",
+    "artista": "Disney",
+    "estilo": [
+      "Pop"
+    ],
+    "idioma": "Português",
+    "ano": "1992"
+  },
+  {
+    "musica": "Beauty and the Beast (Beauty and the Beast Soundtrack)",
+    "artista": "Disney",
+    "estilo": [
+      "Pop"
+    ],
+    "idioma": "Inglês",
+    "ano": "1991"
   }
 ]
