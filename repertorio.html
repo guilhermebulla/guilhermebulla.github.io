@@ -20,11 +20,26 @@
     <header class="rep-header">
         <a href="index.html" class="rep-back">← Voltar</a>
         <span class="rep-logo">Bulla<span>Acoustic</span></span>
-        <span class="rep-counter-badge" id="counter">Carregando...</span>
     </header>
     <main class="rep-main" id="rep-main">
         <h1 class="rep-title">Repertório</h1>
         <p class="rep-subtitle">Explore mais de 1.200 músicas e selecione suas preferências</p>
+
+        <!-- STATS (sticky) -->
+        <div class="stats-bar" id="statsBar">
+            <div class="stat-card">
+                <div class="stat-number" id="statTotal">0</div>
+                <div class="stat-label">Total</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="statFiltered">0</div>
+                <div class="stat-label">Filtradas</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="statStarred">0</div>
+                <div class="stat-label">★</div>
+            </div>
+        </div>
 
         <!-- BUSCA + TOGGLE FILTROS -->
         <div class="search-row">
@@ -68,22 +83,6 @@
                 <div class="filter-group-label">Artistas</div>
                 <input type="text" id="artistSearch" placeholder="Buscar artista..." autocomplete="off">
                 <div class="artist-list" id="artistList"></div>
-            </div>
-        </div>
-
-        <!-- STATS -->
-        <div class="stats-bar">
-            <div class="stat-card">
-                <div class="stat-number" id="statTotal">0</div>
-                <div class="stat-label">Total</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number" id="statFiltered">0</div>
-                <div class="stat-label">Filtradas</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number" id="statStarred">0</div>
-                <div class="stat-label">★</div>
             </div>
         </div>
 
@@ -135,7 +134,7 @@
         </div>
     </footer>
 
-    <button class="sticky-download" id="stickyDownload" disabled>📥 Baixar PDF</button>
+    <button class="sticky-download" id="stickyDownload" disabled></button>
     <script src="repertorio.js"></script>
 </body>
 </html>
