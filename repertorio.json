@@ -8915,10 +8915,11 @@
     "ano": "1996"
   },
   {
-    "musica": "Corazón Espinado (feat. Maná)",
-    "artista": "Santana",
+    "musica": "Corazón Espinado",
+    "artista": "Santana (feat. Maná)",
     "estilo": [
-      "Rock"
+      "Rock",
+      "Pop"
     ],
     "idioma": "Espanhol",
     "ano": "1999"
