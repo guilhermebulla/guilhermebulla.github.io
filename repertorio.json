@@ -11655,5 +11655,43 @@
     ],
     "idioma": "Inglês",
     "ano": "1993"
+  },
+  {
+    "musica": "Maria Maria",
+    "artista": "Santana",
+    "estilo": [
+      "R&B",
+      "Pop",
+      "Rock"
+    ],
+    "idioma": "Inglês",
+    "ano": "1999"
+  },
+  {
+    "musica": "Shiny (Moana Soundtrack)",
+    "artista": "Disney",
+    "estilo": [
+      "Pop"
+    ],
+    "idioma": "Inglês",
+    "ano": "2016"
+  },
+  {
+    "musica": "Brilhe (Trilha Sonora Moana)",
+    "artista": "Disney",
+    "estilo": [
+      "Pop"
+    ],
+    "idioma": "Português",
+    "ano": "2016"
+  },
+  {
+    "musica": "New York, New York",
+    "artista": "Frank Sinatra",
+    "estilo": [
+      "Jazz"
+    ],
+    "idioma": "Inglês",
+    "ano": "1980"
   }
 ]
