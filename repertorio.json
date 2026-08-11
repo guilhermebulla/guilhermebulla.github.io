@@ -3268,7 +3268,8 @@
     "musica": "Candle in the Wind",
     "artista": "Ed Sheeran",
     "estilo": [
-      "Pop"
+      "Pop",
+      "Rock"
     ],
     "idioma": "Inglês",
     "ano": "2018"
@@ -9316,7 +9317,7 @@
   },
   {
     "musica": "Disarm",
-    "artista": "Smashing Pumpkins",
+    "artista": "The Smashing Pumpkins",
     "estilo": [
       "Rock"
     ],
@@ -9325,7 +9326,7 @@
   },
   {
     "musica": "Tonight, tonight",
-    "artista": "Smashing Pumpkins",
+    "artista": "The Smashing Pumpkins",
     "estilo": [
       "Rock"
     ],
@@ -11586,5 +11587,23 @@
     ],
     "idioma": "Inglês",
     "ano": "1991"
+  },
+  {
+    "musica": "Remember me (Coco Soundtrack)",
+    "artista": "Disney",
+    "estilo": [
+      "Pop"
+    ],
+    "idioma": "Inglês",
+    "ano": "2017"
+  },
+  {
+    "musica": "Lembre de mim (Trilha Sonora Viva - A vida é uma festa)",
+    "artista": "Disney",
+    "estilo": [
+      "Pop"
+    ],
+    "idioma": "Português",
+    "ano": "2017"
   }
 ]
