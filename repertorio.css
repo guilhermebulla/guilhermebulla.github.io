@@ -192,7 +192,7 @@ a:hover { color: var(--gold-hover); }
 .mobile-artist-group { border-bottom: 1px solid var(--border); }
 .mobile-artist-header {
     display: flex; align-items: center; gap: 6px;
-    padding: 4px 14px;
+    padding: 4px 14px; line-height: 1.2;
     background: #222;
     border-left: 3px solid var(--gold);
 }
@@ -200,7 +200,7 @@ a:hover { color: var(--gold-hover); }
 .mobile-artist-count { font-size: 0.7rem; color: var(--text-dim); }
 .mobile-song-row {
     display: flex; align-items: center; gap: 8px;
-    padding: 5px 14px 5px 28px;
+    padding: 5px 14px 5px 28px; line-height: 1.2;
 }
 .mobile-song-name { font-size: 0.85rem; color: var(--text); flex: 1; }
 /* ===== DOWNLOAD SECTION ===== */
