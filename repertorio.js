@@ -1,5 +1,4 @@
 /* ===== REPERTORIO.JS v2.1 — Sticky stats + Mobile grouped + SVG icon ===== */
-
 // ===== STATE =====
 let allSongs = [];
 let filteredSongs = [];
@@ -11,7 +10,7 @@ let sortDir = 'asc';
 let autocompleteItems = [];
 let autocompleteIndex = -1;
 let autocompleteLetterMode = false;
-
+let suppressBlurHide = false;
 // ===== DOM =====
 const searchInput = document.getElementById('searchInput');
 const autocompleteDropdown = document.getElementById('autocompleteDropdown');
@@ -27,9 +26,7 @@ const clearFiltersBtn = document.getElementById('clearFilters');
 const results = document.getElementById('results');
 const stickyDownload = document.getElementById('stickyDownload');
 const sortSelect = document.getElementById('sortSelect');
-
 const downloadIcon = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>';
-
 // ===== INIT =====
 async function loadRepertorio() {
     try {
@@ -49,7 +46,6 @@ async function loadRepertorio() {
         console.error('Erro:', error);
     }
 }
-
 // ===== HELPERS =====
 function escapeHtml(text) {
     if (!text) return '';
@@ -74,7 +70,6 @@ function parseIdiomas(song) {
     if (typeof song.idioma === 'string') return song.idioma.split(',').map(s => s.trim());
     return [];
 }
-
 // ===== RENDER PILLS =====
 function renderStylePills() {
     const tagSet = new Set();
@@ -83,7 +78,6 @@ function renderStylePills() {
         '<label class="style-pill"><input type="checkbox" value="' + escapeHtml(tag) + '"><span>' + escapeHtml(tag) + '</span></label>'
     ).join('');
 }
-
 function renderLangPills() {
     const langSet = new Set();
     allSongs.forEach(song => parseIdiomas(song).forEach(l => { if (l) langSet.add(l); }));
@@ -93,7 +87,6 @@ function renderLangPills() {
         return '<label class="style-pill"><input type="checkbox" value="' + escapeHtml(lang) + '"><span>' + flag + ' ' + escapeHtml(lang) + '</span></label>';
     }).join('');
 }
-
 function renderDecadePills() {
     const decadeSet = new Set();
     allSongs.forEach(song => { const d = getDecade(song.ano); if (d) decadeSet.add(d); });
@@ -101,7 +94,6 @@ function renderDecadePills() {
         '<label class="style-pill"><input type="checkbox" value="' + escapeHtml(decade) + '"><span>' + escapeHtml(decade) + '</span></label>'
     ).join('');
 }
-
 // ===== ARTIST LIST =====
 function renderArtistList(artists) {
     if (artists.length === 0) {
@@ -119,7 +111,6 @@ function renderArtistList(artists) {
         '</div>';
     }).join('');
 }
-
 function getArtistStarState(artist) {
     const songs = allSongs.filter(s => s.artista === artist);
     if (songs.length === 0) return 'none';
@@ -128,7 +119,6 @@ function getArtistStarState(artist) {
     if (starred === 0) return 'none';
     return 'partial';
 }
-
 // ===== AUTOCOMPLETE =====
 let autocompleteDebounce;
 searchInput.addEventListener('input', () => {
@@ -144,6 +134,7 @@ searchInput.addEventListener('focus', () => {
     if (searchInput.value.length > 0 && !autocompleteLetterMode) showAutocomplete(searchInput.value);
 });
 searchInput.addEventListener('blur', () => {
+    if (suppressBlurHide) { suppressBlurHide = false; return; }
     setTimeout(() => { autocompleteDropdown.classList.remove('visible'); }, 200);
 });
 searchInput.addEventListener('keydown', (e) => {
@@ -153,13 +144,11 @@ searchInput.addEventListener('keydown', (e) => {
     else if (e.key === 'Enter' && autocompleteIndex >= 0) { e.preventDefault(); selectAutocomplete(autocompleteItems[autocompleteIndex]); }
     else if (e.key === 'Escape') { autocompleteDropdown.classList.remove('visible'); }
 });
-
 function showAutocomplete(term) {
     term = term.trim();
     if (term.length === 0) { autocompleteDropdown.classList.remove('visible'); return; }
     const termNorm = normalizeText(term);
     let html = '';
-
     if (term.length === 1 && /[a-zà-ú]/i.test(term)) {
         const letter = term.toUpperCase();
         const letterNorm = normalizeText(letter);
@@ -170,7 +159,6 @@ function showAutocomplete(term) {
             html += '🎤 Artistas com a letra "' + escapeHtml(letter) + '" (' + artistsWithLetter.length + ')</div></div>';
         }
     }
-
     if (autocompleteLetterMode && autocompleteLetterMode.length === 1) {
         const letterNorm = normalizeText(autocompleteLetterMode);
         const artists = uniqueArtists.filter(a => normalizeText(a.charAt(0)) === letterNorm).slice(0, 20);
@@ -203,7 +191,6 @@ function showAutocomplete(term) {
         }
         autocompleteItems = [...matchingArtists.map(a => ({ type: 'artist', value: a })), ...matchingSongs.map(s => ({ type: 'song', value: s.musica, artist: s.artista }))];
     }
-
     if (html === '') { autocompleteDropdown.classList.remove('visible'); return; }
     autocompleteDropdown.innerHTML = html;
     autocompleteDropdown.classList.add('visible');
@@ -216,7 +203,6 @@ function showAutocomplete(term) {
         });
     });
 }
-
 function updateAutocompleteFocus() {
     autocompleteDropdown.querySelectorAll('.autocomplete-item').forEach((el, i) => {
         el.classList.toggle('focused', i === autocompleteIndex);
@@ -226,17 +212,15 @@ function updateAutocompleteFocus() {
         if (el) el.scrollIntoView({ block: 'nearest' });
     }
 }
-
 function selectAutocomplete(item) {
     if (!item) return;
-    if (item.type === 'letter') { autocompleteLetterMode = item.letter; showAutocomplete(item.letter); searchInput.focus(); return; }
+    if (item.type === 'letter') { autocompleteLetterMode = item.letter; suppressBlurHide = true; showAutocomplete(item.letter); searchInput.blur(); return; }
     if (item.type === 'artist') { searchInput.value = item.value; }
     else if (item.type === 'song') { searchInput.value = item.value; }
     autocompleteDropdown.classList.remove('visible');
     autocompleteLetterMode = false;
     applyFilters();
 }
-
 // ===== FILTERS =====
 function songMatchesStyles(song, tags) { return tags.length === 0 || tags.some(t => parseEstilos(song).includes(t)); }
 function songMatchesLangs(song, langs) { return langs.length === 0 || langs.some(l => parseIdiomas(song).includes(l)); }
@@ -245,7 +229,6 @@ function songMatchesDecades(song, decades) {
     const d = getDecade(song.ano);
     return d && decades.includes(d);
 }
-
 function applyFilters() {
     const searchTerm = searchInput.value.toLowerCase().trim();
     const selectedStyles = Array.from(document.querySelectorAll('#styleFilters input:checked')).map(cb => cb.value);
@@ -266,7 +249,6 @@ function applyFilters() {
     updateStickyButton();
     updateFilterToggleBadge();
 }
-
 // ===== SORT =====
 function sortSongs(songs, column, dir) {
     const factor = dir === 'asc' ? 1 : -1;
@@ -279,7 +261,6 @@ function sortSongs(songs, column, dir) {
         return valA.localeCompare(valB, 'pt-BR') * factor;
     });
 }
-
 // ===== RENDER RESULTS (dispatcher) =====
 function renderResults() {
     const isMobile = window.matchMedia('(max-width: 768px)').matches;
@@ -289,7 +270,6 @@ function renderResults() {
         renderTable();
     }
 }
-
 // ===== RENDER TABLE (desktop + mobile flat) =====
 function renderTable() {
     if (filteredSongs.length === 0) {
@@ -298,7 +278,6 @@ function renderTable() {
     }
     const sorted = sortSongs(filteredSongs, sortColumn, sortDir);
     const visible = sorted.slice(0, displayLimit);
-
     let html = '<div class="results-table-header">' +
         '<div></div>' +
         '<div class="sortable" data-sort="musica">Música<span class="sort-arrow"></span></div>' +
@@ -306,7 +285,6 @@ function renderTable() {
         '<div>Estilos</div><div>Idioma</div>' +
         '<div class="sortable" data-sort="ano">Ano<span class="sort-arrow"></span></div>' +
     '</div><div class="results-body">';
-
     html += visible.map(song => {
         const key = song.artista + '|' + song.musica;
         const isStarred = songStates[key] === 'starred';
@@ -325,13 +303,11 @@ function renderTable() {
             '<span class="cell-ano">' + escapeHtml(song.ano || '') + '</span>' +
         '</div>';
     }).join('');
-
     if (sorted.length > displayLimit) {
         html += '<div class="show-more" id="showMore">Mostrar mais (' + (sorted.length - displayLimit) + ' restantes)</div>';
     }
     html += '</div>';
     results.innerHTML = html;
-
     document.querySelectorAll('.sortable').forEach(el => {
         el.classList.remove('sorted-asc', 'sorted-desc');
         const arrow = el.querySelector('.sort-arrow');
@@ -345,11 +321,9 @@ function renderTable() {
             renderResults();
         });
     });
-
     const showMoreBtn = document.getElementById('showMore');
     if (showMoreBtn) showMoreBtn.addEventListener('click', () => { displayLimit += 100; renderResults(); });
 }
-
 // ===== RENDER MOBILE GROUPED (by artist) =====
 function renderMobileGrouped() {
     if (filteredSongs.length === 0) {
@@ -358,20 +332,17 @@ function renderMobileGrouped() {
     }
     const sorted = sortSongs(filteredSongs, 'artista', 'asc');
     const visible = sorted.slice(0, displayLimit);
-
     const artistGroups = {};
     visible.forEach(song => {
         if (!artistGroups[song.artista]) artistGroups[song.artista] = [];
         artistGroups[song.artista].push(song);
     });
-
     let html = '<div class="results-body mobile-grouped">';
     Object.keys(artistGroups).forEach(artist => {
         const songs = artistGroups[artist];
         const starState = getArtistStarState(artist);
         const starClass = starState === 'all' ? 'starred' : starState === 'partial' ? 'partial' : '';
         const starChar = starState === 'all' ? '★' : '☆';
-
         html += '<div class="mobile-artist-group">';
         html += '<div class="mobile-artist-header">';
         html += '<button class="star-btn ' + starClass + '" data-artist="' + escapeHtml(artist) + '">' + starChar + '</button>';
@@ -390,17 +361,14 @@ function renderMobileGrouped() {
         });
         html += '</div>';
     });
-
     if (sorted.length > displayLimit) {
         html += '<div class="show-more" id="showMore">Mostrar mais (' + (sorted.length - displayLimit) + ' restantes)</div>';
     }
     html += '</div>';
     results.innerHTML = html;
-
     const showMoreBtn = document.getElementById('showMore');
     if (showMoreBtn) showMoreBtn.addEventListener('click', () => { displayLimit += 100; renderResults(); });
 }
-
 // ===== STAR TOGGLES =====
 results.addEventListener('click', (e) => {
     const btn = e.target.closest('.star-btn');
@@ -418,7 +386,6 @@ results.addEventListener('click', (e) => {
         toggleArtistStar(artist);
     }
 });
-
 function toggleArtistStar(artist) {
     const songs = allSongs.filter(s => s.artista === artist);
     const allStarred = songs.every(s => songStates[artist + '|' + s.musica] === 'starred');
@@ -428,26 +395,22 @@ function toggleArtistStar(artist) {
     updateStats();
     updateStickyButton();
 }
-
 function getFilteredArtists() {
     const term = artistSearch.value.toLowerCase().trim();
     return term ? uniqueArtists.filter(a => a.toLowerCase().includes(term)) : uniqueArtists;
 }
-
 artistList.addEventListener('click', (e) => {
     const btn = e.target.closest('.artist-star-btn');
     if (!btn) return;
     toggleArtistStar(btn.dataset.artist);
 });
 artistSearch.addEventListener('input', () => { renderArtistList(getFilteredArtists()); });
-
 // ===== STATS =====
 function updateStats() {
     document.getElementById('statTotal').textContent = allSongs.length;
     document.getElementById('statFiltered').textContent = filteredSongs.length;
     document.getElementById('statStarred').textContent = Object.values(songStates).filter(s => s === 'starred').length;
 }
-
 function updateStickyButton() {
     if (filteredSongs.length === 0) {
         stickyDownload.disabled = true;
@@ -462,13 +425,11 @@ function updateStickyButton() {
     }
     stickyDownload.disabled = false;
 }
-
 function updateFilterToggleBadge() {
     const total = document.querySelectorAll('#styleFilters input:checked, #langFilters input:checked, #decadeFilters input:checked').length;
     if (total > 0) { filterToggleBadge.textContent = total; filterToggleBadge.classList.add('visible'); }
     else { filterToggleBadge.classList.remove('visible'); }
 }
-
 // ===== UI EVENTS =====
 filterToggle.addEventListener('click', () => { filterPanel.classList.toggle('visible'); filterToggle.classList.toggle('active'); });
 sortSelect.addEventListener('change', () => { sortColumn = sortSelect.value; sortDir = 'asc'; renderResults(); });
@@ -482,14 +443,12 @@ clearFiltersBtn.addEventListener('click', () => {
 styleFilters.addEventListener('change', applyFilters);
 langFilters.addEventListener('change', applyFilters);
 decadeFilters.addEventListener('change', applyFilters);
-
 // Resize: re-render para alternar mobile grouped / table
 let resizeTimer;
 window.addEventListener('resize', () => {
     clearTimeout(resizeTimer);
     resizeTimer = setTimeout(renderResults, 200);
 });
-
 // ===== STICKY VISIBILITY =====
 const downloadSection = document.querySelector('.download-section');
 if (downloadSection) {
@@ -501,10 +460,8 @@ if (downloadSection) {
     }, { threshold: 0 });
     observer.observe(downloadSection);
 }
-
 // ===== PDF GENERATION =====
 stickyDownload.addEventListener('click', generatePDF);
-
 function generatePDF() {
     if (filteredSongs.length === 0) { alert('Não há músicas para incluir no PDF. Ajuste seus filtros.'); return; }
     const sorted = [...filteredSongs].sort((a, b) => {
@@ -558,6 +515,5 @@ function generatePDF() {
     printWindow.document.write(printHtml);
     printWindow.document.close();
 }
-
 // ===== INIT =====
 document.addEventListener('DOMContentLoaded', loadRepertorio);
