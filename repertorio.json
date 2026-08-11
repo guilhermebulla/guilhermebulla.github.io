@@ -4946,8 +4946,8 @@
     "musica": "I can see clearly now",
     "artista": "Johnny Nash",
     "estilo": [
-      "Reggae",
-      "Pop"
+      "Pop",
+      "Folk"
     ],
     "idioma": "Inglês",
     "ano": "1972"
@@ -11646,5 +11646,15 @@
     ],
     "idioma": "Inglês",
     "ano": "2016"
+  },
+  {
+    "musica": "I can see clearly now",
+    "artista": "Jimmy Cliff",
+    "estilo": [
+      "Reggae",
+      "Pop"
+    ],
+    "idioma": "Inglês",
+    "ano": "1993"
   }
 ]
