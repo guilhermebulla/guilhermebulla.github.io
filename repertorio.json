@@ -11758,5 +11758,41 @@
     ],
     "idioma": "Inglês",
     "ano": "1995"
+  },
+  {
+    "musica": "Táxi Lunar",
+    "artista": "Geraldo Azevedo",
+    "estilo": [
+      "MPB"
+    ],
+    "idioma": "Português",
+    "ano": "1979"
+  },
+  {
+    "musica": "Táxi Lunar",
+    "artista": "Alceu Valença",
+    "estilo": [
+      "MPB"
+    ],
+    "idioma": "Português",
+    "ano": "1979"
+  },
+  {
+    "musica": "Táxi Lunar",
+    "artista": "Zé Ramalho",
+    "estilo": [
+      "MPB"
+    ],
+    "idioma": "Português",
+    "ano": "1983"
+  },
+  {
+    "musica": "Pé na Areia",
+    "artista": "Diogo Nogueira",
+    "estilo": [
+      "Samba"
+    ],
+    "idioma": "Português",
+    "ano": "2016"
   }
 ]
