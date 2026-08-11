@@ -421,8 +421,8 @@
     "ano": "2004"
   },
   {
-    "musica": "How Far I'll Go (Alessia Cara Version)",
-    "artista": "Alesia Cara",
+    "musica": "How Far I'll Go (Moana Soundtrack)",
+    "artista": "Alessia Cara",
     "estilo": [
       "Pop"
     ],
@@ -11628,5 +11628,23 @@
     ],
     "idioma": "Inglês",
     "ano": "2013"
+  },
+  {
+    "musica": "How deep is your love",
+    "artista": "Bee Gees",
+    "estilo": [
+      "Pop"
+    ],
+    "idioma": "Inglês",
+    "ano": "1977"
+  },
+  {
+    "musica": "How far I'll go (Moana Soundtrack)",
+    "artista": "Disney",
+    "estilo": [
+      "Pop"
+    ],
+    "idioma": "Inglês",
+    "ano": "2016"
   }
 ]
