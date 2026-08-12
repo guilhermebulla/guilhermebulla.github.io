@@ -261,9 +261,6 @@ a:hover { color: var(--gold-hover); }
     .mobile-artist-name { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
     .mobile-song-row { overflow: hidden; }
     .mobile-song-name { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
-    .mobile-artist-header .star-btn {
-        width: 20px; height: 20px; font-size: 0.8rem; padding: 0;
-    }
     .search-box { min-width: 0; }
     .results-body { overflow-x: hidden; }
     .sticky-download { bottom: 16px; right: 16px; padding: 10px 20px; font-size: 0.85rem; }
