@@ -24,25 +24,40 @@
     <main class="rep-main" id="rep-main">
         <h1 class="rep-title">Repertório</h1>
         <p class="rep-subtitle">Explore mais de 1.200 músicas e selecione suas preferências</p>
-        <!-- STATS (sticky + clicável para PDF) -->
-        <div class="stats-bar" id="statsBar" role="button" tabindex="0" title="Clique para baixar o PDF do repertório filtrado">
-            <div class="stat-card">
-                <div class="stat-number" id="statTotal">0</div>
-                <div class="stat-label">Total</div>
+        <!-- STATS (sticky + cards expansivos) -->
+        <div class="stats-bar" id="statsBar">
+            <div class="stat-card" data-scope="total" tabindex="0" role="button" aria-label="Baixar repertório completo em PDF">
+                <div class="stat-card-content">
+                    <div class="stat-number" id="statTotal">0</div>
+                    <div class="stat-label">Total</div>
+                </div>
+                <div class="stat-card-bar">
+                    <svg class="stat-bar-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                    <span class="stat-bar-text">Baixe o repertório completo em PDF</span>
+                </div>
             </div>
-            <div class="stat-card">
-                <div class="stat-number" id="statFiltered">0</div>
-                <div class="stat-label">Filtradas</div>
+            <div class="stat-card" data-scope="filtered" tabindex="0" role="button" aria-label="Baixar repertório filtrado em PDF">
+                <div class="stat-card-content">
+                    <div class="stat-number" id="statFiltered">0</div>
+                    <div class="stat-label">Filtradas</div>
+                </div>
+                <div class="stat-card-bar">
+                    <svg class="stat-bar-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                    <span class="stat-bar-text">Baixe seu repertório personalizado em PDF</span>
+                </div>
             </div>
-            <div class="stat-card">
-                <div class="stat-number" id="statStarred">0</div>
-                <div class="stat-label">★</div>
-            </div>
-            <div class="stat-download-icon">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            <div class="stat-card" data-scope="starred" tabindex="0" role="button" aria-label="Baixar repertório estrelado em PDF">
+                <div class="stat-card-content">
+                    <div class="stat-number" id="statStarred">0</div>
+                    <div class="stat-label">★</div>
+                </div>
+                <div class="stat-card-bar">
+                    <svg class="stat-bar-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                    <span class="stat-bar-text">Baixe seu repertório personalizado em PDF</span>
+                </div>
             </div>
         </div>
-        <!-- BUSCA + TOGGLE FILTROS -->
+        <!-- BUSCA + SORT + TOGGLE FILTROS -->
         <div class="search-row">
             <div class="search-box">
                 <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -51,6 +66,18 @@
                 </svg>
                 <input type="text" id="searchInput" placeholder="Digite música ou artista..." autocomplete="off">
                 <div class="autocomplete-dropdown" id="autocompleteDropdown"></div>
+            </div>
+            <div class="sort-toggle-wrapper" id="sortToggleWrapper">
+                <button class="sort-toggle" id="sortToggle" title="Ordenar" aria-label="Ordenar lista" aria-expanded="false">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M8 20V6M5 9l3-3 3 3"/>
+                        <path d="M16 4v14M13 15l3 3 3-3"/>
+                    </svg>
+                </button>
+                <div class="sort-dropdown" id="sortDropdown">
+                    <button class="sort-option active" data-sort="artista">Artista (A-Z)</button>
+                    <button class="sort-option" data-sort="musica">Música (A-Z)</button>
+                </div>
             </div>
             <button class="filter-toggle" id="filterToggle" title="Mostrar filtros">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -84,15 +111,6 @@
                 <input type="text" id="artistSearch" placeholder="Buscar artista..." autocomplete="off">
                 <div class="artist-list" id="artistList"></div>
             </div>
-        </div>
-        <!-- SORT MOBILE -->
-        <div class="sort-mobile">
-            <select id="sortSelect">
-                <option value="artista">Artista (A-Z)</option>
-                <option value="musica">Música (A-Z)</option>
-                <option value="ano">Ano</option>
-                <option value="estilo">Estilo</option>
-            </select>
         </div>
         <!-- RESULTADOS -->
         <div class="results-table" id="results">
