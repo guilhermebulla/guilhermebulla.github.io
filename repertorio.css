@@ -77,9 +77,12 @@ a:hover { color: var(--gold-hover); }
     z-index: 2; overflow: hidden;
     transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1), background var(--transition);
 }
-.stat-card:not(.disabled):hover .stat-card-bar { background: rgba(212, 168, 83, 0.2); }
-/* FIX: glow animado no próprio card (não clipado por overflow:hidden do pai) */
-.stat-card.expanded .stat-card-bar {
+/* FIX 1: Isolar hover em @media (hover: hover) — elimina sticky hover no mobile */
+@media (hover: hover) {
+    .stat-card:not(.disabled):hover .stat-card-bar { background: rgba(212, 168, 83, 0.2); }
+}
+/* FIX 2: expanded com :not(.disabled) — iguala especificidade (0,4,0) com hover, garantindo prioridade do dourado sólido */
+.stat-card.expanded:not(.disabled) .stat-card-bar {
     width: 100%;
     background: var(--gold);
 }
