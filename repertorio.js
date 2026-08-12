@@ -1,4 +1,4 @@
-/* ===== REPERTORIO.JS v3.0 — Clickable stats + Sticky fix + Footer cleanup ===== */
+/* ===== REPERTORIO.JS v4.0 — Expanding stat cards + Compact sort toggle ===== */
 // ===== STATE =====
 let allSongs = [];
 let filteredSongs = [];
@@ -11,6 +11,7 @@ let autocompleteItems = [];
 let autocompleteIndex = -1;
 let autocompleteLetterMode = false;
 let suppressBlurHide = false;
+let expandedCard = null;
 // ===== DOM =====
 const searchInput = document.getElementById('searchInput');
 const autocompleteDropdown = document.getElementById('autocompleteDropdown');
@@ -24,8 +25,9 @@ const artistSearch = document.getElementById('artistSearch');
 const artistList = document.getElementById('artistList');
 const clearFiltersBtn = document.getElementById('clearFilters');
 const results = document.getElementById('results');
-const statsBar = document.getElementById('statsBar');
-const sortSelect = document.getElementById('sortSelect');
+const sortToggle = document.getElementById('sortToggle');
+const sortDropdown = document.getElementById('sortDropdown');
+const statCards = document.querySelectorAll('.stat-card');
 // ===== INIT =====
 async function loadRepertorio() {
     try {
@@ -403,24 +405,105 @@ artistList.addEventListener('click', (e) => {
 artistSearch.addEventListener('input', () => { renderArtistList(getFilteredArtists()); });
 // ===== STATS =====
 function updateStats() {
+    const starredCount = Object.values(songStates).filter(s => s === 'starred').length;
     document.getElementById('statTotal').textContent = allSongs.length;
     document.getElementById('statFiltered').textContent = filteredSongs.length;
-    document.getElementById('statStarred').textContent = Object.values(songStates).filter(s => s === 'starred').length;
-    statsBar.classList.toggle('download-ready', filteredSongs.length > 0);
+    document.getElementById('statStarred').textContent = starredCount;
+    // Card disabled states
+    statCards.forEach(card => {
+        const scope = card.dataset.scope;
+        if (scope === 'total') {
+            card.classList.toggle('disabled', allSongs.length === 0);
+        } else if (scope === 'filtered') {
+            card.classList.toggle('disabled', filteredSongs.length === 0);
+        } else if (scope === 'starred') {
+            card.classList.toggle('disabled', starredCount === 0);
+        }
+    });
+    // Dynamic instruction texts
+    const filteredText = document.querySelector('[data-scope="filtered"] .stat-bar-text');
+    const starredText = document.querySelector('[data-scope="starred"] .stat-bar-text');
+    if (filteredText) filteredText.textContent = 'Baixe seu repertório personalizado em PDF — ' + filteredSongs.length + ' músicas';
+    if (starredText) starredText.textContent = 'Baixe seu repertório personalizado em PDF — ' + starredCount + ' músicas';
 }
 function updateFilterToggleBadge() {
     const total = document.querySelectorAll('#styleFilters input:checked, #langFilters input:checked, #decadeFilters input:checked').length;
     if (total > 0) { filterToggleBadge.textContent = total; filterToggleBadge.classList.add('visible'); }
     else { filterToggleBadge.classList.remove('visible'); }
 }
+// ===== STAT CARD INTERACTIONS =====
+function collapseCard(card) {
+    if (!card) return;
+    card.classList.remove('expanded');
+    if (expandedCard === card) expandedCard = null;
+}
+function collapseAllCards() {
+    statCards.forEach(collapseCard);
+}
+statCards.forEach(card => {
+    card.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (card.classList.contains('disabled')) return;
+        if (card.classList.contains('expanded')) {
+            const scope = card.dataset.scope;
+            collapseCard(card);
+            generatePDF(scope);
+        } else {
+            collapseAllCards();
+            card.classList.add('expanded');
+            expandedCard = card;
+        }
+    });
+    card.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            card.click();
+        } else if (e.key === 'Escape' && card.classList.contains('expanded')) {
+            collapseCard(card);
+        }
+    });
+});
+document.addEventListener('click', (e) => {
+    if (expandedCard && !expandedCard.contains(e.target)) {
+        collapseCard(expandedCard);
+    }
+    if (sortDropdown.classList.contains('visible') && !sortToggle.contains(e.target) && !sortDropdown.contains(e.target)) {
+        sortDropdown.classList.remove('visible');
+        sortToggle.classList.remove('active');
+        sortToggle.setAttribute('aria-expanded', 'false');
+    }
+});
+// ===== SORT TOGGLE =====
+sortToggle.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const isVisible = sortDropdown.classList.toggle('visible');
+    sortToggle.classList.toggle('active', isVisible);
+    sortToggle.setAttribute('aria-expanded', isVisible ? 'true' : 'false');
+});
+sortDropdown.addEventListener('click', (e) => {
+    const option = e.target.closest('.sort-option');
+    if (!option) return;
+    sortColumn = option.dataset.sort;
+    sortDir = 'asc';
+    sortDropdown.querySelectorAll('.sort-option').forEach(o => o.classList.remove('active'));
+    option.classList.add('active');
+    sortDropdown.classList.remove('visible');
+    sortToggle.classList.remove('active');
+    sortToggle.setAttribute('aria-expanded', 'false');
+    renderResults();
+});
 // ===== UI EVENTS =====
 filterToggle.addEventListener('click', () => { filterPanel.classList.toggle('visible'); filterToggle.classList.toggle('active'); });
-sortSelect.addEventListener('change', () => { sortColumn = sortSelect.value; sortDir = 'asc'; renderResults(); });
 clearFiltersBtn.addEventListener('click', () => {
     searchInput.value = ''; artistSearch.value = '';
     document.querySelectorAll('#styleFilters input, #langFilters input, #decadeFilters input').forEach(cb => cb.checked = false);
     songStates = {}; autocompleteLetterMode = false;
+    sortColumn = 'artista'; sortDir = 'asc';
+    sortDropdown.querySelectorAll('.sort-option').forEach(o => o.classList.remove('active'));
+    const defaultSort = sortDropdown.querySelector('[data-sort="artista"]');
+    if (defaultSort) defaultSort.classList.add('active');
     autocompleteDropdown.classList.remove('visible');
+    collapseAllCards();
     renderArtistList(uniqueArtists); applyFilters();
 });
 styleFilters.addEventListener('change', applyFilters);
@@ -431,15 +514,18 @@ window.addEventListener('resize', () => {
     clearTimeout(resizeTimer);
     resizeTimer = setTimeout(renderResults, 200);
 });
-// ===== STATS BAR → PDF DOWNLOAD =====
-statsBar.addEventListener('click', generatePDF);
-statsBar.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); generatePDF(); }
-});
 // ===== PDF GENERATION =====
-function generatePDF() {
-    if (filteredSongs.length === 0) { alert('Não há músicas para incluir no PDF. Ajuste seus filtros.'); return; }
-    const sorted = [...filteredSongs].sort((a, b) => {
+function generatePDF(scope) {
+    let songs;
+    if (scope === 'total') {
+        songs = [...allSongs];
+    } else if (scope === 'starred') {
+        songs = allSongs.filter(s => songStates[s.artista + '|' + s.musica] === 'starred');
+    } else {
+        songs = [...filteredSongs];
+    }
+    if (songs.length === 0) { alert('Não há músicas para incluir no PDF.'); return; }
+    const sorted = [...songs].sort((a, b) => {
         const c = a.artista.localeCompare(b.artista, 'pt-BR');
         return c !== 0 ? c : a.musica.localeCompare(b.musica, 'pt-BR');
     });
@@ -453,9 +539,9 @@ function generatePDF() {
     });
     let bodyHtml = '';
     Object.keys(letterGroups).sort().forEach(letter => {
-        const songs = letterGroups[letter];
+        const songsInLetter = letterGroups[letter];
         const artistGroups = {};
-        songs.forEach(song => { if (!artistGroups[song.artista]) artistGroups[song.artista] = []; artistGroups[song.artista].push(song); });
+        songsInLetter.forEach(song => { if (!artistGroups[song.artista]) artistGroups[song.artista] = []; artistGroups[song.artista].push(song); });
         const sortedArtists = Object.keys(artistGroups).sort((a, b) => a.localeCompare(b, 'pt-BR'));
         bodyHtml += '<div class="letter-group"><span class="watermark">' + escapeHtml(letter) + '</span>';
         sortedArtists.forEach(artist => {
@@ -468,6 +554,12 @@ function generatePDF() {
         });
         bodyHtml += '<div style="clear:both;"></div></div>';
     });
+    const subtitleMap = {
+        'total': 'BullaAcoustic · Guilherme Bulla — Voz &amp; Violão',
+        'filtered': 'BullaAcoustic · Guilherme Bulla — Repertório personalizado',
+        'starred': 'BullaAcoustic · Guilherme Bulla — Repertório estrelado'
+    };
+    const subtitle = subtitleMap[scope] || subtitleMap['filtered'];
     const printHtml =
         '<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><title>Repertório — BullaAcoustic</title>' +
         '<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">' +
@@ -481,7 +573,7 @@ function generatePDF() {
         '.song-line{font-size:9.5pt;color:#444;padding-left:2px}' +
         '.footer{position:fixed;bottom:0;left:0;right:0;text-align:center;font-size:7.5pt;color:#999;padding:5px 0;border-top:1px solid #eee}' +
         '</style></head><body>' +
-        '<div class="header"><h1>REPERTÓRIO</h1><div class="subtitle">BullaAcoustic · Guilherme Bulla — Voz &amp; Violão</div></div>' +
+        '<div class="header"><h1>REPERTÓRIO</h1><div class="subtitle">' + subtitle + '</div></div>' +
         '<div class="content">' + bodyHtml + '</div>' +
         '<div class="footer">BullaAcoustic · guilhermebulla.github.io · WhatsApp (51) 98444.0402 · @guilhermebulla</div>' +
         '<scr' + 'ipt>window.onload=function(){setTimeout(function(){window.print()},600)}<' + '/scr' + 'ipt></body></html>';
