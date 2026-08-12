@@ -1,4 +1,4 @@
-/* ===== REPERTORIO.JS v4.0 — Expanding stat cards + Compact sort toggle ===== */
+/* ===== REPERTORIO.JS v5.0 — Expanding cards + Glow + Input clear + Per-section clear ===== */
 // ===== STATE =====
 let allSongs = [];
 let filteredSongs = [];
@@ -14,6 +14,7 @@ let suppressBlurHide = false;
 let expandedCard = null;
 // ===== DOM =====
 const searchInput = document.getElementById('searchInput');
+const searchClear = document.getElementById('searchClear');
 const autocompleteDropdown = document.getElementById('autocompleteDropdown');
 const filterToggle = document.getElementById('filterToggle');
 const filterPanel = document.getElementById('filterPanel');
@@ -22,6 +23,7 @@ const styleFilters = document.getElementById('styleFilters');
 const langFilters = document.getElementById('langFilters');
 const decadeFilters = document.getElementById('decadeFilters');
 const artistSearch = document.getElementById('artistSearch');
+const artistClear = document.getElementById('artistClear');
 const artistList = document.getElementById('artistList');
 const clearFiltersBtn = document.getElementById('clearFilters');
 const results = document.getElementById('results');
@@ -123,6 +125,7 @@ function getArtistStarState(artist) {
 // ===== AUTOCOMPLETE =====
 let autocompleteDebounce;
 searchInput.addEventListener('input', () => {
+    searchClear.classList.toggle('visible', searchInput.value.length > 0);
     clearTimeout(autocompleteDebounce);
     const term = searchInput.value;
     autocompleteDebounce = setTimeout(() => {
@@ -144,6 +147,14 @@ searchInput.addEventListener('keydown', (e) => {
     else if (e.key === 'ArrowUp') { e.preventDefault(); autocompleteIndex = Math.max(autocompleteIndex - 1, -1); updateAutocompleteFocus(); }
     else if (e.key === 'Enter' && autocompleteIndex >= 0) { e.preventDefault(); selectAutocomplete(autocompleteItems[autocompleteIndex]); }
     else if (e.key === 'Escape') { autocompleteDropdown.classList.remove('visible'); }
+});
+searchClear.addEventListener('click', () => {
+    searchInput.value = '';
+    searchClear.classList.remove('visible');
+    autocompleteDropdown.classList.remove('visible');
+    autocompleteLetterMode = false;
+    applyFilters();
+    searchInput.focus();
 });
 function showAutocomplete(term) {
     term = term.trim();
@@ -218,6 +229,7 @@ function selectAutocomplete(item) {
     if (item.type === 'letter') { autocompleteLetterMode = item.letter; suppressBlurHide = true; showAutocomplete(item.letter); searchInput.blur(); return; }
     if (item.type === 'artist') { searchInput.value = item.value; }
     else if (item.type === 'song') { searchInput.value = item.value; }
+    searchClear.classList.toggle('visible', searchInput.value.length > 0);
     autocompleteDropdown.classList.remove('visible');
     autocompleteLetterMode = false;
     applyFilters();
@@ -248,6 +260,7 @@ function applyFilters() {
     renderResults();
     updateStats();
     updateFilterToggleBadge();
+    updateFilterGroupClearButtons();
 }
 // ===== SORT =====
 function sortSongs(songs, column, dir) {
@@ -402,14 +415,23 @@ artistList.addEventListener('click', (e) => {
     if (!btn) return;
     toggleArtistStar(btn.dataset.artist);
 });
-artistSearch.addEventListener('input', () => { renderArtistList(getFilteredArtists()); });
+artistSearch.addEventListener('input', () => {
+    artistClear.classList.toggle('visible', artistSearch.value.length > 0);
+    renderArtistList(getFilteredArtists());
+});
+artistClear.addEventListener('click', () => {
+    artistSearch.value = '';
+    artistClear.classList.remove('visible');
+    renderArtistList(uniqueArtists);
+    updateFilterGroupClearButtons();
+    artistSearch.focus();
+});
 // ===== STATS =====
 function updateStats() {
     const starredCount = Object.values(songStates).filter(s => s === 'starred').length;
     document.getElementById('statTotal').textContent = allSongs.length;
     document.getElementById('statFiltered').textContent = filteredSongs.length;
     document.getElementById('statStarred').textContent = starredCount;
-    // Card disabled states
     statCards.forEach(card => {
         const scope = card.dataset.scope;
         if (scope === 'total') {
@@ -420,16 +442,34 @@ function updateStats() {
             card.classList.toggle('disabled', starredCount === 0);
         }
     });
-    // Dynamic instruction texts
     const filteredText = document.querySelector('[data-scope="filtered"] .stat-bar-text');
     const starredText = document.querySelector('[data-scope="starred"] .stat-bar-text');
-    if (filteredText) filteredText.textContent = 'Baixe seu repertório personalizado em PDF — ' + filteredSongs.length + ' músicas';
-    if (starredText) starredText.textContent = 'Baixe seu repertório personalizado em PDF — ' + starredCount + ' músicas';
+    if (filteredText) filteredText.textContent = 'Repertório personalizado — ' + filteredSongs.length + ' músicas';
+    if (starredText) starredText.textContent = 'Repertório estrelado — ' + starredCount + ' músicas';
 }
 function updateFilterToggleBadge() {
     const total = document.querySelectorAll('#styleFilters input:checked, #langFilters input:checked, #decadeFilters input:checked').length;
     if (total > 0) { filterToggleBadge.textContent = total; filterToggleBadge.classList.add('visible'); }
     else { filterToggleBadge.classList.remove('visible'); }
+}
+function updateFilterGroupClearButtons() {
+    const sections = [
+        { id: 'langFilters', type: 'checkbox' },
+        { id: 'styleFilters', type: 'checkbox' },
+        { id: 'decadeFilters', type: 'checkbox' },
+        { id: 'artistSearch', type: 'text' }
+    ];
+    sections.forEach(section => {
+        const btn = document.querySelector('.filter-group-clear[data-target="' + section.id + '"]');
+        if (!btn) return;
+        let hasActive = false;
+        if (section.type === 'checkbox') {
+            hasActive = document.querySelectorAll('#' + section.id + ' input:checked').length > 0;
+        } else {
+            hasActive = document.getElementById(section.id).value.length > 0;
+        }
+        btn.classList.toggle('visible', hasActive);
+    });
 }
 // ===== STAT CARD INTERACTIONS =====
 function collapseCard(card) {
@@ -492,10 +532,27 @@ sortDropdown.addEventListener('click', (e) => {
     sortToggle.setAttribute('aria-expanded', 'false');
     renderResults();
 });
+// ===== PER-SECTION CLEAR =====
+document.querySelectorAll('.filter-group-clear').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const target = btn.dataset.target;
+        if (target === 'artistSearch') {
+            artistSearch.value = '';
+            artistClear.classList.remove('visible');
+            renderArtistList(uniqueArtists);
+        } else {
+            document.querySelectorAll('#' + target + ' input').forEach(cb => cb.checked = false);
+        }
+        applyFilters();
+    });
+});
 // ===== UI EVENTS =====
 filterToggle.addEventListener('click', () => { filterPanel.classList.toggle('visible'); filterToggle.classList.toggle('active'); });
 clearFiltersBtn.addEventListener('click', () => {
     searchInput.value = ''; artistSearch.value = '';
+    searchClear.classList.remove('visible');
+    artistClear.classList.remove('visible');
     document.querySelectorAll('#styleFilters input, #langFilters input, #decadeFilters input').forEach(cb => cb.checked = false);
     songStates = {}; autocompleteLetterMode = false;
     sortColumn = 'artista'; sortDir = 'asc';
@@ -503,6 +560,7 @@ clearFiltersBtn.addEventListener('click', () => {
     const defaultSort = sortDropdown.querySelector('[data-sort="artista"]');
     if (defaultSort) defaultSort.classList.add('active');
     autocompleteDropdown.classList.remove('visible');
+    document.querySelectorAll('.filter-group-clear').forEach(btn => btn.classList.remove('visible'));
     collapseAllCards();
     renderArtistList(uniqueArtists); applyFilters();
 });
