@@ -1,4 +1,4 @@
-/* ===== REPERTORIO.CSS v2.1 — Sticky stats + Mobile grouped + SVG icons ===== */
+/* ===== REPERTORIO.CSS v3.0 — Clickable stats + Sticky fix + Footer cleanup ===== */
 /* Dependências: base.css */
 :root {
     --text-dim: #666666;
@@ -12,8 +12,8 @@
     --transition: 0.25s ease;
     --header-h: 56px;
 }
-html, body { overflow-x: hidden; }
-body { min-height: 100vh; }
+/* FIX: overflow-x: clip no body (não no html) para não quebrar position: sticky */
+body { overflow-x: clip; min-height: 100vh; }
 a { color: var(--gold); text-decoration: none; transition: color var(--transition); }
 a:hover { color: var(--gold-hover); }
 /* ===== HEADER ===== */
@@ -40,18 +40,37 @@ a:hover { color: var(--gold-hover); }
 }
 .rep-title::after { content: ''; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 120px; height: 2px; background: linear-gradient(90deg, transparent, var(--gold), transparent); }
 .rep-subtitle { color: var(--text-muted); font-size: 0.95rem; text-align: center; margin-bottom: 1.5rem; }
-/* ===== STATS BAR (STICKY) ===== */
+/* ===== STATS BAR (STICKY + CLICÁVEL) ===== */
 .stats-bar {
     display: flex; gap: 0.75rem; flex-wrap: wrap;
+    align-items: center;
     margin-bottom: 1.5rem;
     position: sticky; top: var(--header-h); z-index: 90;
     background: var(--bg);
     padding: 0.75rem 0;
     border-bottom: 1px solid var(--border);
+    transition: background var(--transition);
+}
+.stats-bar.download-ready { cursor: pointer; }
+.stats-bar.download-ready:hover { background: var(--bg-elevated); }
+.stats-bar.download-ready:hover .stat-download-icon { color: var(--gold); }
+.stats-bar.download-ready:focus-visible {
+    outline: 2px solid var(--gold);
+    outline-offset: 2px;
+    border-radius: var(--radius-sm);
 }
 .stat-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 0.75rem 1.25rem; flex: 1; min-width: 100px; text-align: center; }
 .stat-number { font-family: 'Playfair Display', serif; font-size: 1.75rem; font-weight: 700; color: var(--gold); }
 .stat-label { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
+.stat-download-icon {
+    display: none;
+    color: var(--text-dim);
+    margin-left: auto;
+    padding: 0 0.5rem;
+    transition: color var(--transition);
+    align-items: center;
+}
+.stats-bar.download-ready .stat-download-icon { display: flex; }
 /* ===== SEARCH ROW ===== */
 .search-row { display: flex; gap: 10px; margin-bottom: 1rem; }
 .search-box { flex: 1; position: relative; }
@@ -207,30 +226,21 @@ a:hover { color: var(--gold-hover); }
 /* ===== DOWNLOAD SECTION ===== */
 .download-section { margin-top: 2.5rem; padding: 1.5rem; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); text-align: center; }
 .disclaimer { font-size: 0.8rem; color: var(--text-muted); line-height: 1.5; max-width: 600px; margin: 0 auto; }
-/* ===== STICKY DOWNLOAD ===== */
-.sticky-download {
-    position: fixed; bottom: 20px; right: 20px;
-    display: inline-flex; align-items: center; gap: 8px;
-    padding: 12px 24px; background: var(--gold); color: var(--bg);
-    border: none; border-radius: 50px;
-    font-family: 'Inter', sans-serif; font-size: 0.9rem; font-weight: 500;
-    cursor: pointer; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
-    z-index: 90; opacity: 0; pointer-events: none;
-    transform: translateY(20px); transition: all 0.3s ease;
-}
-.sticky-download.visible { opacity: 1; pointer-events: auto; transform: translateY(0); }
-.sticky-download:hover { background: var(--gold-hover); }
-.sticky-download:disabled { opacity: 0; pointer-events: none; }
-.sticky-download svg { flex-shrink: 0; }
 /* ===== FOOTER ===== */
 .rep-footer { background: #0a0a0a; border-top: 1px solid var(--border); padding: 48px 0 32px; text-align: center; }
-.footer-social { display: flex; justify-content: center; gap: 20px; margin-bottom: 8px; }
+.footer-social { display: flex; justify-content: center; gap: 20px; margin-bottom: 16px; }
 .footer-social a { display: flex; align-items: center; color: var(--text-muted); transition: color var(--transition); }
 .footer-social a:hover { color: var(--gold); }
 .footer-social svg { width: 22px; height: 22px; }
-.footer-nav { display: flex; gap: 28px; flex-wrap: wrap; justify-content: center; margin-bottom: 24px; }
-.footer-nav a { color: var(--text-muted); font-size: 0.9rem; transition: color var(--transition); }
-.footer-nav a:hover { color: var(--gold); }
+.footer-cta-wa {
+    display: inline-block;
+    color: var(--gold);
+    font-size: 0.95rem;
+    font-weight: 500;
+    margin-bottom: 24px;
+    transition: color var(--transition);
+}
+.footer-cta-wa:hover { color: var(--gold-hover); }
 .footer-legal { text-align: center; color: var(--text-muted); font-size: 0.85rem; opacity: 0.7; }
 .footer-legal p { margin-bottom: 6px; }
 /* ===== RESPONSIVE ===== */
@@ -243,9 +253,9 @@ a:hover { color: var(--gold-hover); }
     .stats-bar { gap: 0.5rem; padding: 0.5rem 0; }
     .stat-card { min-width: 80px; padding: 0.5rem 0.75rem; }
     .stat-number { font-size: 1.25rem; }
+    .stat-download-icon { padding: 0 0.25rem; }
     .sort-mobile { display: block; }
     .results-table-header { display: none; }
-    /* Mobile flat: single-line rows */
     .result-row {
         display: flex; align-items: center; gap: 10px; padding: 10px 14px;
         overflow: hidden;
@@ -263,11 +273,10 @@ a:hover { color: var(--gold-hover); }
     .mobile-song-name { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
     .search-box { min-width: 0; }
     .results-body { overflow-x: hidden; }
-    .sticky-download { bottom: 16px; right: 16px; padding: 10px 20px; font-size: 0.85rem; }
 }
 /* ===== PRINT ===== */
 @media print {
     .rep-header, .search-row, .filter-panel, .stats-bar, .sort-mobile,
-    .download-section, .rep-footer, .sticky-download, .skip-link,
+    .download-section, .rep-footer, .skip-link,
     .results-table-header, .star-btn { display: none !important; }
 }
