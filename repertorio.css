@@ -1,4 +1,4 @@
-/* ===== REPERTORIO.CSS v5.0 — Expanding cards + Glow + Input clear + Per-section clear ===== */
+/* ===== REPERTORIO.CSS v6.0 — Glow fix + Legibilidade + Empty state + Search hint ===== */
 /* Dependências: base.css */
 :root {
     --text-dim: #666666;
@@ -55,7 +55,8 @@ a:hover { color: var(--gold-hover); }
     padding: 0.75rem 1.25rem;
     flex: 1; min-width: 100px; text-align: center;
     cursor: pointer;
-    transition: border-color var(--transition);
+    transition: border-color var(--transition), box-shadow 0.3s ease;
+    will-change: box-shadow;
 }
 .stat-card:focus-visible { outline: 2px solid var(--gold); outline-offset: -2px; }
 .stat-card.disabled { cursor: default; opacity: 0.6; }
@@ -77,14 +78,17 @@ a:hover { color: var(--gold-hover); }
     transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1), background var(--transition);
 }
 .stat-card:not(.disabled):hover .stat-card-bar { background: rgba(212, 168, 83, 0.2); }
+/* FIX: glow animado no próprio card (não clipado por overflow:hidden do pai) */
 .stat-card.expanded .stat-card-bar {
     width: 100%;
     background: var(--gold);
+}
+.stat-card.expanded {
     animation: glow-pulse 2s ease-in-out infinite;
 }
 @keyframes glow-pulse {
-    0%, 100% { box-shadow: 0 0 8px 0 rgba(212, 168, 83, 0.4); }
-    50% { box-shadow: 0 0 20px 4px rgba(212, 168, 83, 0.6); }
+    0%, 100% { box-shadow: 0 0 12px 2px rgba(212, 168, 83, 0.5), 0 0 4px 0 rgba(212, 168, 83, 0.3); }
+    50% { box-shadow: 0 0 28px 8px rgba(212, 168, 83, 0.7), 0 0 12px 2px rgba(212, 168, 83, 0.4); }
 }
 .stat-bar-inner {
     display: flex; align-items: center; gap: 0.5rem;
@@ -98,8 +102,8 @@ a:hover { color: var(--gold-hover); }
 }
 .stat-card.expanded .stat-bar-icon { color: var(--bg); }
 .stat-bar-text {
-    color: var(--bg);
-    font-size: 0.85rem; font-weight: 500;
+    color: #0f0f0f;
+    font-size: 0.9rem; font-weight: 600;
     line-height: 1.3;
     opacity: 0;
     transition: opacity 0.15s ease 0.2s;
@@ -121,6 +125,17 @@ a:hover { color: var(--gold-hover); }
 .search-box input:focus { outline: none; border-color: var(--gold); }
 .search-box input::placeholder { color: var(--text-dim); }
 .search-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-dim); pointer-events: none; }
+/* ===== SEARCH HINT (/ para focar) ===== */
+.search-hint {
+    position: absolute; right: 14px; top: 50%; transform: translateY(-50%);
+    font-family: 'Inter', sans-serif; font-size: 0.7rem;
+    color: var(--text-dim); border: 1px solid var(--border-light);
+    padding: 1px 7px; border-radius: 4px; pointer-events: none;
+    background: var(--bg-elevated);
+    transition: opacity 0.2s ease;
+    line-height: 1.5;
+}
+.search-hint.hidden { opacity: 0; }
 /* ===== INPUT CLEAR ===== */
 .input-clear {
     position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
@@ -284,7 +299,19 @@ a:hover { color: var(--gold-hover); }
 .cell-ano { font-size: 0.8rem; color: var(--text-dim); }
 .show-more { padding: 1.25rem; text-align: center; color: var(--gold); cursor: pointer; font-size: 0.9rem; transition: background var(--transition); }
 .show-more:hover { background: var(--bg); }
+/* ===== EMPTY STATE ===== */
 .results-empty { padding: 3rem 1rem; text-align: center; color: var(--text-dim); font-size: 0.9rem; }
+.results-empty .empty-icon { color: var(--border-light); margin-bottom: 1rem; display: block; }
+.results-empty p { margin-bottom: 1.25rem; }
+.results-empty-clear {
+    display: inline-block; padding: 8px 24px;
+    background: transparent; border: 1px solid var(--gold);
+    border-radius: 50px; color: var(--gold);
+    font-size: 0.85rem; cursor: pointer;
+    font-family: 'Inter', sans-serif; font-weight: 500;
+    transition: all var(--transition);
+}
+.results-empty-clear:hover { background: var(--gold-soft); }
 /* ===== MOBILE ARTIST GROUPED ===== */
 .mobile-artist-group { border-bottom: 1px solid var(--border); }
 .mobile-artist-header {
@@ -333,7 +360,8 @@ a:hover { color: var(--gold-hover); }
     .stat-number { font-size: 1.25rem; }
     .stat-card-bar { min-width: 32px; }
     .stat-bar-icon { width: 14px; height: 14px; }
-    .stat-bar-text { font-size: 0.75rem; }
+    .stat-bar-text { font-size: 0.8rem; }
+    .search-hint { display: none; }
     .sort-toggle-wrapper { display: block; }
     .results-table-header { display: none; }
     .result-row {
