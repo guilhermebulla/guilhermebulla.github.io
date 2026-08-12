@@ -1,4 +1,4 @@
-/* ===== REPERTORIO.JS v5.0 — Expanding cards + Glow + Input clear + Per-section clear ===== */
+/* ===== REPERTORIO.JS v6.0 — LocalStorage + Animated stats + / shortcut + URL hash + Empty state ===== */
 // ===== STATE =====
 let allSongs = [];
 let filteredSongs = [];
@@ -12,9 +12,12 @@ let autocompleteIndex = -1;
 let autocompleteLetterMode = false;
 let suppressBlurHide = false;
 let expandedCard = null;
+let urlHashReady = false;
+const STORAGE_KEY = 'bulla_starred_songs';
 // ===== DOM =====
 const searchInput = document.getElementById('searchInput');
 const searchClear = document.getElementById('searchClear');
+const searchHint = document.getElementById('searchHint');
 const autocompleteDropdown = document.getElementById('autocompleteDropdown');
 const filterToggle = document.getElementById('filterToggle');
 const filterPanel = document.getElementById('filterPanel');
@@ -30,9 +33,95 @@ const results = document.getElementById('results');
 const sortToggle = document.getElementById('sortToggle');
 const sortDropdown = document.getElementById('sortDropdown');
 const statCards = document.querySelectorAll('.stat-card');
+// ===== LOCALSTORAGE (estrelas persistentes) =====
+function loadStarred() {
+    try {
+        const stored = localStorage.getItem(STORAGE_KEY);
+        if (stored) songStates = JSON.parse(stored);
+    } catch(e) {}
+}
+function saveStarred() {
+    try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(songStates));
+    } catch(e) {}
+}
+// ===== ANIMATED STATS (count up/down) =====
+function animateStat(el, target) {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        el.textContent = target;
+        return;
+    }
+    if (el._animId) cancelAnimationFrame(el._animId);
+    const current = parseInt(el.textContent) || 0;
+    if (current === target) { el.textContent = target; return; }
+    const duration = 400;
+    const start = performance.now();
+    function step(now) {
+        const elapsed = now - start;
+        const progress = Math.min(elapsed / duration, 1);
+        const eased = 1 - Math.pow(1 - progress, 3);
+        const value = Math.round(current + (target - current) * eased);
+        el.textContent = value;
+        if (progress < 1) {
+            el._animId = requestAnimationFrame(step);
+        } else {
+            el._animId = null;
+        }
+    }
+    el._animId = requestAnimationFrame(step);
+}
+// ===== URL HASH (filtros compartilháveis) =====
+function updateUrlHash() {
+    if (!urlHashReady) return;
+    const params = [];
+    const searchTerm = searchInput.value.trim();
+    if (searchTerm) params.push('busca=' + encodeURIComponent(searchTerm));
+    const styles = Array.from(document.querySelectorAll('#styleFilters input:checked')).map(cb => cb.value);
+    if (styles.length) params.push('estilo=' + encodeURIComponent(styles.join(',')));
+    const langs = Array.from(document.querySelectorAll('#langFilters input:checked')).map(cb => cb.value);
+    if (langs.length) params.push('idioma=' + encodeURIComponent(langs.join(',')));
+    const decades = Array.from(document.querySelectorAll('#decadeFilters input:checked')).map(cb => cb.value);
+    if (decades.length) params.push('decada=' + encodeURIComponent(decades.join(',')));
+    const hash = params.length ? '#' + params.join('&') : '';
+    history.replaceState(null, '', hash || window.location.pathname);
+}
+function applyUrlHash() {
+    const hash = window.location.hash.slice(1);
+    if (!hash) return false;
+    const params = new URLSearchParams(hash);
+    const busca = params.get('busca');
+    if (busca) {
+        searchInput.value = busca;
+        searchClear.classList.add('visible');
+        searchHint.classList.add('hidden');
+    }
+    const estilo = params.get('estilo');
+    if (estilo) {
+        estilo.split(',').forEach(e => {
+            const cb = document.querySelector('#styleFilters input[value="' + e + '"]');
+            if (cb) cb.checked = true;
+        });
+    }
+    const idioma = params.get('idioma');
+    if (idioma) {
+        idioma.split(',').forEach(l => {
+            const cb = document.querySelector('#langFilters input[value="' + l + '"]');
+            if (cb) cb.checked = true;
+        });
+    }
+    const decada = params.get('decada');
+    if (decada) {
+        decada.split(',').forEach(d => {
+            const cb = document.querySelector('#decadeFilters input[value="' + d + '"]');
+            if (cb) cb.checked = true;
+        });
+    }
+    return true;
+}
 // ===== INIT =====
 async function loadRepertorio() {
     try {
+        loadStarred();
         const response = await fetch('repertorio.json');
         if (!response.ok) throw new Error('Arquivo não encontrado');
         const buffer = await response.arrayBuffer();
@@ -44,6 +133,8 @@ async function loadRepertorio() {
         renderLangPills();
         renderDecadePills();
         renderArtistList(uniqueArtists);
+        applyUrlHash();
+        urlHashReady = true;
         applyFilters();
     } catch (error) {
         console.error('Erro:', error);
@@ -72,6 +163,18 @@ function parseIdiomas(song) {
     if (Array.isArray(song.idioma)) return song.idioma;
     if (typeof song.idioma === 'string') return song.idioma.split(',').map(s => s.trim());
     return [];
+}
+// ===== EMPTY STATE HTML =====
+function getEmptyStateHtml() {
+    return '<div class="results-empty">' +
+        '<svg class="empty-icon" width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">' +
+        '<circle cx="11" cy="11" r="8"></circle>' +
+        '<line x1="21" y1="21" x2="16.65" y2="16.65"></line>' +
+        '<line x1="8" y1="11" x2="14" y2="11"></line>' +
+        '</svg>' +
+        '<p>Nenhuma música encontrada com os filtros atuais.</p>' +
+        '<button class="results-empty-clear" id="emptyClearFilters">Limpar filtros</button>' +
+    '</div>';
 }
 // ===== RENDER PILLS =====
 function renderStylePills() {
@@ -125,7 +228,9 @@ function getArtistStarState(artist) {
 // ===== AUTOCOMPLETE =====
 let autocompleteDebounce;
 searchInput.addEventListener('input', () => {
-    searchClear.classList.toggle('visible', searchInput.value.length > 0);
+    const hasText = searchInput.value.length > 0;
+    searchClear.classList.toggle('visible', hasText);
+    searchHint.classList.toggle('hidden', hasText);
     clearTimeout(autocompleteDebounce);
     const term = searchInput.value;
     autocompleteDebounce = setTimeout(() => {
@@ -151,6 +256,7 @@ searchInput.addEventListener('keydown', (e) => {
 searchClear.addEventListener('click', () => {
     searchInput.value = '';
     searchClear.classList.remove('visible');
+    searchHint.classList.remove('hidden');
     autocompleteDropdown.classList.remove('visible');
     autocompleteLetterMode = false;
     applyFilters();
@@ -229,7 +335,8 @@ function selectAutocomplete(item) {
     if (item.type === 'letter') { autocompleteLetterMode = item.letter; suppressBlurHide = true; showAutocomplete(item.letter); searchInput.blur(); return; }
     if (item.type === 'artist') { searchInput.value = item.value; }
     else if (item.type === 'song') { searchInput.value = item.value; }
-    searchClear.classList.toggle('visible', searchInput.value.length > 0);
+    searchClear.classList.add('visible');
+    searchHint.classList.add('hidden');
     autocompleteDropdown.classList.remove('visible');
     autocompleteLetterMode = false;
     applyFilters();
@@ -261,6 +368,7 @@ function applyFilters() {
     updateStats();
     updateFilterToggleBadge();
     updateFilterGroupClearButtons();
+    updateUrlHash();
 }
 // ===== SORT =====
 function sortSongs(songs, column, dir) {
@@ -286,7 +394,7 @@ function renderResults() {
 // ===== RENDER TABLE (desktop + mobile flat) =====
 function renderTable() {
     if (filteredSongs.length === 0) {
-        results.innerHTML = '<div class="results-empty">Nenhuma música encontrada.</div>';
+        results.innerHTML = getEmptyStateHtml();
         return;
     }
     const sorted = sortSongs(filteredSongs, sortColumn, sortDir);
@@ -340,7 +448,7 @@ function renderTable() {
 // ===== RENDER MOBILE GROUPED (by artist) =====
 function renderMobileGrouped() {
     if (filteredSongs.length === 0) {
-        results.innerHTML = '<div class="results-empty">Nenhuma música encontrada.</div>';
+        results.innerHTML = getEmptyStateHtml();
         return;
     }
     const sorted = sortSongs(filteredSongs, 'artista', 'asc');
@@ -384,6 +492,10 @@ function renderMobileGrouped() {
 }
 // ===== STAR TOGGLES =====
 results.addEventListener('click', (e) => {
+    if (e.target.closest('#emptyClearFilters')) {
+        clearFiltersBtn.click();
+        return;
+    }
     const btn = e.target.closest('.star-btn');
     if (!btn) return;
     const artist = btn.dataset.artist;
@@ -391,6 +503,7 @@ results.addEventListener('click', (e) => {
     if (song) {
         const key = artist + '|' + song;
         songStates[key] = songStates[key] === 'starred' ? 'neutral' : 'starred';
+        saveStarred();
         renderResults();
         renderArtistList(getFilteredArtists());
         updateStats();
@@ -402,6 +515,7 @@ function toggleArtistStar(artist) {
     const songs = allSongs.filter(s => s.artista === artist);
     const allStarred = songs.every(s => songStates[artist + '|' + s.musica] === 'starred');
     songs.forEach(s => { songStates[artist + '|' + s.musica] = allStarred ? 'neutral' : 'starred'; });
+    saveStarred();
     renderArtistList(getFilteredArtists());
     renderResults();
     updateStats();
@@ -429,9 +543,9 @@ artistClear.addEventListener('click', () => {
 // ===== STATS =====
 function updateStats() {
     const starredCount = Object.values(songStates).filter(s => s === 'starred').length;
-    document.getElementById('statTotal').textContent = allSongs.length;
-    document.getElementById('statFiltered').textContent = filteredSongs.length;
-    document.getElementById('statStarred').textContent = starredCount;
+    animateStat(document.getElementById('statTotal'), allSongs.length);
+    animateStat(document.getElementById('statFiltered'), filteredSongs.length);
+    animateStat(document.getElementById('statStarred'), starredCount);
     statCards.forEach(card => {
         const scope = card.dataset.scope;
         if (scope === 'total') {
@@ -552,9 +666,12 @@ filterToggle.addEventListener('click', () => { filterPanel.classList.toggle('vis
 clearFiltersBtn.addEventListener('click', () => {
     searchInput.value = ''; artistSearch.value = '';
     searchClear.classList.remove('visible');
+    searchHint.classList.remove('hidden');
     artistClear.classList.remove('visible');
     document.querySelectorAll('#styleFilters input, #langFilters input, #decadeFilters input').forEach(cb => cb.checked = false);
     songStates = {}; autocompleteLetterMode = false;
+    saveStarred();
+    localStorage.removeItem(STORAGE_KEY);
     sortColumn = 'artista'; sortDir = 'asc';
     sortDropdown.querySelectorAll('.sort-option').forEach(o => o.classList.remove('active'));
     const defaultSort = sortDropdown.querySelector('[data-sort="artista"]');
@@ -562,11 +679,23 @@ clearFiltersBtn.addEventListener('click', () => {
     autocompleteDropdown.classList.remove('visible');
     document.querySelectorAll('.filter-group-clear').forEach(btn => btn.classList.remove('visible'));
     collapseAllCards();
+    history.replaceState(null, '', window.location.pathname);
     renderArtistList(uniqueArtists); applyFilters();
 });
 styleFilters.addEventListener('change', applyFilters);
 langFilters.addEventListener('change', applyFilters);
 decadeFilters.addEventListener('change', applyFilters);
+// ===== KEYBOARD SHORTCUT (/ para focar busca) =====
+document.addEventListener('keydown', (e) => {
+    if (e.key === '/' && document.activeElement !== searchInput && document.activeElement !== artistSearch) {
+        const tag = document.activeElement.tagName;
+        if (tag !== 'INPUT' && tag !== 'TEXTAREA') {
+            e.preventDefault();
+            searchInput.focus();
+            searchHint.classList.add('hidden');
+        }
+    }
+});
 let resizeTimer;
 window.addEventListener('resize', () => {
     clearTimeout(resizeTimer);
