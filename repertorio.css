@@ -1,4 +1,4 @@
-/* ===== REPERTORIO.CSS v3.0 — Clickable stats + Sticky fix + Footer cleanup ===== */
+/* ===== REPERTORIO.CSS v4.0 — Expanding stat cards + Compact sort toggle ===== */
 /* Dependências: base.css */
 :root {
     --text-dim: #666666;
@@ -12,7 +12,6 @@
     --transition: 0.25s ease;
     --header-h: 56px;
 }
-/* FIX: overflow-x: clip no body (não no html) para não quebrar position: sticky */
 body { overflow-x: clip; min-height: 100vh; }
 a { color: var(--gold); text-decoration: none; transition: color var(--transition); }
 a:hover { color: var(--gold-hover); }
@@ -40,37 +39,62 @@ a:hover { color: var(--gold-hover); }
 }
 .rep-title::after { content: ''; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 120px; height: 2px; background: linear-gradient(90deg, transparent, var(--gold), transparent); }
 .rep-subtitle { color: var(--text-muted); font-size: 0.95rem; text-align: center; margin-bottom: 1.5rem; }
-/* ===== STATS BAR (STICKY + CLICÁVEL) ===== */
+/* ===== STATS BAR (STICKY + CARDS EXPANSIVOS) ===== */
 .stats-bar {
     display: flex; gap: 0.75rem; flex-wrap: wrap;
-    align-items: center;
     margin-bottom: 1.5rem;
     position: sticky; top: var(--header-h); z-index: 90;
     background: var(--bg);
     padding: 0.75rem 0;
     border-bottom: 1px solid var(--border);
-    transition: background var(--transition);
 }
-.stats-bar.download-ready { cursor: pointer; }
-.stats-bar.download-ready:hover { background: var(--bg-elevated); }
-.stats-bar.download-ready:hover .stat-download-icon { color: var(--gold); }
-.stats-bar.download-ready:focus-visible {
-    outline: 2px solid var(--gold);
-    outline-offset: 2px;
+.stat-card {
+    position: relative; overflow: hidden;
+    background: var(--bg-card); border: 1px solid var(--border);
     border-radius: var(--radius-sm);
+    padding: 0.75rem 1.25rem;
+    flex: 1; min-width: 100px; text-align: center;
+    cursor: pointer;
+    transition: border-color var(--transition);
 }
-.stat-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 0.75rem 1.25rem; flex: 1; min-width: 100px; text-align: center; }
+.stat-card:focus-visible {
+    outline: 2px solid var(--gold);
+    outline-offset: -2px;
+}
+.stat-card.disabled { cursor: default; opacity: 0.6; }
+.stat-card.disabled .stat-card-bar { display: none; }
+.stat-card-content {
+    position: relative; z-index: 1;
+    transition: opacity 0.2s ease;
+}
+.stat-card.expanded .stat-card-content { opacity: 0; }
 .stat-number { font-family: 'Playfair Display', serif; font-size: 1.75rem; font-weight: 700; color: var(--gold); }
 .stat-label { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
-.stat-download-icon {
-    display: none;
-    color: var(--text-dim);
-    margin-left: auto;
-    padding: 0 0.5rem;
-    transition: color var(--transition);
-    align-items: center;
+.stat-card-bar {
+    position: absolute; top: 0; right: 0; height: 100%;
+    width: 25%; min-width: 40px;
+    background: var(--gold);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 2;
+    transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1), background var(--transition);
 }
-.stats-bar.download-ready .stat-download-icon { display: flex; }
+.stat-card:not(.disabled):hover .stat-card-bar { background: var(--gold-hover); }
+.stat-card.expanded .stat-card-bar { width: 100%; }
+.stat-bar-icon {
+    color: var(--bg);
+    transition: opacity 0.15s ease;
+}
+.stat-card.expanded .stat-bar-icon { opacity: 0; }
+.stat-bar-text {
+    position: absolute;
+    color: var(--bg); font-size: 0.75rem; font-weight: 500;
+    text-align: center; padding: 0.25rem 0.5rem;
+    line-height: 1.3;
+    opacity: 0;
+    transition: opacity 0.2s ease 0.15s;
+    pointer-events: none;
+}
+.stat-card.expanded .stat-bar-text { opacity: 1; }
 /* ===== SEARCH ROW ===== */
 .search-row { display: flex; gap: 10px; margin-bottom: 1rem; }
 .search-box { flex: 1; position: relative; }
@@ -84,6 +108,33 @@ a:hover { color: var(--gold-hover); }
 .search-box input:focus { outline: none; border-color: var(--gold); }
 .search-box input::placeholder { color: var(--text-dim); }
 .search-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-dim); pointer-events: none; }
+/* ===== SORT TOGGLE (mobile only) ===== */
+.sort-toggle-wrapper { position: relative; display: none; }
+.sort-toggle {
+    flex-shrink: 0; width: 44px; height: 44px;
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); color: var(--text-muted);
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    transition: all var(--transition);
+}
+.sort-toggle:hover { border-color: var(--gold); color: var(--gold); }
+.sort-toggle.active { background: var(--gold); color: var(--bg); border-color: var(--gold); }
+.sort-dropdown {
+    display: none; position: absolute; top: 100%; right: 0;
+    background: var(--bg-card); border: 1px solid var(--border-light);
+    border-radius: var(--radius-sm); box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    z-index: 50; margin-top: 4px; overflow: hidden; min-width: 160px;
+}
+.sort-dropdown.visible { display: block; }
+.sort-option {
+    display: block; width: 100%; padding: 10px 16px;
+    background: none; border: none; color: var(--text-muted);
+    font-family: 'Inter', sans-serif; font-size: 0.85rem;
+    cursor: pointer; text-align: left;
+    transition: background var(--transition), color var(--transition);
+}
+.sort-option:hover { background: var(--bg); color: var(--gold); }
+.sort-option.active { color: var(--gold); font-weight: 600; }
 /* ===== AUTOCOMPLETE ===== */
 .autocomplete-dropdown {
     display: none; position: absolute; top: 100%; left: 0; right: 0;
@@ -164,13 +215,6 @@ a:hover { color: var(--gold-hover); }
 .artist-star-btn.starred { color: var(--gold); }
 .artist-star-btn.partial { color: var(--gold); opacity: 0.5; }
 .artist-placeholder { padding: 2rem; text-align: center; color: var(--text-dim); font-size: 0.85rem; }
-/* ===== SORT MOBILE ===== */
-.sort-mobile { display: none; margin-bottom: 1rem; }
-.sort-mobile select {
-    width: 100%; padding: 10px 14px; background: var(--bg-card);
-    border: 1px solid var(--border); border-radius: var(--radius-sm);
-    color: var(--text); font-family: 'Inter', sans-serif; font-size: 0.9rem;
-}
 /* ===== RESULTS TABLE ===== */
 .results-table { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
 .results-table-header { display: grid; grid-template-columns: 40px 2fr 2fr 1.5fr 0.8fr 0.7fr; gap: 1rem; padding: 12px 16px; background: var(--bg-elevated); border-bottom: 1px solid var(--border); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); font-weight: 600; }
@@ -253,8 +297,10 @@ a:hover { color: var(--gold-hover); }
     .stats-bar { gap: 0.5rem; padding: 0.5rem 0; }
     .stat-card { min-width: 80px; padding: 0.5rem 0.75rem; }
     .stat-number { font-size: 1.25rem; }
-    .stat-download-icon { padding: 0 0.25rem; }
-    .sort-mobile { display: block; }
+    .stat-card-bar { min-width: 32px; }
+    .stat-bar-icon { width: 14px; height: 14px; }
+    .stat-bar-text { font-size: 0.65rem; padding: 0.15rem 0.35rem; }
+    .sort-toggle-wrapper { display: block; }
     .results-table-header { display: none; }
     .result-row {
         display: flex; align-items: center; gap: 10px; padding: 10px 14px;
@@ -276,7 +322,7 @@ a:hover { color: var(--gold-hover); }
 }
 /* ===== PRINT ===== */
 @media print {
-    .rep-header, .search-row, .filter-panel, .stats-bar, .sort-mobile,
+    .rep-header, .search-row, .filter-panel, .stats-bar, .sort-toggle-wrapper,
     .download-section, .rep-footer, .skip-link,
     .results-table-header, .star-btn { display: none !important; }
 }
