@@ -1,4 +1,4 @@
-/* ===== REPERTORIO.JS v2.1 — Sticky stats + Mobile grouped + SVG icon ===== */
+/* ===== REPERTORIO.JS v3.0 — Clickable stats + Sticky fix + Footer cleanup ===== */
 // ===== STATE =====
 let allSongs = [];
 let filteredSongs = [];
@@ -24,9 +24,8 @@ const artistSearch = document.getElementById('artistSearch');
 const artistList = document.getElementById('artistList');
 const clearFiltersBtn = document.getElementById('clearFilters');
 const results = document.getElementById('results');
-const stickyDownload = document.getElementById('stickyDownload');
+const statsBar = document.getElementById('statsBar');
 const sortSelect = document.getElementById('sortSelect');
-const downloadIcon = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>';
 // ===== INIT =====
 async function loadRepertorio() {
     try {
@@ -246,7 +245,6 @@ function applyFilters() {
     displayLimit = 100;
     renderResults();
     updateStats();
-    updateStickyButton();
     updateFilterToggleBadge();
 }
 // ===== SORT =====
@@ -381,7 +379,6 @@ results.addEventListener('click', (e) => {
         renderResults();
         renderArtistList(getFilteredArtists());
         updateStats();
-        updateStickyButton();
     } else if (artist) {
         toggleArtistStar(artist);
     }
@@ -393,7 +390,6 @@ function toggleArtistStar(artist) {
     renderArtistList(getFilteredArtists());
     renderResults();
     updateStats();
-    updateStickyButton();
 }
 function getFilteredArtists() {
     const term = artistSearch.value.toLowerCase().trim();
@@ -410,20 +406,7 @@ function updateStats() {
     document.getElementById('statTotal').textContent = allSongs.length;
     document.getElementById('statFiltered').textContent = filteredSongs.length;
     document.getElementById('statStarred').textContent = Object.values(songStates).filter(s => s === 'starred').length;
-}
-function updateStickyButton() {
-    if (filteredSongs.length === 0) {
-        stickyDownload.disabled = true;
-        stickyDownload.innerHTML = downloadIcon + ' Baixar PDF';
-        return;
-    }
-    const starredCount = Object.values(songStates).filter(s => s === 'starred').length;
-    if (starredCount > 0) {
-        stickyDownload.innerHTML = downloadIcon + ' PDF · ' + filteredSongs.length + ' · ' + starredCount + '★';
-    } else {
-        stickyDownload.innerHTML = downloadIcon + ' PDF · ' + filteredSongs.length;
-    }
-    stickyDownload.disabled = false;
+    statsBar.classList.toggle('download-ready', filteredSongs.length > 0);
 }
 function updateFilterToggleBadge() {
     const total = document.querySelectorAll('#styleFilters input:checked, #langFilters input:checked, #decadeFilters input:checked').length;
@@ -443,25 +426,17 @@ clearFiltersBtn.addEventListener('click', () => {
 styleFilters.addEventListener('change', applyFilters);
 langFilters.addEventListener('change', applyFilters);
 decadeFilters.addEventListener('change', applyFilters);
-// Resize: re-render para alternar mobile grouped / table
 let resizeTimer;
 window.addEventListener('resize', () => {
     clearTimeout(resizeTimer);
     resizeTimer = setTimeout(renderResults, 200);
 });
-// ===== STICKY VISIBILITY =====
-const downloadSection = document.querySelector('.download-section');
-if (downloadSection) {
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (!entry.isIntersecting) stickyDownload.classList.add('visible');
-            else stickyDownload.classList.remove('visible');
-        });
-    }, { threshold: 0 });
-    observer.observe(downloadSection);
-}
+// ===== STATS BAR → PDF DOWNLOAD =====
+statsBar.addEventListener('click', generatePDF);
+statsBar.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); generatePDF(); }
+});
 // ===== PDF GENERATION =====
-stickyDownload.addEventListener('click', generatePDF);
 function generatePDF() {
     if (filteredSongs.length === 0) { alert('Não há músicas para incluir no PDF. Ajuste seus filtros.'); return; }
     const sorted = [...filteredSongs].sort((a, b) => {
