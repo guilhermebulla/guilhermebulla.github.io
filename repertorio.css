@@ -341,10 +341,8 @@ a:hover { color: var(--gold-hover); }
 .disclaimer { font-size: 0.8rem; color: var(--text-muted); line-height: 1.5; max-width: 600px; margin: 0 auto; }
 /* ===== FOOTER ===== */
 .rep-footer { background: #0a0a0a; border-top: 1px solid var(--border); padding: 48px 0 32px; text-align: center; }
-.footer-social { display: flex; justify-content: center; gap: 20px; margin-bottom: 16px; }
-.footer-social a { display: flex; align-items: center; color: var(--text-muted); transition: color var(--transition); }
-.footer-social a:hover { color: var(--gold); }
-.footer-social svg { width: 22px; height: 22px; }
+/* .footer-social, .footer-social a/svg, .footer-legal — herdados de base.css */
+.footer-social { justify-content: center; margin-bottom: 16px; } /* override apenas do que difere */
 .footer-cta-wa {
     display: inline-block;
     color: var(--gold);
@@ -354,8 +352,6 @@ a:hover { color: var(--gold-hover); }
     transition: color var(--transition);
 }
 .footer-cta-wa:hover { color: var(--gold-hover); }
-.footer-legal { text-align: center; color: var(--text-muted); font-size: 0.85rem; opacity: 0.7; }
-.footer-legal p { margin-bottom: 6px; }
 /* ===== RESPONSIVE ===== */
 @media (max-width: 768px) {
     :root { --header-h: 48px; }
@@ -386,7 +382,7 @@ a:hover { color: var(--gold-hover); }
     .mobile-song-row { overflow: hidden; }
     .mobile-song-name { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
     .search-box { min-width: 0; }
-    .results-body { overflow-x: hidden; }
+     .results-body { overflow-x: hidden; max-height: none; }
 }
 /* ===== PRINT ===== */
 @media print {
