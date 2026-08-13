@@ -689,8 +689,14 @@ clearFiltersBtn.addEventListener('click', () => {
 styleFilters.addEventListener('change', applyFilters);
 langFilters.addEventListener('change', applyFilters);
 decadeFilters.addEventListener('change', applyFilters);
-// ===== KEYBOARD SHORTCUT (/ para focar busca) =====
+// ===== KEYBOARD SHORTCUT (/ para focar busca, Esc para fechar painéis) =====
 document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && filterPanel.classList.contains('visible')) {
+        filterPanel.classList.remove('visible');
+        filterToggle.classList.remove('active');
+        filterToggle.focus();
+        return;
+    }
     if (e.key === '/' && document.activeElement !== searchInput && document.activeElement !== artistSearch) {
         const tag = document.activeElement.tagName;
         if (tag !== 'INPUT' && tag !== 'TEXTAREA') {
