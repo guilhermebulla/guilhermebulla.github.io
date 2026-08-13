@@ -556,11 +556,12 @@ function updateStats() {
             card.classList.toggle('disabled', starredCount === 0);
         }
     });
+    const totalText = document.querySelector('[data-scope="total"] .stat-bar-text');
     const filteredText = document.querySelector('[data-scope="filtered"] .stat-bar-text');
     const starredText = document.querySelector('[data-scope="starred"] .stat-bar-text');
-    if (filteredText) filteredText.textContent = 'Repertório personalizado — ' + filteredSongs.length + ' músicas';
-    if (starredText) starredText.textContent = 'Repertório estrelado — ' + starredCount + ' músicas';
-}
+    if (totalText) totalText.textContent = 'PDF completo (' + allSongs.length + ' músicas)';
+    if (filteredText) filteredText.textContent = 'PDF editado (' + filteredSongs.length + ' músicas)';
+    if (starredText) starredText.textContent = 'PDF estrelado (' + starredCount + ' músicas)';
 function updateFilterToggleBadge() {
     const total = document.querySelectorAll('#styleFilters input:checked, #langFilters input:checked, #decadeFilters input:checked').length;
     if (total > 0) { filterToggleBadge.textContent = total; filterToggleBadge.classList.add('visible'); }
