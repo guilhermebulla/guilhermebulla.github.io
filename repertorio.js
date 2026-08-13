@@ -137,7 +137,11 @@ async function loadRepertorio() {
         urlHashReady = true;
         applyFilters();
     } catch (error) {
-        console.error('Erro:', error);
+        console.error('Erro ao carregar repertório:', error);
+        results.innerHTML = '<div class="results-empty">' +
+            '<p>Não foi possível carregar o repertório. Verifique sua conexão e recarregue a página.</p>' +
+            '<button class="results-empty-clear" onclick="location.reload()">Recarregar</button>' +
+        '</div>';
     }
 }
 // ===== HELPERS =====
@@ -350,7 +354,7 @@ function songMatchesDecades(song, decades) {
     return d && decades.includes(d);
 }
 function applyFilters() {
-    const searchTerm = searchInput.value.toLowerCase().trim();
+    const searchTerm = normalizeText(searchInput.value);
     const selectedStyles = Array.from(document.querySelectorAll('#styleFilters input:checked')).map(cb => cb.value);
     const selectedLangs = Array.from(document.querySelectorAll('#langFilters input:checked')).map(cb => cb.value);
     const selectedDecades = Array.from(document.querySelectorAll('#decadeFilters input:checked')).map(cb => cb.value);
@@ -359,7 +363,7 @@ function applyFilters() {
         if (!songMatchesLangs(song, selectedLangs)) return false;
         if (!songMatchesDecades(song, selectedDecades)) return false;
         if (searchTerm) {
-            if (!song.musica.toLowerCase().includes(searchTerm) && !song.artista.toLowerCase().includes(searchTerm)) return false;
+            if (!normalizeText(song.musica).includes(searchTerm) && !normalizeText(song.artista).includes(searchTerm)) return false;
         }
         return true;
     });
@@ -562,6 +566,7 @@ function updateStats() {
     if (totalText) totalText.textContent = 'PDF completo (' + allSongs.length + ' músicas)';
     if (filteredText) filteredText.textContent = 'PDF editado (' + filteredSongs.length + ' músicas)';
     if (starredText) starredText.textContent = 'PDF estrelado (' + starredCount + ' músicas)';
+}
 function updateFilterToggleBadge() {
     const total = document.querySelectorAll('#styleFilters input:checked, #langFilters input:checked, #decadeFilters input:checked').length;
     if (total > 0) { filterToggleBadge.textContent = total; filterToggleBadge.classList.add('visible'); }
@@ -670,9 +675,7 @@ clearFiltersBtn.addEventListener('click', () => {
     searchHint.classList.remove('hidden');
     artistClear.classList.remove('visible');
     document.querySelectorAll('#styleFilters input, #langFilters input, #decadeFilters input').forEach(cb => cb.checked = false);
-    songStates = {}; autocompleteLetterMode = false;
-    saveStarred();
-    localStorage.removeItem(STORAGE_KEY);
+    autocompleteLetterMode = false;
     sortColumn = 'artista'; sortDir = 'asc';
     sortDropdown.querySelectorAll('.sort-option').forEach(o => o.classList.remove('active'));
     const defaultSort = sortDropdown.querySelector('[data-sort="artista"]');
