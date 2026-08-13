@@ -95,8 +95,13 @@ a:hover { color: var(--gold-hover); }
 }
 .stat-bar-inner {
     display: flex; align-items: center; gap: 0.5rem;
-    padding-left: 0.5rem;
+    padding: 0 0.5rem;
     overflow: hidden;
+    transition: padding 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.stat-card.expanded .stat-bar-inner {
+    justify-content: center;
+    padding: 0 1rem;
 }
 .stat-bar-icon {
     color: var(--gold);
