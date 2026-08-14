@@ -736,8 +736,7 @@ document.querySelectorAll('.filter-group-clear').forEach(btn => {
 filterToggle.addEventListener('click', () => { filterPanel.classList.toggle('visible'); filterToggle.classList.toggle('active'); });
 clearFiltersBtn.addEventListener('click', () => {
     searchInput.value = ''; artistSearch.value = '';
-    searchClear.classList.remove('visible');
-    searchHint.classList.remove('hidden');
+    searchClear.classList.remove('visible'); searchHint.classList.remove('hidden');
     artistClear.classList.remove('visible');
     document.querySelectorAll('#styleFilters input, #langFilters input, #decadeFilters input').forEach(cb => cb.checked = false);
     autocompleteLetterMode = false;
@@ -808,7 +807,7 @@ function generatePDF(scope) {
         const artistGroups = {};
         songsInLetter.forEach(song => { if (!artistGroups[song.artista]) artistGroups[song.artista] = []; artistGroups[song.artista].push(song); });
         const sortedArtists = Object.keys(artistGroups).sort((a, b) => a.localeCompare(b, 'pt-BR'));
-        bodyHtml += '<div class="letter-group"><span class="watermark">' + escapeHtml(letter) + '</span>';
+        bodyHtml += '<div class="letter-group"><div class="letter-divider">' + escapeHtml(letter) + '</div>';
         sortedArtists.forEach(artist => {
             bodyHtml += '<div class="artist-block"><div class="artist-name">' + escapeHtml(artist) + '</div>';
             artistGroups[artist].sort((a, b) => a.musica.localeCompare(b.musica, 'pt-BR')).forEach(song => {
@@ -828,19 +827,23 @@ function generatePDF(scope) {
     const printHtml =
         '<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><title>Repertório — BullaAcoustic</title>' +
         '<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">' +
-        '<style>@page{margin:1.5cm 1.5cm 2cm 1.5cm}body{font-family:"Inter",sans-serif;color:#333;line-height:1.15;margin:0;padding:0}' +
+        '<style>@page{margin:1.5cm 1.5cm 2cm 1.5cm}' +
+        'body{font-family:"Inter",sans-serif;color:#333;line-height:1.3;margin:0;padding:0}' +
         '.header{text-align:center;margin-bottom:1.2rem;border-bottom:1px solid #d4a853;padding-bottom:0.5rem}' +
-        '.header h1{font-family:"Playfair Display",serif;font-size:22pt;color:#d4a853;margin:0;font-weight:700}' +
-        '.header .subtitle{font-size:10pt;color:#555;margin-top:3px}' +
-        '.content{column-count:2;column-gap:25px}.letter-group{margin-bottom:6px}' +
-        '.watermark{float:left;font-family:"Playfair Display",serif;font-size:42pt;font-weight:bold;color:#f0e8d5;line-height:1;margin:-5px 8px -15px 0}' +
-        '.artist-block{margin-bottom:4px;break-inside:avoid}.artist-name{font-weight:bold;font-size:10.5pt;color:#333}' +
-        '.song-line{font-size:9.5pt;color:#444;padding-left:2px}' +
-        '.footer{position:fixed;bottom:0;left:0;right:0;text-align:center;font-size:7.5pt;color:#999;padding:5px 0;border-top:1px solid #eee}' +
+        '.header h1{font-family:"Playfair Display",serif;font-size:24pt;color:#d4a853;margin:0;font-weight:700}' +
+        '.header .subtitle{font-size:11pt;color:#555;margin-top:3px}' +
+        '.content{column-count:2;column-gap:28px;column-rule:1px solid #d4a853}.letter-group{margin-bottom:6px}' +
+        '.letter-divider{background:#f5f0e0;border-left:4px solid #d4a853;padding:4px 10px;margin:6px 0 4px;font-family:"Playfair Display",serif;font-size:13pt;font-weight:700;color:#8a6d2a;break-inside:avoid}' +
+        '.artist-block{margin-bottom:4px;break-inside:avoid}.artist-name{font-weight:bold;font-size:12pt;color:#333}' +
+        '.song-line{font-size:11pt;color:#444;padding-left:2px}' +
+        '.footer{position:fixed;bottom:0;left:0;right:0;text-align:center;font-size:8pt;color:#999;padding:5px 0;border-top:1px solid #eee}' +
+        '@media screen{body{background:#e8e8e8;padding:2rem 1rem}.print-document{max-width:210mm;margin:0 auto;background:white;padding:1.5cm 1.5cm 2.5cm;box-shadow:0 4px 30px rgba(0,0,0,0.12);border-radius:2px}}' +
         '</style></head><body>' +
+        '<div class="print-document">' +
         '<div class="header"><h1>REPERTÓRIO</h1><div class="subtitle">' + subtitle + '</div></div>' +
         '<div class="content">' + bodyHtml + '</div>' +
         '<div class="footer">BullaAcoustic · guilhermebulla.github.io · WhatsApp (51) 98444.0402 · @guilhermebulla</div>' +
+        '</div>' +
         '<scr' + 'ipt>window.onload=function(){setTimeout(function(){window.print()},600)}<' + '/scr' + 'ipt></body></html>';
     const printWindow = window.open('', '_blank');
     if (!printWindow) { alert('Permita pop-ups para baixar o PDF.'); return; }
