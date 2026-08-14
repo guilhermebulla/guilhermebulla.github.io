@@ -69,7 +69,7 @@ function animateStat(el, target) {
         const eased = 1 - Math.pow(1 - progress, 3);
         const value = Math.round(current + (target - current) * eased);
         el.textContent = value;
-        if (progress &lt; 1) {
+        if (progress < 1) {
             el._animId = requestAnimationFrame(step);
         } else {
             el._animId = null;
@@ -637,7 +637,7 @@ function collapseCard(card) {
             searchInput.value = '';
             searchInput.readOnly = false;
             searchClear.classList.remove('visible');
-            searchHint.classList.add('hidden');
+            searchHint.classList.remove('hidden');
             applyFilters();
         }
         expandedCard = null;
@@ -807,7 +807,7 @@ function generatePDF(scope) {
         const artistGroups = {};
         songsInLetter.forEach(song => { if (!artistGroups[song.artista]) artistGroups[song.artista] = []; artistGroups[song.artista].push(song); });
         const sortedArtists = Object.keys(artistGroups).sort((a, b) => a.localeCompare(b, 'pt-BR'));
-        bodyHtml += '<div class="letter-group"><span class="watermark">' + escapeHtml(letter) + '</span>';
+        bodyHtml += '<div class="letter-group"><div class="letter-divider">' + escapeHtml(letter) + '</div>';
         sortedArtists.forEach(artist => {
             bodyHtml += '<div class="artist-block"><div class="artist-name">' + escapeHtml(artist) + '</div>';
             artistGroups[artist].sort((a, b) => a.musica.localeCompare(b.musica, 'pt-BR')).forEach(song => {
@@ -816,7 +816,7 @@ function generatePDF(scope) {
             });
             bodyHtml += '</div>';
         });
-        bodyHtml += '<div style="clear:both;"></div></div>';
+        bodyHtml += '</div>';
     });
     const subtitleMap = {
         'total': 'BullaAcoustic · Guilherme Bulla — Voz &amp; Violão',
@@ -824,23 +824,124 @@ function generatePDF(scope) {
         'starred': 'BullaAcoustic · Guilherme Bulla — Repertório favoritas'
     };
     const subtitle = subtitleMap[scope] || subtitleMap['filtered'];
+    const footerText = 'BullaAcoustic · guilhermebulla.github.io · WhatsApp (51) 98444.0402 · @guilhermebulla';
     const printHtml =
         '<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><title>Repertório — BullaAcoustic</title>' +
         '<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">' +
-        '<style>@page{size:A4;margin:0}*{margin:0;padding:0;box-sizing:border-box}body{font-family:"Inter",sans-serif;color:#333;line-height:1.4;padding:1.5cm 1.5cm 2.5cm 1.5cm}' +
-        '.header{text-align:center;margin-bottom:1.2rem;border-bottom:1px solid #d4a853;padding-bottom:0.5rem}' +
-        '.header h1{font-family:"Playfair Display",serif;font-size:22pt;color:#d4a853;margin:0;font-weight:700}' +
-        '.header .subtitle{font-size:10pt;color:#555;margin-top:3px}' +
-        '.content{column-count:2;column-gap:25px;column-rule:1px solid #e5e5e5}.letter-group{margin-bottom:8px}' +
-        '.watermark{float:left;font-family:"Playfair Display",serif;font-size:42pt;font-weight:bold;color:#f0e8d5;line-height:1;margin:0 8px -10px 0}' +
-        '.artist-block{margin-bottom:6px;break-inside:avoid}.artist-name{font-weight:bold;font-size:10.5pt;color:#333}' +
-        '.song-line{font-size:9.5pt;color:#444;padding-left:2px}' +
-        '.footer{position:fixed;bottom:0.6cm;left:1.5cm;right:1.5cm;text-align:center;font-size:7.5pt;color:#999;padding:5px 0 0;border-top:1px solid #eee;background:#fff}' +
-        '</style></head><body>' +
+        '<style>' +
+        '@page{margin:0;size:A4}' +
+        '*{box-sizing:border-box;-webkit-print-color-adjust:exact;print-color-adjust:exact}' +
+        'body{font-family:"Inter",sans-serif;color:#333;line-height:1.3;margin:0;padding:0}' +
+        '.header{text-align:center;margin-bottom:1rem;border-bottom:1px solid #d4a853;padding-bottom:0.5rem}' +
+        '.header h1{font-family:"Playfair Display",serif;font-size:24pt;color:#d4a853;margin:0;font-weight:700}' +
+        '.header .subtitle{font-size:11pt;color:#555;margin-top:3px}' +
+        '.pdf-page{padding:1.5cm 1.5cm 1.8cm;page-break-after:always;position:relative;min-height:295mm}' +
+        '.pdf-page:last-child{page-break-after:auto}' +
+        '.content{column-count:2;column-gap:28px;column-rule:1px solid #d4a853}' +
+        '.letter-group{margin-bottom:6px}' +
+        '.letter-divider{background:linear-gradient(to right,#f5f0e0 0%,#f5f0e0 35%,rgba(245,240,224,0.5) 70%,transparent 100%);border-left:4px solid #d4a853;padding:4px 10px;margin:6px 0 4px;font-family:"Playfair Display",serif;font-size:13pt;font-weight:700;color:#8a6d2a;break-inside:avoid;page-break-inside:avoid;break-after:avoid;page-break-after:avoid}' +
+        '.artist-block{margin-bottom:4px}' +
+        '.artist-name{font-weight:bold;font-size:12pt;color:#333;break-after:avoid;page-break-after:avoid}' +
+        '.song-line{font-size:11pt;color:#444;padding-left:2px}' +
+        '.pdf-footer{position:absolute;bottom:0.6cm;left:1.5cm;right:1.5cm;display:flex;justify-content:space-between;align-items:center;border-top:1px solid #eee;padding-top:4px;font-size:8pt;color:#999}' +
+        '.pdf-footer .footer-center{flex:1;text-align:center}' +
+        '.pdf-footer .page-num{font-family:"Playfair Display",serif;color:#d4a853;font-weight:600;min-width:30px;text-align:right}' +
+        '@media screen{body{background:#e8e8e8;padding:1rem 0}.print-document{max-width:210mm;margin:0 auto}.pdf-page{background:white;box-shadow:0 4px 30px rgba(0,0,0,0.12);margin-bottom:1rem;border-radius:2px}.pdf-page.pdf-page-hidden{display:none}.pdf-nav{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);background:white;border:1px solid #ddd;border-radius:50px;padding:8px 16px;box-shadow:0 4px 20px rgba(0,0,0,0.15);display:flex;gap:12px;align-items:center;z-index:1000}.pdf-nav button{background:none;border:1px solid #d4a853;color:#d4a853;border-radius:50px;padding:4px 16px;cursor:pointer;font-family:"Inter",sans-serif;font-size:0.85rem;transition:all 0.2s}.pdf-nav button:hover:not(:disabled){background:#d4a853;color:white}.pdf-nav button:disabled{opacity:0.3;cursor:default}.pdf-nav .page-info{font-size:0.85rem;color:#666;min-width:50px;text-align:center;font-family:"Inter",sans-serif}}' +
+        '@media print{.pdf-nav{display:none!important}.pdf-page{box-shadow:none;margin:0;border-radius:0}}' +
+        '</style></head>' +
+        '<body data-footer="' + footerText + '">' +
+        '<div class="print-document" id="printDoc">' +
+        '<div class="pdf-page" id="pageTemplate">' +
         '<div class="header"><h1>REPERTÓRIO</h1><div class="subtitle">' + subtitle + '</div></div>' +
-        '<div class="content">' + bodyHtml + '</div>' +
-        '<div class="footer">BullaAcoustic · guilhermebulla.github.io · WhatsApp (51) 98444.0402 · @guilhermebulla</div>' +
-        '<scr' + 'ipt>window.onload=function(){setTimeout(function(){window.print()},600)}&lt;' + '/scr' + 'ipt></body></html>';
+        '<div class="content" id="allContent">' + bodyHtml + '</div>' +
+        '<div class="pdf-footer"><span></span><span class="footer-center">' + footerText + '</span><span class="page-num">1</span></div>' +
+        '</div>' +
+        '</div>' +
+        '<div class="pdf-nav" id="pdfNav" style="display:none">' +
+        '<button id="prevPage" disabled>← Anterior</button>' +
+        '<span class="page-info" id="pageInfo">1 / 1</span>' +
+        '<button id="nextPage">Próxima →</button>' +
+        '</div>' +
+        '<scr' + 'ipt>' +
+        'window.onload=function(){' +
+        'document.fonts.ready.then(function(){' +
+        'setTimeout(function(){' +
+        'try{' +
+        'var content=document.getElementById("allContent");' +
+        'var groups=Array.from(content.querySelectorAll(".letter-group"));' +
+        'var printDoc=document.getElementById("printDoc");' +
+        'var templatePage=document.getElementById("pageTemplate");' +
+        'var headerHtml="";' +
+        'var headerEl=document.querySelector(".header");' +
+        'if(headerEl){headerHtml=headerEl.outerHTML}' +
+        'var ft=document.body.getAttribute("data-footer")||"";' +
+        'var PAGE_H=1122;var PAD_T=57;var PAD_B=68;var FOOTER_H=30;' +
+        'var headerH=headerEl?headerEl.offsetHeight+16:60;' +
+        'var usableFirst=Math.floor((PAGE_H-PAD_T-PAD_B-headerH-FOOTER_H)*0.93);' +
+        'var usableRest=Math.floor((PAGE_H-PAD_T-PAD_B-FOOTER_H)*0.93);' +
+        'templatePage.remove();' +
+        'var pages=[];var cc=null;var ch=0;' +
+        'groups.forEach(function(g){' +
+        'var gh=g.offsetHeight+6;' +
+        'var isFirst=pages.length===0;' +
+        'var usable=isFirst?usableFirst:usableRest;' +
+        'if(!cc||(ch+gh>usable&&ch>0)){' +
+        'isFirst=pages.length===0;' +
+        'usable=isFirst?usableFirst:usableRest;' +
+        'var page=document.createElement("div");' +
+        'page.className="pdf-page";' +
+        'if(pages.length>0){page.classList.add("pdf-page-hidden")}' +
+        'if(isFirst){page.insertAdjacentHTML("afterbegin",headerHtml)}' +
+        'var cd=document.createElement("div");' +
+        'cd.className="content";' +
+        'page.appendChild(cd);' +
+        'var ftd=document.createElement("div");' +
+        'ftd.className="pdf-footer";' +
+        'ftd.appendChild(document.createElement("span"));' +
+        'var s2=ftd.appendChild(document.createElement("span"));' +
+        's2.className="footer-center";' +
+        's2.textContent=ft;' +
+        'var s3=ftd.appendChild(document.createElement("span"));' +
+        's3.className="page-num";' +
+        's3.textContent=String(pages.length+1);' +
+        'page.appendChild(ftd);' +
+        'printDoc.appendChild(page);' +
+        'pages.push(page);' +
+        'cc=cd;' +
+        'ch=0;' +
+        '}' +
+        'cc.appendChild(g);' +
+        'ch+=gh;' +
+        '});' +
+        'var nav=document.getElementById("pdfNav");' +
+        'var prevBtn=document.getElementById("prevPage");' +
+        'var nextBtn=document.getElementById("nextPage");' +
+        'var pageInfo=document.getElementById("pageInfo");' +
+        'var idx=0;' +
+        'function showPage(i){' +
+        'pages.forEach(function(p,j){p.classList.toggle("pdf-page-hidden",j!==i)});' +
+        'idx=i;' +
+        'pageInfo.textContent=(i+1)+" / "+pages.length;' +
+        'prevBtn.disabled=i===0;' +
+        'nextBtn.disabled=i===pages.length-1;' +
+        'window.scrollTo(0,0);' +
+        '}' +
+        'prevBtn.addEventListener("click",function(){if(idx>0)showPage(idx-1)});' +
+        'nextBtn.addEventListener("click",function(){if(idx<pages.length-1)showPage(idx+1)});' +
+        'if(pages.length>1){nav.style.display="flex";showPage(0)}' +
+        'window.onbeforeprint=function(){' +
+        'pages.forEach(function(p){p.classList.remove("pdf-page-hidden")});' +
+        'nav.style.display="none";' +
+        '};' +
+        'window.onafterprint=function(){' +
+        'if(pages.length>1){showPage(idx);nav.style.display="flex"}' +
+        '};' +
+        '}catch(e){console.error("Pagination error:",e)}' +
+        'window.print();' +
+        '},200)' +
+        '})' +
+        '}' +
+        '<' + '/scr' + 'ipt></body></html>';
     const printWindow = window.open('', '_blank');
     if (!printWindow) { alert('Permita pop-ups para baixar o PDF.'); return; }
     printWindow.document.write(printHtml);
