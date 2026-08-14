@@ -13,8 +13,10 @@ let autocompleteLetterMode = false;
 let suppressBlurHide = false;
 let expandedCard = null;
 let urlHashReady = false;
+let starredFilterActive = false;
 let selectedArtist = null;
 const STORAGE_KEY = 'bulla_starred_songs';
+const LANG_FLAGS = { 'Português': '🇧🇷', 'Inglês': '🇺🇸', 'Espanhol': '🇪🇸', 'Francês': '🇫🇷' };
 // ===== DOM =====
 const searchInput = document.getElementById('searchInput');
 const searchClear = document.getElementById('searchClear');
@@ -192,9 +194,8 @@ function renderStylePills() {
 function renderLangPills() {
     const langSet = new Set();
     allSongs.forEach(song => parseIdiomas(song).forEach(l => { if (l) langSet.add(l); }));
-    const langFlags = { 'Português': '🇧🇷', 'Inglês': '🇺🇸', 'Espanhol': '🇪🇸', 'Francês': '🇫🇷' };
     langFilters.innerHTML = [...langSet].sort((a, b) => a.localeCompare(b, 'pt-BR')).map(lang => {
-        const flag = langFlags[lang] || '🌐';
+        const flag = LANG_FLAGS[lang] || '🌐';
         return '<label class="style-pill"><input type="checkbox" value="' + escapeHtml(lang) + '"><span>' + flag + ' ' + escapeHtml(lang) + '</span></label>';
     }).join('');
 }
@@ -260,6 +261,11 @@ searchInput.addEventListener('keydown', (e) => {
     else if (e.key === 'Escape') { autocompleteDropdown.classList.remove('visible'); }
 });
 searchClear.addEventListener('click', () => {
+    if (starredFilterActive) {
+        starredFilterActive = false;
+        searchInput.readOnly = false;
+        collapseAllCards();
+    }
     searchInput.value = '';
     searchClear.classList.remove('visible');
     searchHint.classList.remove('hidden');
@@ -361,6 +367,7 @@ function applyFilters() {
     const selectedLangs = Array.from(document.querySelectorAll('#langFilters input:checked')).map(cb => cb.value);
     const selectedDecades = Array.from(document.querySelectorAll('#decadeFilters input:checked')).map(cb => cb.value);
     filteredSongs = allSongs.filter(song => {
+        if (starredFilterActive && songStates[song.artista + '|' + song.musica] !== 'starred') return false;
         if (selectedArtist && song.artista !== selectedArtist) return false;
         if (!songMatchesStyles(song, selectedStyles)) return false;
         if (!songMatchesLangs(song, selectedLangs)) return false;
@@ -420,8 +427,7 @@ function renderTable() {
         const starChar = isStarred ? '★' : '☆';
         const tags = parseEstilos(song).map(e => '<span>' + escapeHtml(e) + '</span>').join('');
         const idiomas = parseIdiomas(song);
-        const langFlags = { 'Português': '🇧🇷', 'Inglês': '🇺🇸', 'Espanhol': '🇪🇸', 'Francês': '🇫🇷' };
-        const langDisplay = idiomas.map(l => langFlags[l] || l).join(' ');
+        const langDisplay = idiomas.map(l => LANG_FLAGS[l] || l).join(' ');
         return '<div class="result-row">' +
             '<button class="star-btn ' + starClass + '" data-artist="' + escapeHtml(song.artista) + '" data-song="' + escapeHtml(song.musica) + '">' + starChar + '</button>' +
             '<span class="cell-musica">' + escapeHtml(song.musica) + '</span>' +
@@ -458,7 +464,7 @@ function renderMobileGrouped() {
         results.innerHTML = getEmptyStateHtml();
         return;
     }
-    const sorted = sortSongs(filteredSongs, 'artista', 'asc');
+    const sorted = sortSongs(filteredSongs, 'artista', sortDir);
     const visible = sorted.slice(0, displayLimit);
     const artistGroups = {};
     visible.forEach(song => {
@@ -589,10 +595,12 @@ function updateStats() {
     const starredText = document.querySelector('[data-scope="starred"] .stat-bar-text');
     if (totalText) totalText.textContent = 'PDF completo (' + allSongs.length + ' músicas)';
     if (filteredText) filteredText.textContent = 'PDF editado (' + filteredSongs.length + ' músicas)';
-    if (starredText) starredText.textContent = 'PDF estrelado (' + starredCount + ' músicas)';
+    if (starredText) starredText.textContent = 'PDF favoritas (' + starredCount + ' músicas)';
 }
 function updateFilterToggleBadge() {
-    const total = document.querySelectorAll('#styleFilters input:checked, #langFilters input:checked, #decadeFilters input:checked').length;
+    let total = document.querySelectorAll('#styleFilters input:checked, #langFilters input:checked, #decadeFilters input:checked').length;
+    if (selectedArtist) total++;
+    if (starredFilterActive) total++;
     if (total > 0) { filterToggleBadge.textContent = total; filterToggleBadge.classList.add('visible'); }
     else { filterToggleBadge.classList.remove('visible'); }
 }
@@ -619,7 +627,17 @@ function updateFilterGroupClearButtons() {
 function collapseCard(card) {
     if (!card) return;
     card.classList.remove('expanded');
-    if (expandedCard === card) expandedCard = null;
+    if (expandedCard === card) {
+        if (card.dataset.scope === 'starred' && starredFilterActive) {
+            starredFilterActive = false;
+            searchInput.value = '';
+            searchInput.readOnly = false;
+            searchClear.classList.remove('visible');
+            searchHint.classList.remove('hidden');
+            applyFilters();
+        }
+        expandedCard = null;
+    }
 }
 function collapseAllCards() {
     statCards.forEach(collapseCard);
@@ -636,6 +654,14 @@ statCards.forEach(card => {
             collapseAllCards();
             card.classList.add('expanded');
             expandedCard = card;
+            if (card.dataset.scope === 'starred') {
+                starredFilterActive = true;
+                searchInput.value = '★ Favoritas';
+                searchInput.readOnly = true;
+                searchClear.classList.add('visible');
+                searchHint.classList.add('hidden');
+                applyFilters();
+            }
         }
     });
     card.addEventListener('keydown', (e) => {
@@ -712,6 +738,8 @@ clearFiltersBtn.addEventListener('click', () => {
     document.querySelectorAll('#styleFilters input, #langFilters input, #decadeFilters input').forEach(cb => cb.checked = false);
     autocompleteLetterMode = false;
     selectedArtist = null;
+    starredFilterActive = false;
+    searchInput.readOnly = false;
     sortColumn = 'artista'; sortDir = 'asc';
     sortDropdown.querySelectorAll('.sort-option').forEach(o => o.classList.remove('active'));
     const defaultSort = sortDropdown.querySelector('[data-sort="artista"]');
@@ -790,7 +818,7 @@ function generatePDF(scope) {
     const subtitleMap = {
         'total': 'BullaAcoustic · Guilherme Bulla — Voz &amp; Violão',
         'filtered': 'BullaAcoustic · Guilherme Bulla — Repertório personalizado',
-        'starred': 'BullaAcoustic · Guilherme Bulla — Repertório estrelado'
+        'starred': 'BullaAcoustic · Guilherme Bulla — Repertório favoritas'
     };
     const subtitle = subtitleMap[scope] || subtitleMap['filtered'];
     const printHtml =
