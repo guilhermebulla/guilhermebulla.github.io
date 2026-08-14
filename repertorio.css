@@ -68,7 +68,7 @@ a:hover { color: var(--gold-hover); }
 }
 .stat-card.expanded .stat-card-content { opacity: 0; }
 .stat-number { font-family: 'Playfair Display', serif; font-size: 1.75rem; font-weight: 700; color: var(--gold); }
-.stat-label { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
+.stat-label { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .stat-card-bar {
     position: absolute; top: 0; right: 0; height: 100%;
     width: 25%; min-width: 40px;
@@ -365,6 +365,7 @@ a:hover { color: var(--gold-hover); }
     .stats-bar { gap: 0.5rem; padding: 0.5rem 0; }
     .stat-card { min-width: 80px; padding: 0.5rem 0.75rem; }
     .stat-number { font-size: 1.25rem; }
+    .stat-label { font-size: 0.6rem; letter-spacing: 0.5px; }
     .stat-card-bar { min-width: 32px; }
     .stat-bar-icon { width: 14px; height: 14px; }
     .stat-bar-text { font-size: 0.8rem; }
