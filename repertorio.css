@@ -248,6 +248,7 @@ a:hover { color: var(--gold-hover); }
 }
 .style-pill input { position: absolute; opacity: 0; pointer-events: none; }
 .style-pill:hover { border-color: var(--gold); color: var(--gold); }
+.flag-icon { vertical-align: middle; margin-right: 4px; border-radius: 2px; }
 .style-pill:has(input:checked) { background: var(--gold); border-color: var(--gold); color: var(--bg); font-weight: 500; }
 /* ===== ARTIST LIST ===== */
 .artist-search-wrapper { position: relative; margin-bottom: 0.75rem; }
@@ -306,7 +307,8 @@ a:hover { color: var(--gold-hover); }
 .cell-artista { font-size: 0.85rem; color: var(--text-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .cell-estilos { display: flex; flex-wrap: wrap; gap: 4px; overflow: hidden; }
 .cell-estilos span { font-size: 0.7rem; padding: 2px 8px; border-radius: 50px; background: var(--bg-elevated); color: var(--text-dim); }
-.cell-idioma { font-size: 0.8rem; color: var(--text-muted); }
+.cell-idioma { font-size: 0.8rem; color: var(--text-muted); display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }
+.cell-idioma .flag-icon { margin-right: 0; }
 .cell-ano { font-size: 0.8rem; color: var(--text-dim); }
 .show-more { padding: 1.25rem; text-align: center; color: var(--gold); cursor: pointer; font-size: 0.9rem; transition: background var(--transition); }
 .show-more:hover { background: var(--bg); }
