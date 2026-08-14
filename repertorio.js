@@ -13,6 +13,7 @@ let autocompleteLetterMode = false;
 let suppressBlurHide = false;
 let expandedCard = null;
 let urlHashReady = false;
+let selectedArtist = null;
 const STORAGE_KEY = 'bulla_starred_songs';
 // ===== DOM =====
 const searchInput = document.getElementById('searchInput');
@@ -156,7 +157,7 @@ function getDecade(ano) {
     const year = parseInt(ano);
     if (isNaN(year)) return null;
     const decade = Math.floor(year / 10) * 10;
-    return (decade % 100) + 's';
+    return decade + 's';
 }
 function parseEstilos(song) {
     if (Array.isArray(song.estilo)) return song.estilo;
@@ -214,8 +215,9 @@ function renderArtistList(artists) {
         const starState = getArtistStarState(artist);
         const starClass = starState === 'all' ? 'starred' : starState === 'partial' ? 'partial' : '';
         const songCount = allSongs.filter(s => s.artista === artist).length;
-        return '<div class="artist-item">' +
-            '<span class="artist-name">' + escapeHtml(artist) + '</span>' +
+        const selectedClass = selectedArtist === artist ? ' selected' : '';
+        return '<div class="artist-item' + selectedClass + '">' +
+            '<span class="artist-name" data-artist="' + escapeHtml(artist) + '" role="button" tabindex="0">' + escapeHtml(artist) + '</span>' +
             '<span class="artist-count">' + songCount + '</span>' +
             '<button class="artist-star-btn ' + starClass + '" data-artist="' + escapeHtml(artist) + '" title="Estrelar todas">★</button>' +
         '</div>';
@@ -359,6 +361,7 @@ function applyFilters() {
     const selectedLangs = Array.from(document.querySelectorAll('#langFilters input:checked')).map(cb => cb.value);
     const selectedDecades = Array.from(document.querySelectorAll('#decadeFilters input:checked')).map(cb => cb.value);
     filteredSongs = allSongs.filter(song => {
+        if (selectedArtist && song.artista !== selectedArtist) return false;
         if (!songMatchesStyles(song, selectedStyles)) return false;
         if (!songMatchesLangs(song, selectedLangs)) return false;
         if (!songMatchesDecades(song, selectedDecades)) return false;
@@ -525,13 +528,34 @@ function toggleArtistStar(artist) {
     updateStats();
 }
 function getFilteredArtists() {
-    const term = artistSearch.value.toLowerCase().trim();
-    return term ? uniqueArtists.filter(a => a.toLowerCase().includes(term)) : uniqueArtists;
+    const term = normalizeText(artistSearch.value);
+    return term ? uniqueArtists.filter(a => normalizeText(a).includes(term)) : uniqueArtists;
 }
 artistList.addEventListener('click', (e) => {
-    const btn = e.target.closest('.artist-star-btn');
-    if (!btn) return;
-    toggleArtistStar(btn.dataset.artist);
+    const starBtn = e.target.closest('.artist-star-btn');
+    if (starBtn) {
+        toggleArtistStar(starBtn.dataset.artist);
+        return;
+    }
+    const nameEl = e.target.closest('.artist-name');
+    if (nameEl) {
+        const artist = nameEl.dataset.artist;
+        selectedArtist = (selectedArtist === artist) ? null : artist;
+        renderArtistList(getFilteredArtists());
+        applyFilters();
+    }
+});
+artistList.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+        const nameEl = e.target.closest('.artist-name');
+        if (nameEl) {
+            e.preventDefault();
+            const artist = nameEl.dataset.artist;
+            selectedArtist = (selectedArtist === artist) ? null : artist;
+            renderArtistList(getFilteredArtists());
+            applyFilters();
+        }
+    }
 });
 artistSearch.addEventListener('input', () => {
     artistClear.classList.toggle('visible', artistSearch.value.length > 0);
@@ -643,10 +667,21 @@ sortToggle.addEventListener('click', (e) => {
 sortDropdown.addEventListener('click', (e) => {
     const option = e.target.closest('.sort-option');
     if (!option) return;
-    sortColumn = option.dataset.sort;
-    sortDir = 'asc';
+    // Reset labels da opção não-selecionada
+    sortDropdown.querySelectorAll('.sort-option').forEach(o => {
+        o.textContent = o.dataset.sort === 'artista' ? 'Artista (A-Z)' : 'Música (A-Z)';
+    });
+    if (sortColumn === option.dataset.sort) {
+        sortDir = sortDir === 'asc' ? 'desc' : 'asc';
+    } else {
+        sortColumn = option.dataset.sort;
+        sortDir = 'asc';
+    }
     sortDropdown.querySelectorAll('.sort-option').forEach(o => o.classList.remove('active'));
     option.classList.add('active');
+    option.textContent = option.dataset.sort === 'artista'
+        ? (sortDir === 'asc' ? 'Artista (A-Z)' : 'Artista (Z-A)')
+        : (sortDir === 'asc' ? 'Música (A-Z)' : 'Música (Z-A)');
     sortDropdown.classList.remove('visible');
     sortToggle.classList.remove('active');
     sortToggle.setAttribute('aria-expanded', 'false');
@@ -676,6 +711,7 @@ clearFiltersBtn.addEventListener('click', () => {
     artistClear.classList.remove('visible');
     document.querySelectorAll('#styleFilters input, #langFilters input, #decadeFilters input').forEach(cb => cb.checked = false);
     autocompleteLetterMode = false;
+    selectedArtist = null;
     sortColumn = 'artista'; sortDir = 'asc';
     sortDropdown.querySelectorAll('.sort-option').forEach(o => o.classList.remove('active'));
     const defaultSort = sortDropdown.querySelector('[data-sort="artista"]');
@@ -759,7 +795,7 @@ function generatePDF(scope) {
     const subtitle = subtitleMap[scope] || subtitleMap['filtered'];
     const printHtml =
         '<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><title>Repertório — BullaAcoustic</title>' +
-        '<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">' +
+        '<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">' +
         '<style>@page{margin:1.5cm 1.5cm 2cm 1.5cm}body{font-family:"Inter",sans-serif;color:#333;line-height:1.15;margin:0;padding:0}' +
         '.header{text-align:center;margin-bottom:1.2rem;border-bottom:1px solid #d4a853;padding-bottom:0.5rem}' +
         '.header h1{font-family:"Playfair Display",serif;font-size:22pt;color:#d4a853;margin:0;font-weight:700}' +
