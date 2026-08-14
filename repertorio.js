@@ -828,11 +828,11 @@ function generatePDF(scope) {
     const printHtml =
         '<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><title>Repertório — BullaAcoustic</title>' +
         '<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">' +
-        '<style>@page{margin:1.5cm 1.5cm 2cm 1.5cm}body{font-family:"Inter",sans-serif;color:#333;line-height:1.15;margin:0;padding:0}' +
+        '<style>@page{size:A4;margin:1.5cm 1.5cm 2.2cm 1.5cm}body{font-family:"Inter",sans-serif;color:#333;line-height:1.15;margin:0;padding:0 0 1.2cm 0}' +
         '.header{text-align:center;margin-bottom:1.2rem;border-bottom:1px solid #d4a853;padding-bottom:0.5rem}' +
         '.header h1{font-family:"Playfair Display",serif;font-size:22pt;color:#d4a853;margin:0;font-weight:700}' +
         '.header .subtitle{font-size:10pt;color:#555;margin-top:3px}' +
-        '.content{column-count:2;column-gap:25px}.letter-group{margin-bottom:6px}' +
+        '.content{column-count:2;column-gap:25px;column-fill:auto;column-rule:1px solid #e5e5e5}.letter-group{margin-bottom:6px}' +
         '.watermark{float:left;font-family:"Playfair Display",serif;font-size:42pt;font-weight:bold;color:#f0e8d5;line-height:1;margin:-5px 8px -15px 0}' +
         '.artist-block{margin-bottom:4px;break-inside:avoid}.artist-name{font-weight:bold;font-size:10.5pt;color:#333}' +
         '.song-line{font-size:9.5pt;color:#444;padding-left:2px}' +
