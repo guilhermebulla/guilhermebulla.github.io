@@ -816,7 +816,7 @@ function generatePDF(scope) {
             });
             bodyHtml += '</div>';
         });
-        bodyHtml += '<div style="clear:both;"></div></div>';
+        bodyHtml += '</div>';
     });
     const subtitleMap = {
         'total': 'BullaAcoustic · Guilherme Bulla — Voz &amp; Violão',
@@ -835,29 +835,21 @@ function generatePDF(scope) {
         '.header{text-align:center;margin-bottom:1rem;border-bottom:1px solid #d4a853;padding-bottom:0.5rem}' +
         '.header h1{font-family:"Playfair Display",serif;font-size:24pt;color:#d4a853;margin:0;font-weight:700}' +
         '.header .subtitle{font-size:11pt;color:#555;margin-top:3px}' +
-        '.pdf-page{padding:1.5cm 1.5cm 1.8cm;page-break-after:always;position:relative;min-height:297mm;overflow:hidden}' +
+        '.pdf-page{padding:1.5cm 1.5cm 1.8cm;page-break-after:always;position:relative;min-height:295mm}' +
         '.pdf-page:last-child{page-break-after:auto}' +
         '.content{column-count:2;column-gap:28px;column-rule:1px solid #d4a853}' +
         '.letter-group{margin-bottom:6px}' +
-        '.letter-divider{background:linear-gradient(to right,#f5f0e0 0%,#f5f0e0 35%,rgba(245,240,224,0.5) 70%,transparent 100%);border-left:4px solid #d4a853;padding:4px 10px;margin:6px 0 4px;font-family:"Playfair Display",serif;font-size:13pt;font-weight:700;color:#8a6d2a;break-inside:avoid}' +
-        '.artist-block{margin-bottom:4px;break-inside:avoid}.artist-name{font-weight:bold;font-size:12pt;color:#333}' +
+        '.letter-divider{background:linear-gradient(to right,#f5f0e0 0%,#f5f0e0 35%,rgba(245,240,224,0.5) 70%,transparent 100%);border-left:4px solid #d4a853;padding:4px 10px;margin:6px 0 4px;font-family:"Playfair Display",serif;font-size:13pt;font-weight:700;color:#8a6d2a;break-inside:avoid;page-break-inside:avoid;break-after:avoid;page-break-after:avoid}' +
+        '.artist-block{margin-bottom:4px}' +
+        '.artist-name{font-weight:bold;font-size:12pt;color:#333;break-after:avoid;page-break-after:avoid}' +
         '.song-line{font-size:11pt;color:#444;padding-left:2px}' +
-        '.pdf-footer{position:absolute;bottom:0.5cm;left:1.5cm;right:1.5cm;display:flex;justify-content:space-between;align-items:center;border-top:1px solid #eee;padding-top:4px;font-size:8pt;color:#999}' +
+        '.pdf-footer{position:absolute;bottom:0.6cm;left:1.5cm;right:1.5cm;display:flex;justify-content:space-between;align-items:center;border-top:1px solid #eee;padding-top:4px;font-size:8pt;color:#999}' +
         '.pdf-footer .footer-center{flex:1;text-align:center}' +
         '.pdf-footer .page-num{font-family:"Playfair Display",serif;color:#d4a853;font-weight:600;min-width:30px;text-align:right}' +
-        '@media screen{' +
-        'body{background:#e8e8e8;padding:1rem 0}' +
-        '.print-document{max-width:210mm;margin:0 auto}' +
-        '.pdf-page{background:white;box-shadow:0 4px 30px rgba(0,0,0,0.12);margin-bottom:1rem;border-radius:2px}' +
-        '.pdf-page.pdf-page-hidden{display:none}' +
-        '.pdf-nav{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);background:white;border:1px solid #ddd;border-radius:50px;padding:8px 16px;box-shadow:0 4px 20px rgba(0,0,0,0.15);display:flex;gap:12px;align-items:center;z-index:1000}' +
-        '.pdf-nav button{background:none;border:1px solid #d4a853;color:#d4a853;border-radius:50px;padding:4px 16px;cursor:pointer;font-family:"Inter",sans-serif;font-size:0.85rem;transition:all 0.2s}' +
-        '.pdf-nav button:hover:not(:disabled){background:#d4a853;color:white}' +
-        '.pdf-nav button:disabled{opacity:0.3;cursor:default}' +
-        '.pdf-nav .page-info{font-size:0.85rem;color:#666;min-width:50px;text-align:center;font-family:"Inter",sans-serif}' +
-        '}' +
+        '@media screen{body{background:#e8e8e8;padding:1rem 0}.print-document{max-width:210mm;margin:0 auto}.pdf-page{background:white;box-shadow:0 4px 30px rgba(0,0,0,0.12);margin-bottom:1rem;border-radius:2px}.pdf-page.pdf-page-hidden{display:none}.pdf-nav{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);background:white;border:1px solid #ddd;border-radius:50px;padding:8px 16px;box-shadow:0 4px 20px rgba(0,0,0,0.15);display:flex;gap:12px;align-items:center;z-index:1000}.pdf-nav button{background:none;border:1px solid #d4a853;color:#d4a853;border-radius:50px;padding:4px 16px;cursor:pointer;font-family:"Inter",sans-serif;font-size:0.85rem;transition:all 0.2s}.pdf-nav button:hover:not(:disabled){background:#d4a853;color:white}.pdf-nav button:disabled{opacity:0.3;cursor:default}.pdf-nav .page-info{font-size:0.85rem;color:#666;min-width:50px;text-align:center;font-family:"Inter",sans-serif}}' +
         '@media print{.pdf-nav{display:none!important}.pdf-page{box-shadow:none;margin:0;border-radius:0}}' +
-        '</style></head><body>' +
+        '</style></head>' +
+        '<body data-footer="' + footerText + '">' +
         '<div class="print-document" id="printDoc">' +
         '<div class="pdf-page" id="pageTemplate">' +
         '<div class="header"><h1>REPERTÓRIO</h1><div class="subtitle">' + subtitle + '</div></div>' +
@@ -872,18 +864,21 @@ function generatePDF(scope) {
         '</div>' +
         '<scr' + 'ipt>' +
         'window.onload=function(){' +
+        'document.fonts.ready.then(function(){' +
         'setTimeout(function(){' +
+        'try{' +
         'var content=document.getElementById("allContent");' +
         'var groups=Array.from(content.querySelectorAll(".letter-group"));' +
         'var printDoc=document.getElementById("printDoc");' +
         'var templatePage=document.getElementById("pageTemplate");' +
-        'var headerHtml=document.querySelector(".header").outerHTML;' +
-        'var pageH=1122;var padT=57;var padB=68;' +
+        'var headerHtml="";' +
         'var headerEl=document.querySelector(".header");' +
+        'if(headerEl){headerHtml=headerEl.outerHTML}' +
+        'var ft=document.body.getAttribute("data-footer")||"";' +
+        'var PAGE_H=1122;var PAD_T=57;var PAD_B=68;var FOOTER_H=30;' +
         'var headerH=headerEl?headerEl.offsetHeight+16:60;' +
-        'var footerH=30;' +
-        'var usableFirst=pageH-padT-padB-headerH-footerH;' +
-        'var usableRest=pageH-padT-padB-footerH;' +
+        'var usableFirst=Math.floor((PAGE_H-PAD_T-PAD_B-headerH-FOOTER_H)*0.93);' +
+        'var usableRest=Math.floor((PAGE_H-PAD_T-PAD_B-FOOTER_H)*0.93);' +
         'templatePage.remove();' +
         'var pages=[];var cc=null;var ch=0;' +
         'groups.forEach(function(g){' +
@@ -900,16 +895,16 @@ function generatePDF(scope) {
         'var cd=document.createElement("div");' +
         'cd.className="content";' +
         'page.appendChild(cd);' +
-        'var ft=document.createElement("div");' +
-        'ft.className="pdf-footer";' +
-        'var s1=ft.appendChild(document.createElement("span"));' +
-        'var s2=ft.appendChild(document.createElement("span"));' +
+        'var ftd=document.createElement("div");' +
+        'ftd.className="pdf-footer";' +
+        'ftd.appendChild(document.createElement("span"));' +
+        'var s2=ftd.appendChild(document.createElement("span"));' +
         's2.className="footer-center";' +
-        's2.textContent="' + footerText + '";' +
-        'var s3=ft.appendChild(document.createElement("span"));' +
+        's2.textContent=ft;' +
+        'var s3=ftd.appendChild(document.createElement("span"));' +
         's3.className="page-num";' +
         's3.textContent=String(pages.length+1);' +
-        'page.appendChild(ft);' +
+        'page.appendChild(ftd);' +
         'printDoc.appendChild(page);' +
         'pages.push(page);' +
         'cc=cd;' +
@@ -918,7 +913,6 @@ function generatePDF(scope) {
         'cc.appendChild(g);' +
         'ch+=gh;' +
         '});' +
-        'if(pages.length===0){printDoc.appendChild(templatePage)}' +
         'var nav=document.getElementById("pdfNav");' +
         'var prevBtn=document.getElementById("prevPage");' +
         'var nextBtn=document.getElementById("nextPage");' +
@@ -942,8 +936,10 @@ function generatePDF(scope) {
         'window.onafterprint=function(){' +
         'if(pages.length>1){showPage(idx);nav.style.display="flex"}' +
         '};' +
+        '}catch(e){console.error("Pagination error:",e)}' +
         'window.print();' +
-        '},800)' +
+        '},200)' +
+        '})' +
         '}' +
         '<' + '/scr' + 'ipt></body></html>';
     const printWindow = window.open('', '_blank');
