@@ -265,6 +265,9 @@ a:hover { color: var(--gold-hover); }
 .artist-list::-webkit-scrollbar-thumb { background: var(--border-light); border-radius: 3px; }
 .artist-item { display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; border-radius: 6px; transition: background var(--transition); }
 .artist-item:hover { background: var(--bg); }
+.artist-item.selected { background: var(--gold-soft); border-left: 3px solid var(--gold); }
+.artist-item.selected .artist-name { color: var(--gold); font-weight: 600; }
+.artist-name { cursor: pointer; }
 .artist-name { font-size: 0.85rem; color: var(--text-muted); flex: 1; }
 .artist-count { font-size: 0.7rem; color: var(--text-dim); margin-right: 8px; }
 .artist-star-btn { background: none; border: none; cursor: pointer; font-size: 1rem; color: var(--text-dim); transition: color var(--transition); padding: 4px; }
