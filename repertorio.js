@@ -376,7 +376,6 @@ function applyFilters() {
         if (!songMatchesStyles(song, selectedStyles)) return false;
         if (!songMatchesLangs(song, selectedLangs)) return false;
         if (!songMatchesDecades(song, selectedDecades)) return false;
-        if (searchTerm) {
         if (searchTerm && !starredFilterActive) {
             if (!normalizeText(song.musica).includes(searchTerm) && !normalizeText(song.artista).includes(searchTerm)) return false;
         }
