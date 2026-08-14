@@ -16,7 +16,11 @@ let urlHashReady = false;
 let starredFilterActive = false;
 let selectedArtist = null;
 const STORAGE_KEY = 'bulla_starred_songs';
-const LANG_FLAGS = { 'Português': '🇧🇷', 'Inglês': '🇺🇸', 'Espanhol': '🇪🇸', 'Francês': '🇫🇷' };
+const FLAG_BR = '<svg width="14" height="10" viewBox="0 0 14 10" class="flag-icon"><rect width="14" height="10" fill="#009b3a"/><path d="M7 1.5L13 5L7 8.5L1 5Z" fill="#fedf00"/><circle cx="7" cy="5" r="1.8" fill="#002776"/></svg>';
+const FLAG_US = '<svg width="14" height="10" viewBox="0 0 14 10" class="flag-icon"><rect width="14" height="10" fill="#bf0a30"/><rect y="1.4" width="14" height="1.4" fill="#fff"/><rect y="4.2" width="14" height="1.4" fill="#fff"/><rect y="7" width="14" height="1.4" fill="#fff"/><rect width="6" height="5.6" fill="#002868"/></svg>';
+const FLAG_ES = '<svg width="14" height="10" viewBox="0 0 14 10" class="flag-icon"><rect width="14" height="10" fill="#aa151b"/><rect y="2.8" width="14" height="4.4" fill="#f1bf00"/></svg>';
+const FLAG_FR = '<svg width="14" height="10" viewBox="0 0 14 10" class="flag-icon"><rect width="4.67" height="10" fill="#0055a4"/><rect x="4.67" width="4.66" height="10" fill="#fff"/><rect x="9.33" width="4.67" height="10" fill="#ef4135"/></svg>';
+const LANG_FLAGS = { 'Português': FLAG_BR, 'Inglês': FLAG_US, 'Espanhol': FLAG_ES, 'Francês': FLAG_FR };
 // ===== DOM =====
 const searchInput = document.getElementById('searchInput');
 const searchClear = document.getElementById('searchClear');
@@ -373,6 +377,7 @@ function applyFilters() {
         if (!songMatchesLangs(song, selectedLangs)) return false;
         if (!songMatchesDecades(song, selectedDecades)) return false;
         if (searchTerm) {
+        if (searchTerm && !starredFilterActive) {
             if (!normalizeText(song.musica).includes(searchTerm) && !normalizeText(song.artista).includes(searchTerm)) return false;
         }
         return true;
