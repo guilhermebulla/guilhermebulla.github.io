@@ -835,7 +835,8 @@ function generatePDF(scope) {
         '.header{text-align:center;margin-bottom:1rem;border-bottom:1px solid #d4a853;padding-bottom:0.5rem}' +
         '.header h1{font-family:"Playfair Display",serif;font-size:24pt;color:#d4a853;margin:0;font-weight:700}' +
         '.header .subtitle{font-size:11pt;color:#555;margin-top:3px}' +
-        '.pdf-page{padding:1.5cm 1.5cm 1.8cm;page-break-after:always;position:relative;min-height:295mm}' +
+        // ALTERAÇÃO 1: min-height 295mm → 277mm
+        '.pdf-page{padding:1.5cm 1.5cm 1.8cm;page-break-after:always;position:relative;min-height:277mm}' +
         '.pdf-page:last-child{page-break-after:auto}' +
         '.content{column-count:2;column-gap:28px;column-rule:1px solid #d4a853}' +
         '.letter-group{margin-bottom:6px}' +
@@ -877,8 +878,9 @@ function generatePDF(scope) {
         'var ft=document.body.getAttribute("data-footer")||"";' +
         'var PAGE_H=1122;var PAD_T=57;var PAD_B=68;var FOOTER_H=30;' +
         'var headerH=headerEl?headerEl.offsetHeight+16:60;' +
-        'var usableFirst=Math.floor((PAGE_H-PAD_T-PAD_B-headerH-FOOTER_H)*0.93);' +
-        'var usableRest=Math.floor((PAGE_H-PAD_T-PAD_B-FOOTER_H)*0.93);' +
+        // ALTERAÇÃO 2: fator 0.93 → 0.88
+        'var usableFirst=Math.floor((PAGE_H-PAD_T-PAD_B-headerH-FOOTER_H)*0.88);' +
+        'var usableRest=Math.floor((PAGE_H-PAD_T-PAD_B-FOOTER_H)*0.88);' +
         'templatePage.remove();' +
         'var pages=[];var cc=null;var ch=0;' +
         'groups.forEach(function(g){' +
