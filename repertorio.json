@@ -3534,7 +3534,7 @@
     "ano": "1987"
   },
   {
-    "musica": "Papa é pop, O",
+    "musica": "O Papa é pop",
     "artista": "Engenheiros do Hawaii",
     "estilo": [
       "Rock"
@@ -3579,7 +3579,7 @@
     "ano": "1987"
   },
   {
-    "musica": "Revolta dos Dândis, A",
+    "musica": "A Revolta dos Dândis",
     "artista": "Engenheiros do Hawaii",
     "estilo": [
       "Rock"
@@ -3982,7 +3982,7 @@
     "ano": "1997"
   },
   {
-    "musica": "Friend in low places",
+    "musica": "Friends in low places",
     "artista": "Garth Brooks",
     "estilo": [
       "Country"
@@ -4091,7 +4091,7 @@
     "ano": "1981"
   },
   {
-    "musica": "Paz, A",
+    "musica": "A Paz",
     "artista": "Gilberto Gil",
     "estilo": [
       "MPB"
@@ -12240,5 +12240,15 @@
     ],
     "idioma": "Português",
     "ano": "2020"
+  },
+  {
+    "musica": "Jolene",
+    "artista": "Miley Cyrus",
+    "estilo": [
+      "Country",
+      "Rock"
+    ],
+    "idioma": "Inglês",
+    "ano": "2012"
   }
 ]
