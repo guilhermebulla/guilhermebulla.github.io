@@ -620,15 +620,6 @@
     "ano": "2015"
   },
   {
-    "musica": "Trevo",
-    "artista": "Anavitória",
-    "estilo": [
-      "MPB"
-    ],
-    "idioma": "Português",
-    "ano": "2016"
-  },
-  {
     "musica": "Why",
     "artista": "Annie Lennox",
     "estilo": [
@@ -669,7 +660,8 @@
     "musica": "Outra noite que se vai",
     "artista": "Armandinho",
     "estilo": [
-      "Reggae"
+      "Reggae",
+      "Pop"
     ],
     "idioma": "Português",
     "ano": "2002"
@@ -714,7 +706,8 @@
     "musica": "Sol Loiro",
     "artista": "Armandinho",
     "estilo": [
-      "Reggae"
+      "Reggae",
+      "Pop"
     ],
     "idioma": "Português",
     "ano": "2006"
@@ -1397,7 +1390,7 @@
     "ano": "2002"
   },
   {
-    "musica": "Mundo, O",
+    "musica": "O Mundo",
     "artista": "Capital Inicial",
     "estilo": [
       "Rock"
@@ -1537,7 +1530,8 @@
     "musica": "Bilhetinho Azul",
     "artista": "Cazuza",
     "estilo": [
-      "Rock"
+      "Rock",
+      "Blues"
     ],
     "idioma": "Português",
     "ano": "1990"
@@ -1564,7 +1558,9 @@
     "musica": "Down em Mim",
     "artista": "Cazuza",
     "estilo": [
-      "Rock"
+      "Rock",
+      "Blues",
+      "MPB"
     ],
     "idioma": "Português",
     "ano": "1982"
@@ -1624,10 +1620,11 @@
     "ano": "1987"
   },
   {
-    "musica": "Nosso Amor a gente inventa, O",
+    "musica": "O Nosso Amor a gente inventa",
     "artista": "Cazuza",
     "estilo": [
-      "Rock"
+      "Rock",
+      "Pop"
     ],
     "idioma": "Português",
     "ano": "1987"
@@ -1642,10 +1639,11 @@
     "ano": "1990"
   },
   {
-    "musica": "Por que a Gente é Assim",
+    "musica": "Por que a Gente é Assim?",
     "artista": "Cazuza",
     "estilo": [
-      "Rock"
+      "Rock",
+      "Pop"
     ],
     "idioma": "Português",
     "ano": "1987"
@@ -1672,13 +1670,14 @@
     "musica": "Solidão que Nada",
     "artista": "Cazuza",
     "estilo": [
-      "Rock"
+      "Rock",
+      "MPB"
     ],
     "idioma": "Português",
     "ano": "1987"
   },
   {
-    "musica": "Tempo não Pára, O",
+    "musica": "O Tempo não Pára",
     "artista": "Cazuza",
     "estilo": [
       "Rock"
@@ -1690,7 +1689,8 @@
     "musica": "Todo Amor q Houver nessa vida",
     "artista": "Cazuza",
     "estilo": [
-      "Rock"
+      "MPB",
+      "Pop"
     ],
     "idioma": "Português",
     "ano": "1987"
@@ -1814,7 +1814,7 @@
     "ano": "1970"
   },
   {
-    "musica": "Gota d'Água, A",
+    "musica": "A Gota d'Água",
     "artista": "Chico Buarque",
     "estilo": [
       "MPB"
@@ -1832,7 +1832,7 @@
     "ano": "1987"
   },
   {
-    "musica": "Meu Guri, O",
+    "musica": "O Meu Guri",
     "artista": "Chico Buarque",
     "estilo": [
       "MPB"
@@ -1857,15 +1857,6 @@
     ],
     "idioma": "Português",
     "ano": "1967"
-  },
-  {
-    "musica": "Samba de Orly",
-    "artista": "Chico Buarque",
-    "estilo": [
-      "Samba"
-    ],
-    "idioma": "Português",
-    "ano": "1971"
   },
   {
     "musica": "Mama África",
@@ -1951,10 +1942,11 @@
     "ano": "2011"
   },
   {
-    "musica": "Estrada, A",
+    "musica": "A Estrada",
     "artista": "Cidade Negra",
     "estilo": [
-      "Reggae"
+      "Reggae",
+      "Pop"
     ],
     "idioma": "Português",
     "ano": "1998"
@@ -2450,7 +2442,7 @@
     "ano": "2002"
   },
   {
-    "musica": "Long December, A",
+    "musica": "A Long December",
     "artista": "Counting Crows",
     "estilo": [
       "Rock"
@@ -2730,7 +2722,7 @@
     "ano": "2012"
   },
   {
-    "musica": "Segundo sol, O",
+    "musica": "O Segundo sol",
     "artista": "Cássia Eller",
     "estilo": [
       "Rock",
@@ -4072,7 +4064,7 @@
     "ano": "1982"
   },
   {
-    "musica": "Novidade, A",
+    "musica": "A Novidade",
     "artista": "Caetano Veloso, Gilberto Gil & Ivete Sangalo",
     "estilo": [
       "MPB"
@@ -9103,7 +9095,7 @@
     "ano": "1996"
   },
   {
-    "musica": "Fica tudo bem (part. Anitta)",
+    "musica": "Fica tudo bem (feat. Anitta)",
     "artista": "Silva",
     "estilo": [
       "MPB",
@@ -11380,7 +11372,7 @@
     "ano": "2019"
   },
   {
-    "musica": "Que Pescar Que Nada",
+    "musica": "Que Pescar, Que Nada",
     "artista": "Bruno & Marrone",
     "estilo": [
       "Sertanejo"
@@ -11934,5 +11926,319 @@
     ],
     "idioma": "Português",
     "ano": "2025"
+  },
+  {
+    "musica": "Amor, meu grande amor",
+    "artista": "Barão Vermelho",
+    "estilo": [
+      "Rock",
+      "Pop",
+      "MPB"
+    ],
+    "idioma": "Português",
+    "ano": "1996"
+  },
+  {
+    "musica": "Amor, meu grande amor",
+    "artista": "Ângela Rô Rô",
+    "estilo": [
+      "MPB"
+    ],
+    "idioma": "Português",
+    "ano": "1979"
+  },
+  {
+    "musica": "Bilhetinho Azul",
+    "artista": "Barão Vermelho",
+    "estilo": [
+      "Blues",
+      "Rock",
+      "Pop"
+    ],
+    "idioma": "Português",
+    "ano": "1982"
+  },
+  {
+    "musica": "Cuidado",
+    "artista": "Barão Vermelho",
+    "estilo": [
+      "Rock"
+    ],
+    "idioma": "Português",
+    "ano": "2004"
+  },
+  {
+    "musica": "Down em mim",
+    "artista": "Barão Vermelho",
+    "estilo": [
+      "Rock",
+      "Blues",
+      "MPB"
+    ],
+    "idioma": "Português",
+    "ano": "1982"
+  },
+  {
+    "musica": "Jardins da Babilônia",
+    "artista": "Barão Vermelho",
+    "estilo": [
+      "Rock",
+      "Pop"
+    ],
+    "idioma": "Português",
+    "ano": "1996"
+  },
+  {
+    "musica": "Pedra, Flor e Espinho",
+    "artista": "Barão Vermelho",
+    "estilo": [
+      "Rock",
+      "Pop"
+    ],
+    "idioma": "Português",
+    "ano": "1992"
+  },
+  {
+    "musica": "Por que a gente é assim?",
+    "artista": "Barão Vermelho",
+    "estilo": [
+      "Rock",
+      "Pop"
+    ],
+    "idioma": "Português",
+    "ano": "1984"
+  },
+  {
+    "musica": "Por Você",
+    "artista": "Barão Vermelho",
+    "estilo": [
+      "Rock",
+      "Pop"
+    ],
+    "idioma": "Português",
+    "ano": "1998"
+  },
+  {
+    "musica": "Pro dia nascer feliz",
+    "artista": "Barão Vermelho",
+    "estilo": [
+      "Rock",
+      "Pop"
+    ],
+    "idioma": "Português",
+    "ano": "1983"
+  },
+  {
+    "musica": "Puro Êxtase",
+    "artista": "Barão Vermelho",
+    "estilo": [
+      "Pop",
+      "Rock"
+    ],
+    "idioma": "Português",
+    "ano": "1998"
+  },
+  {
+    "musica": "Amor de Índio",
+    "artista": "Beto Guedes",
+    "estilo": [
+      "MPB"
+    ],
+    "idioma": "Português",
+    "ano": "1978"
+  },
+  {
+    "musica": "Paisagem na Janela",
+    "artista": "Beto Guedes",
+    "estilo": [
+      "MPB"
+    ],
+    "idioma": "Português",
+    "ano": "1972"
+  },
+  {
+    "musica": "Paisagem na Janela",
+    "artista": "Milton Nascimento",
+    "estilo": [
+      "MPB"
+    ],
+    "idioma": "Português",
+    "ano": "1972"
+  },
+  {
+    "musica": "Bang!",
+    "artista": "Anitta",
+    "estilo": [
+      "Pop"
+    ],
+    "idioma": "Português",
+    "ano": "2015"
+  },
+  {
+    "musica": "Fica tudo bem (feat. Silva)",
+    "artista": "Anitta",
+    "estilo": [
+      "MPB"
+    ],
+    "idioma": "Português",
+    "ano": "2018"
+  },
+  {
+    "musica": "Reggae das Tramanda",
+    "artista": "Armandinho",
+    "estilo": [
+      "Reggae"
+    ],
+    "idioma": "Português",
+    "ano": "2002"
+  },
+  {
+    "musica": "Halo",
+    "artista": "Beyoncé",
+    "estilo": [
+      "Pop"
+    ],
+    "idioma": "Inglês",
+    "ano": "2008"
+  },
+  {
+    "musica": "XO",
+    "artista": "Beyoncé",
+    "estilo": [
+      "Pop"
+    ],
+    "idioma": "Inglês",
+    "ano": "2013"
+  },
+  {
+    "musica": "Mesmo que Mude",
+    "artista": "Bidê ou Balde",
+    "estilo": [
+      "Rock",
+      "Pop"
+    ],
+    "idioma": "Português",
+    "ano": "2004"
+  },
+  {
+    "musica": "Dani",
+    "artista": "Biquíni Cavadão",
+    "estilo": [
+      "Pop",
+      "Rock"
+    ],
+    "idioma": "Português",
+    "ano": "2003"
+  },
+  {
+    "musica": "Impossível",
+    "artista": "Biquíni Cavadão",
+    "estilo": [
+      "Pop",
+      "Rock"
+    ],
+    "idioma": "Português",
+    "ano": "1991"
+  },
+  {
+    "musica": "Quanto tempo demora um mês",
+    "artista": "Biquíni Cavadão",
+    "estilo": [
+      "Pop",
+      "Rock"
+    ],
+    "idioma": "Português",
+    "ano": "2004"
+  },
+  {
+    "musica": "Vento Ventania",
+    "artista": "Biquíni Cavadão",
+    "estilo": [
+      "Pop",
+      "Rock"
+    ],
+    "idioma": "Português",
+    "ano": "1991"
+  },
+  {
+    "musica": "I wanna be there",
+    "artista": "Blessid Union of Souls",
+    "estilo": [
+      "Rock",
+      "Country"
+    ],
+    "idioma": "Inglês",
+    "ano": "1997"
+  },
+  {
+    "musica": "All the small things",
+    "artista": "Blink182",
+    "estilo": [
+      "Punk",
+      "Rock",
+      "Pop"
+    ],
+    "idioma": "Inglês",
+    "ano": "1999"
+  },
+  {
+    "musica": "No Rain",
+    "artista": "Blind Melon",
+    "estilo": [
+      "Rock",
+      "Indie"
+    ],
+    "idioma": "Inglês",
+    "ano": "1992"
+  },
+  {
+    "musica": "A dois passos do paraíso",
+    "artista": "Blitz",
+    "estilo": [
+      "Pop",
+      "Rock",
+      "Reggae"
+    ],
+    "idioma": "Português",
+    "ano": "1983"
+  },
+  {
+    "musica": "Maria",
+    "artista": "Blondie",
+    "estilo": [
+      "Rock",
+      "Pop"
+    ],
+    "idioma": "Inglês",
+    "ano": "1999"
+  },
+  {
+    "musica": "Billionaire (feat. Travie McCoy)",
+    "artista": "Bruno Mars",
+    "estilo": [
+      "Reggae",
+      "Pop"
+    ],
+    "idioma": "Inglês",
+    "ano": "2010"
+  },
+  {
+    "musica": "Uptown Funk (feat. Mark Ronson)",
+    "artista": "Bruno Mars",
+    "estilo": [
+      "Pop",
+      "Funk"
+    ],
+    "idioma": "Inglês",
+    "ano": "2014"
+  },
+  {
+    "musica": "Ninguém (feat. Fran Gil)",
+    "artista": "Chico Chico",
+    "estilo": [
+      "MPB"
+    ],
+    "idioma": "Português",
+    "ano": "2020"
   }
 ]
