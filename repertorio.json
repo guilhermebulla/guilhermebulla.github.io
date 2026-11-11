@@ -10001,15 +10001,6 @@
     "ano": "2006"
   },
   {
-    "musica": "Dona Maria (feat. Jorge)",
-    "artista": "Thiago Brava",
-    "estilo": [
-      "Sertanejo"
-    ],
-    "idioma": "Português",
-    "ano": "2017"
-  },
-  {
     "musica": "Amei te ver",
     "artista": "Tiago Iorc",
     "estilo": [
@@ -10589,7 +10580,8 @@
     "musica": "When the Stars go Blue (feat. Bono)",
     "artista": "The Corrs",
     "estilo": [
-      "Rock"
+      "Rock",
+      "Pop"
     ],
     "idioma": "Inglês",
     "ano": "2002"
