@@ -10102,7 +10102,7 @@
     "ano": "1970"
   },
   {
-    "musica": "Descobridor dos sete mares, O",
+    "musica": "O Descobridor dos sete mares",
     "artista": "Tim Maia",
     "estilo": [
       "Soul",
@@ -10426,18 +10426,18 @@
     "ano": "1983"
   },
   {
-    "musica": "Carta ao Tom 74",
+    "musica": "Carta ao Tom 74 (feat. Vinicius de Moraes)",
     "artista": "Toquinho",
     "estilo": [
       "MPB",
       "Bossa Nova"
     ],
     "idioma": "Português",
-    "ano": "2010"
+    "ano": "1974"
   },
   {
-    "musica": "Que Maravilha",
-    "artista": "Toquinho e Vinícius",
+    "musica": "Que Maravilha (feat. Vinicius de Moraes)",
+    "artista": "Toquinho",
     "estilo": [
       "MPB",
       "Bossa Nova"
@@ -10688,7 +10688,7 @@
   },
   {
     "musica": "Carta ao Tom 74 (feat. Toquinho)",
-    "artista": "Vinícius de Moraes",
+    "artista": "Vinicius de Moraes",
     "estilo": [
       "MPB",
       "Bossa Nova"
@@ -10718,7 +10718,7 @@
   },
   {
     "musica": "Pela Luz dos Olhos Teus",
-    "artista": "Vinícius Moraes",
+    "artista": "Vinicius de Moraes",
     "estilo": [
       "MPB",
       "Bossa Nova"
@@ -10738,7 +10738,7 @@
   },
   {
     "musica": "Samba em Prelúdio",
-    "artista": "Vinícius Moraes",
+    "artista": "Vinicius de Moraes",
     "estilo": [
       "MPB",
       "Bossa Nova"
@@ -10990,15 +10990,6 @@
     ],
     "idioma": "Português",
     "ano": "2009"
-  },
-  {
-    "musica": "Flor da Pele / Vapor Barato",
-    "artista": "Zeca Baleiro",
-    "estilo": [
-      "MPB"
-    ],
-    "idioma": "Português",
-    "ano": "1997"
   },
   {
     "musica": "Admirável Gado Novo",
@@ -12263,5 +12254,15 @@
     ],
     "idioma": "Português",
     "ano": "2006"
+  },
+  {
+    "musica": "Samba de Orly (feat. Chico Buarque)",
+    "artista": "Toquinho",
+    "estilo": [
+      "MPB",
+      "Samba"
+    ],
+    "idioma": "Português",
+    "ano": "1971"
   }
 ]
