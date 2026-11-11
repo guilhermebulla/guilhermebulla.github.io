@@ -6044,7 +6044,7 @@
     "ano": "1987"
   },
   {
-    "musica": "Vento, O",
+    "musica": "O Vento",
     "artista": "Los Hermanos",
     "estilo": [
       "MPB",
@@ -12249,5 +12249,15 @@
     ],
     "idioma": "Inglês",
     "ano": "1992"
+  },
+  {
+    "musica": "Anna Júlia",
+    "artista": "Los Hermanos",
+    "estilo": [
+      "Rock",
+      "Pop"
+    ],
+    "idioma": "Português",
+    "ano": "1999"
   }
 ]
