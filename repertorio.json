@@ -8690,7 +8690,7 @@
   },
   {
     "musica": "Angie",
-    "artista": "Rolling Stones",
+    "artista": "The Rolling Stones",
     "estilo": [
       "Rock"
     ],
@@ -8699,7 +8699,7 @@
   },
   {
     "musica": "Satisfaction",
-    "artista": "Rolling Stones",
+    "artista": "The Rolling Stones",
     "estilo": [
       "Rock"
     ],
@@ -8708,7 +8708,7 @@
   },
   {
     "musica": "Start me up",
-    "artista": "Rolling Stones",
+    "artista": "The Rolling Stones",
     "estilo": [
       "Rock"
     ],
@@ -8936,7 +8936,7 @@
   },
   {
     "musica": "Wind of change",
-    "artista": "Scorpions",
+    "artista": "The Scorpions",
     "estilo": [
       "Rock"
     ],
@@ -9165,7 +9165,7 @@
     "ano": "2003"
   },
   {
-    "musica": "Beijo e a Reza, O",
+    "musica": "O Beijo e a Reza",
     "artista": "Skank",
     "estilo": [
       "Pop",
@@ -9215,7 +9215,7 @@
     "ano": "2006"
   },
   {
-    "musica": "Resposta, A",
+    "musica": "A Resposta",
     "artista": "Skank",
     "estilo": [
       "Pop",
@@ -9487,7 +9487,7 @@
     "ano": "2014"
   },
   {
-    "musica": "Anjo mais velho, O",
+    "musica": "O Anjo mais velho",
     "artista": "Teatro Mágico",
     "estilo": [
       "MPB"
@@ -12271,5 +12271,15 @@
     ],
     "idioma": "Português",
     "ano": "2017"
+  },
+  {
+    "musica": "Eu bebo sim (feat. Bebeto)",
+    "artista": "Seu Jorge",
+    "estilo": [
+      "MPB",
+      "Samba"
+    ],
+    "idioma": "Português",
+    "ano": "2006"
   }
 ]
