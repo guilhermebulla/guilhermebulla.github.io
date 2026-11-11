@@ -7314,15 +7314,6 @@
     "ano": "1991"
   },
   {
-    "musica": "Jesus Don't want me for a Sunbeam",
-    "artista": "Nirvana",
-    "estilo": [
-      "Rock"
-    ],
-    "idioma": "Inglês",
-    "ano": "1991"
-  },
-  {
     "musica": "Smells like teen spirit",
     "artista": "Nirvana",
     "estilo": [
@@ -7560,7 +7551,7 @@
     "ano": "2000"
   },
   {
-    "musica": "Vagabundo, O",
+    "musica": "O Vagabundo",
     "artista": "Os Incríveis",
     "estilo": [
       "Rock"
@@ -8302,7 +8293,7 @@
   },
   {
     "musica": "Me Deixa",
-    "artista": "Rappa",
+    "artista": "O Rappa",
     "estilo": [
       "Rock"
     ],
@@ -8311,7 +8302,7 @@
   },
   {
     "musica": "Minha Alma",
-    "artista": "Rappa",
+    "artista": "O Rappa",
     "estilo": [
       "Rock"
     ],
@@ -8320,7 +8311,7 @@
   },
   {
     "musica": "Pescador de Ilusões, O",
-    "artista": "Rappa",
+    "artista": "O Rappa",
     "estilo": [
       "Rock"
     ],
@@ -8329,7 +8320,7 @@
   },
   {
     "musica": "Que sobrou do céu, O",
-    "artista": "Rappa",
+    "artista": "O Rappa",
     "estilo": [
       "Rock"
     ],
@@ -8338,7 +8329,7 @@
   },
   {
     "musica": "Rodo Cotidiano",
-    "artista": "Rappa",
+    "artista": "O Rappa",
     "estilo": [
       "Rock"
     ],
@@ -8347,7 +8338,7 @@
   },
   {
     "musica": "Vapor Barato",
-    "artista": "Rappa",
+    "artista": "O Rappa",
     "estilo": [
       "Rock"
     ],
