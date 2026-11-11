@@ -6854,7 +6854,7 @@
   },
   {
     "musica": "Ando meio Desligado",
-    "artista": "Mutantes",
+    "artista": "Os Mutantes",
     "estilo": [
       "Rock",
       "MPB"
@@ -6999,7 +6999,7 @@
     "ano": "2000"
   },
   {
-    "musica": "Segundo sol, O",
+    "musica": "O Segundo sol",
     "artista": "Nando Reis",
     "estilo": [
       "MPB"
@@ -12269,5 +12269,16 @@
     ],
     "idioma": "Português",
     "ano": "2019"
+  },
+  {
+    "musica": "Você partiu meu coração (feat. Nego do Borel & Wesley Safadão)",
+    "artista": "Anitta",
+    "estilo": [
+      "Pop",
+      "Sertanejo",
+      "Samba"
+    ],
+    "idioma": "Português",
+    "ano": "2017"
   }
 ]
