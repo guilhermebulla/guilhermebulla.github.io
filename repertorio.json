@@ -4845,16 +4845,6 @@
     "ano": "2005"
   },
   {
-    "musica": "Halo",
-    "artista": "John Mayer",
-    "estilo": [
-      "Pop",
-      "Rock"
-    ],
-    "idioma": "Inglês",
-    "ano": "2008"
-  },
-  {
     "musica": "Love Song for no one",
     "artista": "John Mayer",
     "estilo": [
@@ -5059,7 +5049,7 @@
     "ano": "2012"
   },
   {
-    "musica": "A hora é agora",
+    "musica": "A hora é agora (Paz e amor)",
     "artista": "Jorge & Mateus",
     "estilo": [
       "Sertanejo"
@@ -12250,5 +12240,14 @@
     ],
     "idioma": "Inglês",
     "ano": "2012"
+  },
+  {
+    "musica": "Just another day",
+    "artista": "Jon Secada",
+    "estilo": [
+      "Pop"
+    ],
+    "idioma": "Inglês",
+    "ano": "1992"
   }
 ]
