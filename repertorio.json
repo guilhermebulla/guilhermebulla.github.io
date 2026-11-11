@@ -6297,8 +6297,8 @@
     "ano": "2009"
   },
   {
-    "musica": "João de Barro",
-    "artista": "Maria Gadú & Leandro Léo",
+    "musica": "João de Barro (feat. Leandro Léo)",
+    "artista": "Maria Gadú",
     "estilo": [
       "MPB"
     ],
@@ -12260,5 +12260,14 @@
     ],
     "idioma": "Português",
     "ano": "1999"
+  },
+  {
+    "musica": "Quarta Cadeira (feat. Matheu & Kauan)",
+    "artista": "Jorge & Mateus",
+    "estilo": [
+      "Sertanejo"
+    ],
+    "idioma": "Português",
+    "ano": "2019"
   }
 ]
