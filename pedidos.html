@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pedidos ao vivo — BullaAcoustic</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Playfair+Display:ital@1&display=swap" rel="stylesheet">
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<style>
+  :root {
+    --color-bg: #0F0F23; --color-surface: #1B1B30; --color-fg: #F8FAFC;
+    --color-primary: #1E1B4B; --color-accent: #22C55E; --color-border: #312E81;
+    --font-display: 'Playfair Display', serif; --font-body: 'Inter', sans-serif;
+    --radius: 12px; --space-4: 16px; --motion-fast: 150ms;
+  }
+  * { box-sizing: border-box; margin: 0; }
+  body { background: var(--color-bg); color: var(--color-fg);
+         font-family: var(--font-body); min-height: 100vh;
+         padding: var(--space-4); max-width: 640px; margin: 0 auto; }
+  h1 { font-family: var(--font-display); font-style: italic; font-size: 1.5rem;
+       text-align: center; margin: 24px 0 4px; }
+  .sub { text-align: center; color: #94A3B8; font-size: .9rem; margin-bottom: 24px; }
+  input { width: 100%; padding: 14px; border-radius: var(--radius);
+          border: 1px solid var(--color-border); background: var(--color-surface);
+          color: var(--color-fg); font-size: 1rem; margin-bottom: 12px; }
+  input:focus { outline: 2px solid var(--color-accent); }
+  button { width: 100%; padding: 16px; border: 0; border-radius: var(--radius);
+           background: var(--color-accent); color: #052E16; font-size: 1.05rem;
+           font-weight: 600; cursor: pointer; min-height: 48px; }
+  #resultado { margin-top: 16px; }
+  .musica { padding: 12px 16px; border: 1px solid var(--color-border);
+            border-radius: var(--radius); margin-bottom: 8px; cursor: pointer;
+            background: var(--color-surface); }
+  .musica strong { display: block; }
+  .musica span { color: #94A3B8; font-size: .85rem; }
+  .ok { text-align: center; color: var(--color-accent); padding: 16px;
+        border: 1px solid var(--color-accent); border-radius: var(--radius);
+        margin-top: 16px; }
+  footer { margin-top: 32px; text-align: center; color: #475569; font-size: .8rem; }
+</style>
+</head>
+<body>
+  <h1>Pedidos ao vivo</h1>
+  <p class="sub">Escolha do repertório do BullaAcoustic</p>
+  <input id="nome" placeholder="Seu nome" maxlength="40" autocomplete="name">
+  <input id="busca" placeholder="Buscar música ou artista…" autocomplete="off">
+  <div id="resultado"></div>
+  <div id="confirmacao"></div>
+  <footer>BullaAcoustic · voz e violão</footer>
+
+<script>
+  // PREENCHA com os dados do seu projeto Firebase (instruções no arquivo 4)
+  firebase.initializeApp({
+    apiKey: "SUA_API_KEY",
+    authDomain: "bulla-pedidos.firebaseapp.com",
+    projectId: "bulla-pedidos",
+    appId: "SEU_APP_ID"
+  });
+  const db = firebase.firestore();
+
+  let catalogo = [];
+  let selecionada = null;
+  const MAX_PEDIDOS_POR_PESSOA = 3;
+
+  fetch('repertorio.json')
+    .then(r => r.json())
+    .then(d => { catalogo = d; })
+    .catch(() => {
+      document.getElementById('resultado').innerHTML =
+        '<p class="sub">Não foi possível carregar o repertório. Verifique a conexão.</p>';
+    });
+
+  document.getElementById('busca').addEventListener('input', e => {
+    const q = e.target.value.trim().toLowerCase();
+    const alvo = document.getElementById('resultado');
+    selecionada = null;
+    if (q.length < 2) { alvo.innerHTML = ''; return; }
+    const achados = [];
+    for (let i = 0; i < catalogo.length && achados.length < 20; i++) {
+      const m = catalogo[i];
+      if ((m.musica || '').toLowerCase().includes(q) ||
+          (m.artista || '').toLowerCase().includes(q)) {
+        achados.push({ idx: i, ...m });
+      }
+    }
+    alvo.innerHTML = achados.map(m =>
+      `<div class="musica" data-idx="${m.idx}"><strong>${esc(m.musica)}</strong>` +
+      `<span>${esc(m.artista)} · ${esc((m.estilo || []).join(', '))}</span></div>`
+    ).join('');
+  });
+
+  document.getElementById('resultado').addEventListener('click', e => {
+    const card = e.target.closest('.musica');
+    if (!card) return;
+    const idx = Number(card.dataset.idx);
+    selecionada = { idx, ...catalogo[idx] };
+    pedir();
+  });
+
+  function esc(s) { const d = document.createElement('div'); d.textContent = s || ''; return d.innerHTML; }
+
+  async function pedir() {
+    const nome = document.getElementById('nome').value.trim();
+    const aviso = document.getElementById('confirmacao');
+    if (!nome) { aviso.innerHTML = '<p class="sub" style="color:#F59E0B">Digite seu nome primeiro.</p>'; return; }
+    if (!selecionada) return;
+    try {
+      const meus = await db.collection('pedidos')
+        .where('requesterKey', '==', nome.toLowerCase())
+        .where('status', '==', 'fila').get();
+      if (meus.size >= MAX_PEDIDOS_POR_PESSOA) {
+        aviso.innerHTML = `<p class="sub" style="color:#F59E0B">Limite de ${MAX_PEDIDOS_POR_PESSOA} pedidos em espera. Aguarde tocar um.</p>`;
+        return;
+      }
+      await db.collection('pedidos').add({
+        songId: selecionada.idx,
+        title: selecionada.musica,
+        artist: selecionada.artista,
+        requester: nome, requesterKey: nome.toLowerCase(),
+        status: 'fila', createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      });
+      aviso.innerHTML = `<div class="ok">✅ "${esc(selecionada.musica)}" na fila! Sujeito à ordem do show.</div>`;
+      document.getElementById('busca').value = '';
+      document.getElementById('resultado').innerHTML = '';
+      selecionada = null;
+    } catch (err) {
+      aviso.innerHTML = '<p class="sub" style="color:#DC2626">Falha ao enviar. Tente de novo.</p>';
+    }
+  }
+</script>
+</body>
+</html>
