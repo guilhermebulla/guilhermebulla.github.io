@@ -48,22 +48,28 @@
     toastTimer = setTimeout(() => t.classList.remove('mostrar'), 3000);
   }
 
-  // Fila pública ao vivo
+  // Fila pública ao vivo — mesma ordem da mesa (ordem manual > chegada)
   db.collection('pedidos').where('status', '==', 'fila')
     .onSnapshot(snap => {
       const itens = snap.docs.map(d => d.data());
-      itens.sort((a, b) => (a.createdAt?.seconds || 0) - (b.createdAt?.seconds || 0));
+      itens.sort((a, b) => {
+        const oa = (a.ordem != null) ? a.ordem : Infinity;
+        const ob = (b.ordem != null) ? b.ordem : Infinity;
+        if (oa !== ob) return oa - ob;
+        return (a.createdAt?.seconds || 0) - (b.createdAt?.seconds || 0);
+      });
       const alvo = document.getElementById('fila-publica');
       document.getElementById('fila-count').textContent =
         itens.length ? `(${itens.length})` : '';
       const meuNome = document.getElementById('nome').value.trim().toLowerCase();
       alvo.innerHTML = itens.length
-        ? itens.map(p =>
-            `<div class="musica"><strong>${esc(p.title)}</strong>` +
+        ? itens.map((p, i) =>
+            `<div class="musica"><span class="num">${i + 1}</span>` +
+            `<div><strong>${esc(p.title)}</strong>` +
             `<span>${esc(p.requester)} na fila</span>` +
             ((p.requesterKey || '') === meuNome && meuNome
               ? '<div class="me-tag">É VOCÊ</div>' : '') +
-            `</div>`).join('')
+            `</div></div>`).join('')
         : '<p class="sub">Nenhum pedido na fila. Seja o primeiro!</p>';
     }, () => {});
 
