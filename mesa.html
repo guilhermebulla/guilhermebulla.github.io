@@ -22,6 +22,9 @@
          padding: var(--space-4); max-width: 640px; margin: 0 auto; }
   h1 { font-family: var(--font-display); font-style: italic; font-size: 1.5rem;
        text-align: center; margin: 24px 0 4px; }
+  h2 { font-family: var(--font-body); font-size: .95rem; font-weight: 600;
+       text-transform: uppercase; letter-spacing: .08em; color: #a3a3a3;
+       margin: 28px 0 8px; }
   .sub { text-align: center; color: #a3a3a3; font-size: .9rem; margin-bottom: 24px; }
   input { width: 100%; padding: 14px; border-radius: var(--radius);
           border: 1px solid var(--color-border); background: var(--color-surface);
@@ -31,18 +34,20 @@
            background: var(--color-accent); color: #0f0f0f; font-size: 1.05rem;
            font-weight: 600; cursor: pointer; min-height: 48px; }
   .fila { margin-top: 8px; }
-  .pedido { padding: 14px 16px; border: 1px solid var(--color-border);
+  .pedido, .hist { padding: 14px 16px; border: 1px solid var(--color-border);
             border-radius: var(--radius); margin-bottom: 8px;
             background: var(--color-surface); }
-  .pedido strong { display: block; font-size: 1.05rem; }
-  .pedido span { color: #a3a3a3; font-size: .85rem; }
+  .pedido strong, .hist strong { display: block; font-size: 1.05rem; }
+  .pedido span, .hist span { color: #a3a3a3; font-size: .85rem; }
+  .hist .hora { float: right; color: #a3a3a3; font-size: .8rem; }
+  .hist.pulada strong { color: #a3a3a3; text-decoration: line-through; }
   .pedido .acoes { display: flex; gap: 8px; margin-top: 10px; }
   .pedido .acoes button { padding: 10px; font-size: .9rem; min-height: 40px; }
   .btn-sec { background: transparent; color: var(--color-accent);
              border: 1px solid var(--color-accent); }
   .btn-perigo { background: transparent; color: #DC2626;
                 border: 1px solid #DC2626; }
-  .vazio { text-align: center; color: #a3a3a3; padding: 32px 0; }
+  .vazio { text-align: center; color: #a3a3a3; padding: 24px 0; }
   .erro-pin { color: #DC2626; text-align: center; font-size: .9rem; margin-bottom: 12px; }
   footer { margin-top: 32px; text-align: center; color: #a3a3a3; font-size: .8rem; }
 </style>
@@ -52,7 +57,7 @@
     <h1>Mesa do músico</h1>
     <p class="sub">Acesso restrito</p>
     <p class="erro-pin" id="erro-pin"></p>
-    <input id="pin" type="password" inputmode="numeric" placeholder="PIN (4+ dígitos)" maxlength="12">
+    <input id="pin" type="password" placeholder="PIN alfanumérico" maxlength="24" autocomplete="off">
     <button id="btn-pin">Entrar</button>
   </div>
 
@@ -60,12 +65,15 @@
     <h1>Mesa do músico</h1>
     <p class="sub">Fila ao vivo</p>
     <div id="fila" class="fila"></div>
+
+    <h2>Já rolaram</h2>
+    <div id="historico"></div>
   </div>
 
   <footer>BullaAcoustic · voz e violão</footer>
 
 <script>
-  // PREENCHA com os mesmos dados do pedidos.html (projeto bulla-pedidos)
+  // Mesmas credenciais do pedidos.html (projeto bulla-pedidos)
   firebase.initializeApp({
     apiKey: "AIzaSyBpiEpoyY7lH1s-uz602bf61aw-uKCjjGE",
     authDomain: "bulla-pedidos.firebaseapp.com",
@@ -74,23 +82,30 @@
   });
   const db = firebase.firestore();
 
-  let pin = null;
-
-  // ---- PIN (conveniência: salvo no localStorage após 1ª digitação) ----
-  const PIN_KEY = 'mesa_pin_bulla';
-  const pinSalvo = localStorage.getItem(PIN_KEY);
-  if (pinSalvo) { pin = pinSalvo; abrirPainel(); }
-
-  document.getElementById('btn-pin').addEventListener('click', () => {
+  // ---- PIN central: validado contra config/pin no Firestore ----
+  document.getElementById('btn-pin').addEventListener('click', async () => {
     const v = document.getElementById('pin').value.trim();
-    if (v.length < 4) {
-      document.getElementById('erro-pin').textContent = 'Mínimo de 4 dígitos.';
-      return;
+    const erro = document.getElementById('erro-pin');
+    if (v.length < 4) { erro.textContent = 'Mínimo de 4 caracteres.'; return; }
+    erro.textContent = 'Verificando…';
+    try {
+      const doc = await db.collection('config').doc('pin').get();
+      if (!doc.exists || doc.data().pin !== v) {
+        erro.textContent = 'PIN incorreto.';
+        return;
+      }
+      sessionStorage.setItem('mesa_autenticada', '1');
+      abrirPainel();
+    } catch (e) {
+      erro.textContent = 'Erro ao verificar o PIN. Verifique a conexão.';
     }
-    pin = v;
-    localStorage.setItem(PIN_KEY, pin);
-    abrirPainel();
   });
+  // Enter também envia
+  document.getElementById('pin').addEventListener('keydown', e => {
+    if (e.key === 'Enter') document.getElementById('btn-pin').click();
+  });
+
+  if (sessionStorage.getItem('mesa_autenticada')) abrirPainel();
 
   function abrirPainel() {
     document.getElementById('tela-pin').hidden = true;
@@ -98,19 +113,40 @@
     iniciarFila();
   }
 
-  // ---- Fila em tempo real ----
+  // ---- Fila + histórico em tempo real (uma leitura só) ----
   function iniciarFila() {
-    db.collection('pedidos')
-      .where('status', '==', 'fila')
-      .onSnapshot(snap => {
-        const itens = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-        // rodízio simples: ordem de chegada (createdAt)
-        itens.sort((a, b) => (a.createdAt?.seconds || 0) - (b.createdAt?.seconds || 0));
-        render(itens);
-      }, err => {
-        document.getElementById('fila').innerHTML =
-          '<p class="vazio">Erro ao carregar a fila. Recarregue a página.</p>';
+    db.collection('pedidos').onSnapshot(snap => {
+      const todos = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+
+      // Rodízio por quem pediu: menos pedidos atendidos (tocada+pulada) vai primeiro
+      const feitos = {};
+      for (const p of todos) {
+        if (p.status === 'tocada' || p.status === 'pulada') {
+          const k = (p.requesterKey || '').toLowerCase();
+          feitos[k] = (feitos[k] || 0) + 1;
+        }
+      }
+      const fila = todos.filter(p => p.status === 'fila');
+      fila.sort((a, b) => {
+        const ka = (a.requesterKey || '').toLowerCase();
+        const kb = (b.requesterKey || '').toLowerCase();
+        if ((feitos[ka] || 0) !== (feitos[kb] || 0)) {
+          return (feitos[ka] || 0) - (feitos[kb] || 0);
+        }
+        return (a.createdAt?.seconds || 0) - (b.createdAt?.seconds || 0);
       });
+      render(fila);
+
+      // Histórico: tocadas e puladas, mais recentes primeiro, com horário
+      const hist = todos.filter(p => p.status === 'tocada' || p.status === 'pulada');
+      hist.sort((a, b) =>
+        (b.finishedAt?.seconds || b.createdAt?.seconds || 0) -
+        (a.finishedAt?.seconds || a.createdAt?.seconds || 0));
+      renderHist(hist);
+    }, err => {
+      document.getElementById('fila').innerHTML =
+        '<p class="vazio">Erro ao carregar a fila. Recarregue a página.</p>';
+    });
   }
 
   function render(itens) {
@@ -132,6 +168,26 @@
     `).join('');
   }
 
+  function renderHist(itens) {
+    const alvo = document.getElementById('historico');
+    if (!itens.length) {
+      alvo.innerHTML = '<p class="vazio">Nada tocado ainda neste show.</p>';
+      return;
+    }
+    alvo.innerHTML = itens.map(p => {
+      const seg = p.finishedAt?.seconds;
+      const hora = seg
+        ? new Date(seg * 1000).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })
+        : '';
+      return `
+      <div class="hist ${p.status === 'pulada' ? 'pulada' : ''}">
+        ${hora ? `<span class="hora">${hora}${p.status === 'pulada' ? ' · pulada' : ''}</span>` : ''}
+        <strong>${esc(p.title)}</strong>
+        <span>${esc(p.artist)} · ${esc(p.requester)}</span>
+      </div>`;
+    }).join('');
+  }
+
   document.getElementById('fila').addEventListener('click', e => {
     const btn = e.target.closest('button[data-op]');
     if (!btn) return;
@@ -142,7 +198,8 @@
       db.collection('pedidos').doc(id).delete();
     } else {
       db.collection('pedidos').doc(id).update({
-        status: op === 'tocada' ? 'tocada' : 'pulada'
+        status: op === 'tocada' ? 'tocada' : 'pulada',
+        finishedAt: firebase.firestore.FieldValue.serverTimestamp()
       });
     }
   });
