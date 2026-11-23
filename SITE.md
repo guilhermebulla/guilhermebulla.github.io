@@ -15,13 +15,42 @@ Site publicado: https://guilhermebulla.github.io (GitHub Pages, repo raiz = site
 - index.html + index.css + script.js (7 módulos init*)
 - repertorio.html + repertorio.css + repertorio.js — consome repertorio.json
 - conecte-se.html — monolítico (HTML+CSS inline), sem base.css
-- pedidos.html — app de pedidos ao vivo (Firebase Firestore), mesmo tema
 - repertorio.json — FONTE ÚNICA de repertório (~1.329 músicas; campos: musica,
   artista, estilo[], idioma, ano). NÃO usar json-setlist.txt (obsoleto).
 
+### App Pedidos ao vivo (23/11/2026)
+- Fluxo: QR → pedidos.html (convidado pede) → Firestore (projeto bulla-pedidos,
+  southamerica-east1) → mesa.html (painel do músico, PIN validado contra
+  config/pin; write bloqueado nas Rules).
+- Coleção pedidos: songId, title, artist, requester, requesterKey,
+  status (fila|tocada|pulada), createdAt, finishedAt, ordem (int opcional;
+  gravado em lote via batch quando o músico reordena).
+- app.css (compartilhado por pedidos.html e mesa.html, após base.css):
+  tokens locais --warn #F59E0B e --danger #DC2626 (única exceção de hex),
+  header .app-header (pill "Voz & Violão" + logo Bulla/Acoustic dourado +
+  divisor gradiente), glow de fundo body::before, cards .musica/.pedido/.hist,
+  .num (numeração circular da fila), .me-tag ("É VOCÊ"),
+  .toast (mensagens flutuantes; classes .aviso/.erro), footer neutralizado
+  contra o vazamento do base.css (!important pontual),
+  drag & drop (.arrastando/.sobre/.dica-drag).
+- mesa.html: fila em tempo real (onSnapshot). Ordenação: campo ordem manual
+  vence; sem ordem, rodízio por requesterKey (menos atendidos primeiro;
+  empate = chegada). Cards arrastáveis (drag & drop) — ao soltar, grava ordem
+  em batch; o público vê a nova ordem ao vivo. Numeração 1,2,3... nos cards.
+  Histórico "Já rolaram" com horário; botão "Devolver à fila" em puladas
+  (update: status fila + finishedAt FieldValue.delete()).
+- pedidos.html: máx. 3 pedidos ativos por requesterKey; confirmações via toast;
+  fila pública ordena por ordem manual > chegada e mostra numeração igual à
+  mesa (sem reproduzir o rodízio completo — limitação conhecida).
+- Security Rules fase 2: create só com status=='fila'; read/update/delete
+  abertos (dívida técnica anotada: blindagem real = Firebase Auth, fase futura).
+- apiKey do Firebase não é segredo; segurança mora nas Rules.
+- Decisões fechadas não se reabrir: PIN alfanumérico; mesa.html + histórico na
+  mesma página; fila pública mostra nome de quem pediu; sem emojis em rótulos.
+
 ## Regras para IA
-1. Ler base.css antes de propor qualquer estilo novo.
-2. Nunca inventar hex/fontes — usar as variáveis acima.
+1. Ler base.css e app.css antes de propor qualquer estilo novo.
+2. Nunca inventar hex/fontes — usar as variáveis acima (exceção: --warn/--danger).
 3. Alterar ESTRITAMENTE o solicitado (regra do dono, 24/06/2026).
 4. Ler o arquivo real no repo antes de propor edição; raw por branch pode vir
    defasado — pinar leitura pelo SHA do commit.
