@@ -129,6 +129,32 @@ button:focus-visible {
     to   { opacity: 1; transform: translateY(0); }
 }
 
+/* ===== AÇÕES DA MESA (mesa.html) ===== */
+.btn-sec {
+    background: transparent;
+    color: var(--gold);
+    border: 1px solid var(--gold);
+}
+.btn-sec:hover {
+    background: var(--gold-soft);
+    transform: translateY(-2px);
+}
+.btn-perigo {
+    background: transparent;
+    color: var(--danger);
+    border: 1px solid var(--danger);
+}
+.btn-perigo:hover {
+    background: rgba(220, 38, 38, 0.12);
+    transform: translateY(-2px);
+}
+.pedido .acoes { display: flex; gap: 8px; margin-top: 10px; }
+.pedido .acoes button { padding: 10px; font-size: .9rem; min-height: 40px; }
+.hist .hora { float: right; color: var(--text-muted); font-size: .8rem; }
+.hist.pulada strong { color: var(--text-muted); text-decoration: line-through; }
+.vazio { text-align: center; color: var(--text-muted); padding: 24px 0; }
+.erro-pin { color: var(--danger); text-align: center; font-size: .9rem; margin-bottom: 12px; }
+
 /* ===== RODAPÉ ===== */
 footer {
     margin-top: 32px;
