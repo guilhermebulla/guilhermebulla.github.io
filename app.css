@@ -210,6 +210,60 @@ footer {
     opacity: 1 !important;
 }
 
+/* ===== TOAST (porta do karaoke) ===== */
+.toast {
+    position: fixed;
+    top: 16px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-12px);
+    background: var(--bg-elevated);
+    border: 1px solid var(--gold);
+    color: var(--text);
+    font-size: .9rem;
+    font-weight: 500;
+    padding: 12px 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+    z-index: 2000;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease, transform 0.25s ease;
+    max-width: 90%;
+    text-align: center;
+}
+.toast.mostrar {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+.toast.erro { border-color: var(--danger); }
+.toast.aviso { border-color: var(--warn); }
+
+/* ===== SELO "É VOCÊ" (porta do karaoke) ===== */
+.me-tag {
+    display: inline-block;
+    margin-top: 8px;
+    background: var(--gold-soft);
+    border: 1px solid var(--gold);
+    border-radius: 50px;
+    color: var(--gold);
+    font-size: .72rem;
+    font-weight: 600;
+    letter-spacing: .5px;
+    padding: 3px 10px;
+}
+
+/* ===== CONTADOR DAS SEÇÕES ===== */
+h2 .contagem {
+    color: var(--gold);
+    font-weight: 600;
+    letter-spacing: 0;
+    text-transform: none;
+}
+
+/* ===== DEVOLVER À FILA (mesa.html) ===== */
+.hist .acoes { display: flex; gap: 8px; margin-top: 10px; }
+.hist .acoes button { padding: 10px; font-size: .9rem; min-height: 40px; width: auto; }
+
 @media (prefers-reduced-motion: reduce) {
     *, *::before {
         animation-duration: 0.01ms !important;
