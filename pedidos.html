@@ -3,16 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Pedidos ao vivo — BullaAcoustic</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%230f0f0f'/><text x='50' y='75' font-family='Playfair Display,serif' font-size='72' font-weight='700' fill='%23d4a853' text-anchor='middle'>B</text></svg>">
 <meta name="theme-color" content="#0f0f0f">
+<title>Pedidos ao vivo — BullaAcoustic</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%230f0f0f'/><text x='50' y='75' font-family='Playfair Display,serif' font-size='72' font-weight='700' fill='%23d4a853' text-anchor='middle'>B</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Playfair+Display:ital@1&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="base.css">
 <link rel="stylesheet" href="app.css">
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 </head>
 <body>
   <h1>Pedidos ao vivo</h1>
@@ -99,7 +99,7 @@
         .where('requesterKey', '==', nome.toLowerCase())
         .where('status', '==', 'fila').get();
       if (meus.size >= MAX_PEDIDOS_POR_PESSOA) {
-        aviso.innerHTML = `<p class="sub" style="color:#F59E0B">Limite de ${MAX_PEDIDOS_POR_PESSOA} pedidos em espera. Aguarde tocar um.</p>`;
+        aviso.innerHTML = `<p class="sub aviso">Limite de ${MAX_PEDIDOS_POR_PESSOA} pedidos em espera. Aguarde tocar um.</p>`;
         return;
       }
       await db.collection('pedidos').add({
@@ -114,7 +114,7 @@
       document.getElementById('resultado').innerHTML = '';
       selecionada = null;
     } catch (err) {
-      aviso.innerHTML = '<p class="sub" style="color:#DC2626">Falha ao enviar. Tente de novo.</p>';
+      aviso.innerHTML = '<p class="sub erro">Falha ao enviar. Tente de novo.</p>';
     }
   }
 </script>
