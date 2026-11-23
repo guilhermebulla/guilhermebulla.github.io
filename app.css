@@ -270,3 +270,31 @@ h2 .contagem {
         transition-duration: 0.01ms !important;
     }
 }
+
+/* ===== NUMERAÇÃO DA FILA ===== */
+.num {
+    display: inline-block;
+    width: 26px;
+    height: 26px;
+    line-height: 26px;
+    text-align: center;
+    border: 1px solid var(--gold);
+    border-radius: 50%;
+    color: var(--gold);
+    font-size: .8rem;
+    font-weight: 600;
+    margin-right: 10px;
+    flex-shrink: 0;
+}
+.pedido, .musica { display: flex; align-items: flex-start; }
+.pedido > div, .musica > div { flex: 1; min-width: 0; }
+
+/* ===== DRAG & DROP (mesa.html) ===== */
+.pedido[draggable="true"] { cursor: grab; }
+.pedido.arrastando { opacity: .5; }
+.pedido.sobre { border-color: var(--gold); border-style: dashed; }
+.dica-drag {
+    font-size: .78rem;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+}
