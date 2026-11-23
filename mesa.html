@@ -4,53 +4,16 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex">
+<meta name="theme-color" content="#0f0f0f">
 <title>Mesa do músico — BullaAcoustic</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%230f0f0f'/><text x='50' y='75' font-family='Playfair Display,serif' font-size='72' font-weight='700' fill='%23d4a853' text-anchor='middle'>B</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Playfair+Display:ital@1&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="base.css">
+<link rel="stylesheet" href="app.css">
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
-<style>
-  :root {
-    --color-bg: #0f0f0f; --color-surface: #1a1a1a; --color-fg: #f5f5f5;
-    --color-accent: #d4a853; --color-border: #2a2a2a;
-    --font-display: 'Playfair Display', serif; --font-body: 'Inter', sans-serif;
-    --radius: 12px; --space-4: 16px; --motion-fast: 150ms;
-  }
-  * { box-sizing: border-box; margin: 0; }
-  body { background: var(--color-bg); color: var(--color-fg);
-         font-family: var(--font-body); min-height: 100vh;
-         padding: var(--space-4); max-width: 640px; margin: 0 auto; }
-  h1 { font-family: var(--font-display); font-style: italic; font-size: 1.5rem;
-       text-align: center; margin: 24px 0 4px; }
-  h2 { font-family: var(--font-body); font-size: .95rem; font-weight: 600;
-       text-transform: uppercase; letter-spacing: .08em; color: #a3a3a3;
-       margin: 28px 0 8px; }
-  .sub { text-align: center; color: #a3a3a3; font-size: .9rem; margin-bottom: 24px; }
-  input { width: 100%; padding: 14px; border-radius: var(--radius);
-          border: 1px solid var(--color-border); background: var(--color-surface);
-          color: var(--color-fg); font-size: 1rem; margin-bottom: 12px; }
-  input:focus { outline: 2px solid var(--color-accent); }
-  button { width: 100%; padding: 16px; border: 0; border-radius: var(--radius);
-           background: var(--color-accent); color: #0f0f0f; font-size: 1.05rem;
-           font-weight: 600; cursor: pointer; min-height: 48px; }
-  .fila { margin-top: 8px; }
-  .pedido, .hist { padding: 14px 16px; border: 1px solid var(--color-border);
-            border-radius: var(--radius); margin-bottom: 8px;
-            background: var(--color-surface); }
-  .pedido strong, .hist strong { display: block; font-size: 1.05rem; }
-  .pedido span, .hist span { color: #a3a3a3; font-size: .85rem; }
-  .hist .hora { float: right; color: #a3a3a3; font-size: .8rem; }
-  .hist.pulada strong { color: #a3a3a3; text-decoration: line-through; }
-  .pedido .acoes { display: flex; gap: 8px; margin-top: 10px; }
-  .pedido .acoes button { padding: 10px; font-size: .9rem; min-height: 40px; }
-  .btn-sec { background: transparent; color: var(--color-accent);
-             border: 1px solid var(--color-accent); }
-  .btn-perigo { background: transparent; color: #DC2626;
-                border: 1px solid #DC2626; }
-  .vazio { text-align: center; color: #a3a3a3; padding: 24px 0; }
-  .erro-pin { color: #DC2626; text-align: center; font-size: .9rem; margin-bottom: 12px; }
-  footer { margin-top: 32px; text-align: center; color: #a3a3a3; font-size: .8rem; }
-</style>
 </head>
 <body>
   <div id="tela-pin">
