@@ -69,7 +69,6 @@
       erro.textContent = 'Erro ao verificar o PIN. Verifique a conexão.';
     }
   });
-  // Enter também envia
   document.getElementById('pin').addEventListener('keydown', e => {
     if (e.key === 'Enter') document.getElementById('btn-pin').click();
   });
@@ -82,12 +81,12 @@
     iniciarFila();
   }
 
-  // ---- Fila + histórico em tempo real (uma leitura só) ----
+  // ---- Fila + histórico em tempo real ----
   function iniciarFila() {
     db.collection('pedidos').onSnapshot(snap => {
       const todos = snap.docs.map(d => ({ id: d.id, ...d.data() }));
 
-      // Rodízio por quem pediu: menos pedidos atendidos (tocada+pulada) vai primeiro
+      // Rodízio por quem pediu (só vale para quem não tem ordem manual)
       const feitos = {};
       for (const p of todos) {
         if (p.status === 'tocada' || p.status === 'pulada') {
@@ -97,6 +96,10 @@
       }
       const fila = todos.filter(p => p.status === 'fila');
       fila.sort((a, b) => {
+        // Ordem manual vence quando existir
+        const oa = (a.ordem != null) ? a.ordem : Infinity;
+        const ob = (b.ordem != null) ? b.ordem : Infinity;
+        if (oa !== ob) return oa - ob;
         const ka = (a.requesterKey || '').toLowerCase();
         const kb = (b.requesterKey || '').toLowerCase();
         if ((feitos[ka] || 0) !== (feitos[kb] || 0)) {
@@ -106,7 +109,6 @@
       });
       render(fila);
 
-      // Histórico: tocadas e puladas, mais recentes primeiro, com horário
       const hist = todos.filter(p => p.status === 'tocada' || p.status === 'pulada');
       hist.sort((a, b) =>
         (b.finishedAt?.seconds || b.createdAt?.seconds || 0) -
@@ -124,17 +126,64 @@
       alvo.innerHTML = '<p class="vazio">Nenhum pedido na fila ainda.</p>';
       return;
     }
-    alvo.innerHTML = itens.map(p => `
-      <div class="pedido" data-id="${p.id}">
-        <strong>${esc(p.title)}</strong>
-        <span>${esc(p.artist)} · ${esc(p.requester)}</span>
-        <div class="acoes">
-          <button data-op="tocada">Tocada</button>
-          <button data-op="pulada" class="btn-sec">Pular</button>
-          <button data-op="remover" class="btn-perigo">Remover</button>
+    alvo.innerHTML =
+      '<p class="dica-drag">Segure e arraste um pedido para mudar a ordem — o público vê na hora.</p>' +
+      itens.map((p, i) => `
+      <div class="pedido" data-id="${p.id}" draggable="true">
+        <span class="num">${i + 1}</span>
+        <div>
+          <strong>${esc(p.title)}</strong>
+          <span>${esc(p.artist)} · ${esc(p.requester)}</span>
+          <div class="acoes">
+            <button data-op="tocada">Tocada</button>
+            <button data-op="pulada" class="btn-sec">Pular</button>
+            <button data-op="remover" class="btn-perigo">Remover</button>
+          </div>
         </div>
       </div>
     `).join('');
+    ativarDrag(alvo);
+  }
+
+  // ---- Drag & drop: reordena e grava "ordem" em lote ----
+  let arrastado = null;
+  function ativarDrag(alvo) {
+    alvo.querySelectorAll('.pedido').forEach(card => {
+      card.addEventListener('dragstart', () => {
+        arrastado = card;
+        card.classList.add('arrastando');
+      });
+      card.addEventListener('dragend', () => {
+        card.classList.remove('arrastando');
+        alvo.querySelectorAll('.pedido').forEach(c => c.classList.remove('sobre'));
+      });
+      card.addEventListener('dragover', e => {
+        e.preventDefault();
+        if (!arrastado || card === arrastado) return;
+        card.classList.add('sobre');
+      });
+      card.addEventListener('dragleave', () => card.classList.remove('sobre'));
+      card.addEventListener('drop', e => {
+        e.preventDefault();
+        if (!arrastado || card === arrastado) return;
+        const rect = card.getBoundingClientRect();
+        const antes = (e.clientY - rect.top) < rect.height / 2;
+        alvo.insertBefore(arrastado, antes ? card : card.nextSibling);
+        gravarOrdem(alvo);
+      });
+    });
+  }
+
+  async function gravarOrdem(alvo) {
+    const batch = db.batch();
+    alvo.querySelectorAll('.pedido').forEach((card, i) => {
+      batch.update(db.collection('pedidos').doc(card.dataset.id), { ordem: i });
+    });
+    try { await batch.commit(); }
+    catch (e) {
+      console.error('Falha ao gravar ordem:', e);
+      alert('Não consegui salvar a nova ordem. Veja o console (F12).');
+    }
   }
 
   function renderHist(itens) {
