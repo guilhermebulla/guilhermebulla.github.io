@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>Mesa do músico — BullaAcoustic</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Playfair+Display:ital@1&display=swap" rel="stylesheet">
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<style>
+  :root {
+    --color-bg: #0f0f0f; --color-surface: #1a1a1a; --color-fg: #f5f5f5;
+    --color-accent: #d4a853; --color-border: #2a2a2a;
+    --font-display: 'Playfair Display', serif; --font-body: 'Inter', sans-serif;
+    --radius: 12px; --space-4: 16px; --motion-fast: 150ms;
+  }
+  * { box-sizing: border-box; margin: 0; }
+  body { background: var(--color-bg); color: var(--color-fg);
+         font-family: var(--font-body); min-height: 100vh;
+         padding: var(--space-4); max-width: 640px; margin: 0 auto; }
+  h1 { font-family: var(--font-display); font-style: italic; font-size: 1.5rem;
+       text-align: center; margin: 24px 0 4px; }
+  .sub { text-align: center; color: #a3a3a3; font-size: .9rem; margin-bottom: 24px; }
+  input { width: 100%; padding: 14px; border-radius: var(--radius);
+          border: 1px solid var(--color-border); background: var(--color-surface);
+          color: var(--color-fg); font-size: 1rem; margin-bottom: 12px; }
+  input:focus { outline: 2px solid var(--color-accent); }
+  button { width: 100%; padding: 16px; border: 0; border-radius: var(--radius);
+           background: var(--color-accent); color: #0f0f0f; font-size: 1.05rem;
+           font-weight: 600; cursor: pointer; min-height: 48px; }
+  .fila { margin-top: 8px; }
+  .pedido { padding: 14px 16px; border: 1px solid var(--color-border);
+            border-radius: var(--radius); margin-bottom: 8px;
+            background: var(--color-surface); }
+  .pedido strong { display: block; font-size: 1.05rem; }
+  .pedido span { color: #a3a3a3; font-size: .85rem; }
+  .pedido .acoes { display: flex; gap: 8px; margin-top: 10px; }
+  .pedido .acoes button { padding: 10px; font-size: .9rem; min-height: 40px; }
+  .btn-sec { background: transparent; color: var(--color-accent);
+             border: 1px solid var(--color-accent); }
+  .btn-perigo { background: transparent; color: #DC2626;
+                border: 1px solid #DC2626; }
+  .vazio { text-align: center; color: #a3a3a3; padding: 32px 0; }
+  .erro-pin { color: #DC2626; text-align: center; font-size: .9rem; margin-bottom: 12px; }
+  footer { margin-top: 32px; text-align: center; color: #a3a3a3; font-size: .8rem; }
+</style>
+</head>
+<body>
+  <div id="tela-pin">
+    <h1>Mesa do músico</h1>
+    <p class="sub">Acesso restrito</p>
+    <p class="erro-pin" id="erro-pin"></p>
+    <input id="pin" type="password" inputmode="numeric" placeholder="PIN (4+ dígitos)" maxlength="12">
+    <button id="btn-pin">Entrar</button>
+  </div>
+
+  <div id="painel" hidden>
+    <h1>Mesa do músico</h1>
+    <p class="sub">Fila ao vivo</p>
+    <div id="fila" class="fila"></div>
+  </div>
+
+  <footer>BullaAcoustic · voz e violão</footer>
+
+<script>
+  // PREENCHA com os mesmos dados do pedidos.html (projeto bulla-pedidos)
+  firebase.initializeApp({
+    apiKey: "SUA_API_KEY",
+    authDomain: "bulla-pedidos.firebaseapp.com",
+    projectId: "bulla-pedidos",
+    appId: "SEU_APP_ID"
+  });
+  const db = firebase.firestore();
+
+  let pin = null;
+
+  // ---- PIN (conveniência: salvo no localStorage após 1ª digitação) ----
+  const PIN_KEY = 'mesa_pin_bulla';
+  const pinSalvo = localStorage.getItem(PIN_KEY);
+  if (pinSalvo) { pin = pinSalvo; abrirPainel(); }
+
+  document.getElementById('btn-pin').addEventListener('click', () => {
+    const v = document.getElementById('pin').value.trim();
+    if (v.length < 4) {
+      document.getElementById('erro-pin').textContent = 'Mínimo de 4 dígitos.';
+      return;
+    }
+    pin = v;
+    localStorage.setItem(PIN_KEY, pin);
+    abrirPainel();
+  });
+
+  function abrirPainel() {
+    document.getElementById('tela-pin').hidden = true;
+    document.getElementById('painel').hidden = false;
+    iniciarFila();
+  }
+
+  // ---- Fila em tempo real ----
+  function iniciarFila() {
+    db.collection('pedidos')
+      .where('status', '==', 'fila')
+      .onSnapshot(snap => {
+        const itens = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+        // rodízio simples: ordem de chegada (createdAt)
+        itens.sort((a, b) => (a.createdAt?.seconds || 0) - (b.createdAt?.seconds || 0));
+        render(itens);
+      }, err => {
+        document.getElementById('fila').innerHTML =
+          '<p class="vazio">Erro ao carregar a fila. Recarregue a página.</p>';
+      });
+  }
+
+  function render(itens) {
+    const alvo = document.getElementById('fila');
+    if (!itens.length) {
+      alvo.innerHTML = '<p class="vazio">Nenhum pedido na fila ainda.</p>';
+      return;
+    }
+    alvo.innerHTML = itens.map(p => `
+      <div class="pedido" data-id="${p.id}">
+        <strong>${esc(p.title)}</strong>
+        <span>${esc(p.artist)} · ${esc(p.requester)}</span>
+        <div class="acoes">
+          <button data-op="tocada">Tocada</button>
+          <button data-op="pulada" class="btn-sec">Pular</button>
+          <button data-op="remover" class="btn-perigo">Remover</button>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  document.getElementById('fila').addEventListener('click', e => {
+    const btn = e.target.closest('button[data-op]');
+    if (!btn) return;
+    const card = btn.closest('.pedido');
+    const id = card.dataset.id;
+    const op = btn.dataset.op;
+    if (op === 'remover') {
+      db.collection('pedidos').doc(id).delete();
+ec    } else {
+      db.collection('pedidos').doc(id).update({
+        status: op === 'tocada' ? 'tocada' : 'pulada'
+      });
+    }
+  });
+
+  function esc(s) { const d = document.createElement('div'); d.textContent = s || ''; return d.innerHTML; }
+</script>
+</body>
+</html>
