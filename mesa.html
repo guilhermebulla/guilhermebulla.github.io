@@ -67,10 +67,10 @@
 <script>
   // PREENCHA com os mesmos dados do pedidos.html (projeto bulla-pedidos)
   firebase.initializeApp({
-    apiKey: "SUA_API_KEY",
+    apiKey: "AIzaSyBpiEpoyY7lH1s-uz602bf61aw-uKCjjGE",
     authDomain: "bulla-pedidos.firebaseapp.com",
     projectId: "bulla-pedidos",
-    appId: "SEU_APP_ID"
+    appId: "1:459269474903:web:edc67d6f4e115eb2f3112"
   });
   const db = firebase.firestore();
 
@@ -140,7 +140,7 @@
     const op = btn.dataset.op;
     if (op === 'remover') {
       db.collection('pedidos').doc(id).delete();
-ec    } else {
+    } else {
       db.collection('pedidos').doc(id).update({
         status: op === 'tocada' ? 'tocada' : 'pulada'
       });
