@@ -20,11 +20,11 @@
     <h1 class="logo">Bulla<span>Acoustic</span></h1>
     <p class="tagline">Pedidos ao vivo — escolha do repertório</p>
   </header>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
   <input id="nome" placeholder="Seu nome" maxlength="40" autocomplete="name">
   <input id="busca" placeholder="Buscar música ou artista…" autocomplete="off">
   <div id="resultado"></div>
-  <div id="confirmacao"></div>
-  <h2>Fila agora</h2>
+    <h2>Fila agora <span class="contagem" id="fila-count"></span></h2>
   <div id="fila-publica"></div>
   <footer>BullaAcoustic · voz e violão</footer>
 
@@ -38,16 +38,32 @@
   });
   const db = firebase.firestore();
 
+  // ===== Toast (porta do karaoke) =====
+  let toastTimer = null;
+  function toast(msg, tipo) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.className = 'toast mostrar' + (tipo ? ' ' + tipo : '');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => t.classList.remove('mostrar'), 3000);
+  }
+
   // Fila pública ao vivo
   db.collection('pedidos').where('status', '==', 'fila')
     .onSnapshot(snap => {
       const itens = snap.docs.map(d => d.data());
       itens.sort((a, b) => (a.createdAt?.seconds || 0) - (b.createdAt?.seconds || 0));
       const alvo = document.getElementById('fila-publica');
+      document.getElementById('fila-count').textContent =
+        itens.length ? `(${itens.length})` : '';
+      const meuNome = document.getElementById('nome').value.trim().toLowerCase();
       alvo.innerHTML = itens.length
         ? itens.map(p =>
             `<div class="musica"><strong>${esc(p.title)}</strong>` +
-            `<span>${esc(p.requester)} na fila</span></div>`).join('')
+            `<span>${esc(p.requester)} na fila</span>` +
+            ((p.requesterKey || '') === meuNome && meuNome
+              ? '<div class="me-tag">É VOCÊ</div>' : '') +
+            `</div>`).join('')
         : '<p class="sub">Nenhum pedido na fila. Seja o primeiro!</p>';
     }, () => {});
 
@@ -94,15 +110,14 @@
 
   async function pedir() {
     const nome = document.getElementById('nome').value.trim();
-    const aviso = document.getElementById('confirmacao');
-    if (!nome) { aviso.innerHTML = '<p class="sub aviso">Digite seu nome primeiro.</p>'; return; }
+    if (!nome) { toast('Digite seu nome primeiro.', 'aviso'); return; }
     if (!selecionada) return;
     try {
       const meus = await db.collection('pedidos')
         .where('requesterKey', '==', nome.toLowerCase())
         .where('status', '==', 'fila').get();
       if (meus.size >= MAX_PEDIDOS_POR_PESSOA) {
-        aviso.innerHTML = `<p class="sub aviso">Limite de ${MAX_PEDIDOS_POR_PESSOA} pedidos em espera. Aguarde tocar um.</p>`;
+        toast(`Limite de ${MAX_PEDIDOS_POR_PESSOA} pedidos em espera. Aguarde tocar um.`, 'aviso');
         return;
       }
       await db.collection('pedidos').add({
@@ -112,12 +127,12 @@
         requester: nome, requesterKey: nome.toLowerCase(),
         status: 'fila', createdAt: firebase.firestore.FieldValue.serverTimestamp()
       });
-      aviso.innerHTML = `<div class="ok">"${esc(selecionada.musica)}" na fila! Sujeito à ordem do show.</div>`;
+      toast(`"${selecionada.musica}" na fila! Sujeito à ordem do show.`);
       document.getElementById('busca').value = '';
       document.getElementById('resultado').innerHTML = '';
       selecionada = null;
     } catch (err) {
-      aviso.innerHTML = '<p class="sub erro">Falha ao enviar. Tente de novo.</p>';
+      toast('Falha ao enviar. Tente de novo.', 'erro');
     }
   }
 </script>
