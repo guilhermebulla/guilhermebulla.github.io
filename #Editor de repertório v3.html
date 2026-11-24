@@ -1,0 +1,1261 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editor de Repertório — BullaAcoustic</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230f0f0f'/%3E%3Ctext x='16' y='23' font-family='serif' font-size='20' font-weight='700' fill='%23d4a853' text-anchor='middle'%3EB%3C/text%3E%3C/svg%3E" type="image/svg+xml">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --bg: #0f0f0f;
+            --bg-card: #1a1a1a;
+            --bg-elevated: #171717;
+            --gold: #d4a853;
+            --gold-hover: #b88d3e;
+            --gold-soft: rgba(212, 168, 83, 0.12);
+            --text: #f5f5f5;
+            --text-muted: #a3a3a3;
+            --text-dim: #666666;
+            --border: #2a2a2a;
+            --border-light: #3a3a3a;
+            --green: #4a8;
+            --green-bg: #2d5a2d;
+            --red: #a44;
+            --red-bg: #5a2d2d;
+            --radius: 12px;
+            --radius-sm: 8px;
+            --transition: 0.25s ease;
+        }
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+        }
+        /* HEADER */
+        .editor-header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem 2rem;
+            background: rgba(15, 15, 15, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border);
+        }
+        .editor-logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--gold);
+            letter-spacing: -0.5px;
+        }
+        .editor-logo span { color: var(--text); font-weight: 400; }
+        .header-actions { display: flex; gap: 10px; align-items: center; }
+        .btn {
+            padding: 8px 18px;
+            border: none;
+            border-radius: 50px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all var(--transition);
+        }
+        .btn-gold {
+            background: var(--gold);
+            color: var(--bg);
+        }
+        .btn-gold:hover { background: var(--gold-hover); transform: translateY(-1px); }
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--border-light);
+            color: var(--text-muted);
+        }
+        .btn-outline:hover { border-color: var(--gold); color: var(--gold); }
+        .btn-green {
+            background: var(--green-bg);
+            border: 1px solid var(--green);
+            color: var(--green);
+        }
+        .btn-green:hover { background: var(--green); color: var(--bg); }
+        .btn-red {
+            background: transparent;
+            border: 1px solid var(--red);
+            color: var(--red);
+            padding: 6px 12px;
+            font-size: 0.8rem;
+        }
+        .btn-red:hover { background: var(--red-bg); }
+        .btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+        /* MAIN */
+        .editor-main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem 4rem;
+        }
+        .editor-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.75rem, 4vw, 2.5rem);
+            font-weight: 700;
+            color: var(--gold);
+            text-align: center;
+            margin-bottom: 0.5rem;
+            position: relative;
+            padding-bottom: 1.25rem;
+        }
+        .editor-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--gold), transparent);
+        }
+        .editor-subtitle {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        /* CONFIG PANEL */
+        .config-panel {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        .config-panel.collapsed .config-body { display: none; }
+        .config-panel.collapsed .config-chevron { transform: rotate(-90deg); }
+        .config-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+        }
+        .config-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .config-status {
+            font-size: 0.8rem;
+            padding: 3px 12px;
+            border-radius: 50px;
+            font-weight: 500;
+        }
+        .config-status.connected { background: var(--green-bg); color: var(--green); border: 1px solid var(--green); }
+        .config-status.disconnected { background: var(--bg-elevated); color: var(--text-dim); border: 1px solid var(--border); }
+        .config-chevron { color: var(--text-muted); transition: transform 0.2s ease; font-size: 1.2rem; }
+        .config-body { padding-top: 1.25rem; border-top: 1px solid var(--border); margin-top: 1rem; }
+        .config-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        .config-field { display: flex; flex-direction: column; gap: 4px; }
+        .config-field label { font-size: 0.8rem; color: var(--text-muted); font-weight: 500; }
+        .config-field input {
+            padding: 10px 14px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+            font-size: 0.9rem;
+            transition: border-color var(--transition);
+        }
+        .config-field input:focus { outline: none; border-color: var(--gold); }
+        .config-field input::placeholder { color: var(--text-dim); }
+        /* STATS BAR */
+        .stats-bar {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+        }
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 1rem 1.5rem;
+            flex: 1;
+            min-width: 150px;
+            text-align: center;
+        }
+        .stat-number {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--gold);
+        }
+        .stat-label { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
+        /* ADD/EDIT FORM */
+        .add-form {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            transition: border-color var(--transition), box-shadow var(--transition);
+        }
+        .add-form.editing { border-color: var(--gold); box-shadow: 0 0 0 1px var(--gold); }
+        .add-form-title {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text);
+        }
+        .add-form.editing .add-form-title { color: var(--gold); }
+        .form-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        .form-field { display: flex; flex-direction: column; gap: 4px; }
+        .form-field label { font-size: 0.8rem; color: var(--text-muted); font-weight: 500; }
+        .form-field input, .form-field select {
+            padding: 10px 14px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+            font-size: 0.9rem;
+            transition: border-color var(--transition);
+        }
+        .form-field input:focus, .form-field select:focus { outline: none; border-color: var(--gold); }
+        .form-field input::placeholder { color: var(--text-dim); }
+        /* TAG INPUT */
+        .tag-input-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            padding: 8px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            min-height: 42px;
+            transition: border-color var(--transition);
+        }
+        .tag-input-container:focus-within { border-color: var(--gold); }
+        .tag-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 10px;
+            background: var(--gold-soft);
+            border: 1px solid var(--gold);
+            border-radius: 50px;
+            font-size: 0.8rem;
+            color: var(--gold);
+            cursor: default;
+        }
+        .tag-item button {
+            background: none;
+            border: none;
+            color: var(--gold);
+            cursor: pointer;
+            font-size: 0.9rem;
+            padding: 0;
+            line-height: 1;
+        }
+        .tag-item button:hover { color: var(--gold-hover); }
+        .tag-input {
+            flex: 1;
+            min-width: 120px;
+            background: none;
+            border: none;
+            outline: none;
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+            font-size: 0.85rem;
+        }
+        .tag-input::placeholder { color: var(--text-dim); }
+
+/* ARTIST SEARCH BUTTON */
+.artist-input-wrapper {
+    display: flex;
+    gap: 8px;
+}
+.artist-input-wrapper input { flex: 1; }
+.artist-search-btn {
+    flex-shrink: 0;
+    width: 42px;
+    height: 42px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: var(--bg);
+    color: var(--text-dim);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all var(--transition);
+}
+.artist-search-btn:hover {
+    border-color: var(--gold);
+    color: var(--gold);
+    background: var(--gold-soft);
+}
+/* FILTER BADGE */
+.filter-badge {
+    display: none;
+    align-items: center;
+    gap: 8px;
+    background: var(--gold-soft);
+    border: 1px solid var(--gold);
+    border-radius: 50px;
+    padding: 5px 14px;
+    margin-bottom: 0.75rem;
+    font-size: 0.8rem;
+    color: var(--gold);
+}
+.filter-badge.visible { display: inline-flex; }
+.filter-badge button {
+    background: none;
+    border: none;
+    color: var(--gold);
+    cursor: pointer;
+    font-size: 1rem;
+    padding: 0;
+    line-height: 1;
+}
+.filter-badge button:hover { color: var(--gold-hover); }
+
+        /* SEARCH */
+        .search-bar {
+            margin-bottom: 1rem;
+            position: relative;
+        }
+        .search-bar input {
+            width: 100%;
+            padding: 10px 14px 10px 40px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+            font-size: 0.9rem;
+        }
+        .search-bar input:focus { outline: none; border-color: var(--gold); }
+        .search-bar svg {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-dim);
+            pointer-events: none;
+        }
+        /* SONGS TABLE */
+        .songs-table {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            overflow: hidden;
+        }
+        .songs-header {
+            display: grid;
+            grid-template-columns: 2fr 2fr 1.5fr 1fr 0.7fr auto;
+            gap: 1rem;
+            padding: 12px 16px;
+            background: var(--bg-elevated);
+            border-bottom: 1px solid var(--border);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+        .songs-body { max-height: 500px; overflow-y: auto; }
+        .songs-body::-webkit-scrollbar { width: 6px; }
+        .songs-body::-webkit-scrollbar-track { background: var(--bg); }
+        .songs-body::-webkit-scrollbar-thumb { background: var(--border-light); border-radius: 3px; }
+        .song-row {
+            display: grid;
+            grid-template-columns: 2fr 2fr 1.5fr 1fr 0.7fr auto;
+            gap: 1rem;
+            padding: 10px 16px;
+            border-bottom: 1px solid var(--border);
+            align-items: center;
+            transition: background var(--transition);
+        }
+        .song-row:hover { background: var(--bg); }
+        .song-row.editing { background: var(--gold-soft); border-color: var(--gold); }
+        .song-cell { font-size: 0.85rem; color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .song-cell.artist { color: var(--text-muted); }
+        .song-cell.styles { display: flex; flex-wrap: wrap; gap: 4px; }
+        .song-cell.styles span {
+            font-size: 0.7rem;
+            padding: 2px 8px;
+            border-radius: 50px;
+            background: var(--bg-elevated);
+            color: var(--text-dim);
+        }
+        .song-cell.lang { color: var(--text-muted); font-size: 0.8rem; }
+        .song-actions { display: flex; gap: 6px; }
+        .song-actions button {
+            width: 30px;
+            height: 30px;
+            border: 1px solid var(--border-light);
+            border-radius: 6px;
+            background: transparent;
+            color: var(--text-dim);
+            cursor: pointer;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all var(--transition);
+        }
+        .song-actions button:hover { border-color: var(--gold); color: var(--gold); }
+        .song-actions button.delete:hover { border-color: var(--red); color: var(--red); }
+        .song-actions button.edit.active { border-color: var(--gold); color: var(--gold); background: var(--gold-soft); }
+        .songs-empty {
+            padding: 3rem 1rem;
+            text-align: center;
+            color: var(--text-dim);
+            font-size: 0.9rem;
+        }
+        /* TOAST */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(20px);
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 50px;
+            padding: 12px 28px;
+            font-size: 0.9rem;
+            color: var(--text);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+            z-index: 200;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .toast.show { opacity: 1; pointer-events: auto; transform: translateX(-50%) translateY(0); }
+        .toast.success { border-color: var(--green); color: var(--green); }
+        .toast.error { border-color: var(--red); color: var(--red); }
+        /* AUTOCOMPLETE ESTILOS */
+        .estilo-dropdown {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: var(--bg-card);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-sm);
+            max-height: 200px;
+            overflow-y: auto;
+            z-index: 50;
+            margin-top: 4px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+        }
+        .estilo-dropdown::-webkit-scrollbar { width: 5px; }
+        .estilo-dropdown::-webkit-scrollbar-thumb { background: var(--border-light); border-radius: 3px; }
+        .estilo-dropdown.visible { display: block; }
+        .estilo-option {
+            padding: 8px 14px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: background var(--transition);
+        }
+        .estilo-option:hover { background: var(--bg); color: var(--gold); }
+        /* DUPLICATE DROPDOWN */
+        .dup-dropdown {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: var(--bg-card);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-sm);
+            max-height: 240px;
+            overflow-y: auto;
+            z-index: 60;
+            margin-top: 4px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+        }
+        .dup-dropdown::-webkit-scrollbar { width: 5px; }
+        .dup-dropdown::-webkit-scrollbar-thumb { background: var(--border-light); border-radius: 3px; }
+        .dup-dropdown.visible { display: block; }
+        .dup-option {
+            padding: 8px 14px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: background var(--transition);
+            border-bottom: 1px solid var(--border);
+        }
+        .dup-option:hover { background: var(--bg); color: var(--gold); }
+        .dup-option:last-child { border-bottom: none; }
+        .dup-exact {
+            background: var(--red-bg);
+            color: var(--red);
+            border-left: 3px solid var(--red);
+        }
+        .dup-exact:hover { background: var(--red); color: var(--bg); }
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .editor-header { padding: 0.75rem 1rem; }
+            .editor-main { padding: 1.5rem 1rem 3rem; }
+            .config-grid, .form-grid { grid-template-columns: 1fr; }
+            .songs-header { display: none; }
+            .song-row {
+                grid-template-columns: 1fr;
+                gap: 4px;
+                padding: 12px 16px;
+            }
+            .song-cell { white-space: normal; }
+            .song-actions { margin-top: 4px; }
+            .stats-bar { gap: 0.5rem; }
+            .stat-card { min-width: 100px; padding: 0.75rem; }
+            .stat-number { font-size: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+    <header class="editor-header">
+        <span class="editor-logo">Bulla<span>Acoustic</span> · Editor</span>
+        <div class="header-actions">
+            <button class="btn btn-outline" id="loadBtn">↻ Carregar do GitHub</button>
+            <button class="btn btn-gold" id="saveBtn" disabled>↑ Salvar no GitHub</button>
+        </div>
+    </header>
+    <main class="editor-main">
+        <h1 class="editor-title">Editor de Repertório</h1>
+        <p class="editor-subtitle">Adicione, edite e remova músicas do repertorio.json direto no GitHub</p>
+        <!-- CONFIG -->
+        <div class="config-panel" id="configPanel">
+            <div class="config-header" id="configHeader">
+                <span class="config-title">⚙️ Configuração do GitHub</span>
+                <div style="display:flex;align-items:center;gap:10px;">
+                    <span class="config-status disconnected" id="configStatus">Não configurado</span>
+                    <span class="config-chevron">⌄</span>
+                </div>
+            </div>
+            <div class="config-body">
+                <div class="config-grid">
+                    <div class="config-field">
+                        <label>Usuário do GitHub (owner)</label>
+                        <input type="text" id="ghOwner" placeholder="Ex: guilhermebulla" value="">
+                    </div>
+                    <div class="config-field">
+                        <label>Repositório</label>
+                        <input type="text" id="ghRepo" placeholder="Ex: guilhermebulla.github.io" value="">
+                    </div>
+                </div>
+                <div class="config-grid">
+                    <div class="config-field">
+                        <label>Caminho do arquivo</label>
+                        <input type="text" id="ghPath" placeholder="Ex: repertorio.json" value="repertorio.json">
+                    </div>
+                    <div class="config-field">
+                        <label>Branch</label>
+                        <input type="text" id="ghBranch" placeholder="main" value="main">
+                    </div>
+                </div>
+                <div class="config-field" style="margin-bottom:1rem;">
+                    <label>Personal Access Token (PAT)</label>
+                    <input type="password" id="ghToken" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" value="">
+                </div>
+                <button class="btn btn-outline" id="saveConfigBtn">Salvar configuração</button>
+            </div>
+        </div>
+        <!-- STATS -->
+        <div class="stats-bar">
+            <div class="stat-card">
+                <div class="stat-number" id="statTotal">0</div>
+                <div class="stat-label">Total de músicas</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="statArtists">0</div>
+                <div class="stat-label">Artistas</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="statStyles">0</div>
+                <div class="stat-label">Estilos</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="statUnsaved">0</div>
+                <div class="stat-label">Alterações pendentes</div>
+            </div>
+        </div>
+        <!-- ADD/EDIT FORM -->
+        <div class="add-form" id="addForm">
+            <div class="add-form-title" id="addFormTitle">＋ Adicionar nova música</div>
+            <div class="form-grid">
+                <div class="form-field">
+                   <label>Música *</label>
+                   <div style="position:relative;">
+                      <input type="text" id="addMusica" placeholder="Ex: Anunciação" autocomplete="off">
+                      <div class="dup-dropdown" id="dupDropdown"></div>
+                   </div>
+                </div>
+                <div class="form-field">
+                    <label>Artista *</label>
+                    <div class="artist-input-wrapper">
+                        <input type="text" id="addArtista" placeholder="Ex: Alceu Valença" list="artistaSuggestions">
+                        <button type="button" class="artist-search-btn" id="searchArtistBtn" title="Buscar músicas deste artista na lista">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="11" cy="11" r="8"></circle>
+                                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            <div class="form-grid">
+                <div class="form-field">
+                    <label>Estilos * (clique para ver a lista ou digite)</label>
+                    <div style="position:relative;">
+                        <div class="tag-input-container" id="addEstiloContainer">
+                            <input type="text" class="tag-input" id="addEstiloInput" placeholder="Ex: MPB, Rock, Pop..." autocomplete="off">
+                        </div>
+                        <div class="estilo-dropdown" id="estiloDropdown"></div>
+                    </div>
+                </div>
+                <div class="form-field">
+                    <label>Idioma *</label>
+                    <select id="addIdioma">
+                        <option value="">Selecione...</option>
+                        <option value="Português">🇧🇷 Português</option>
+                        <option value="Inglês">🇺🇸 Inglês</option>
+                        <option value="Espanhol">🇪🇸 Espanhol</option>
+                        <option value="Francês">🇫🇷 Francês</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-grid">
+                <div class="form-field">
+                    <label>Ano</label>
+                    <input type="number" id="addAno" placeholder="Ex: 1998" min="1900" max="2099">
+                </div>
+            </div>
+            <div class="form-actions">
+                <button class="btn btn-green" id="addBtn">＋ Adicionar à lista</button>
+                <button class="btn btn-outline" id="cancelBtn" style="display:none;">✕ Cancelar edição</button>
+            </div>
+        </div>
+        <!-- SEARCH -->
+        <div class="search-bar">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <input type="text" id="searchInput" placeholder="Buscar por música ou artista...">
+        </div>
+<div class="filter-badge" id="filterBadge">
+    <span>🔍 Filtro por artista</span>
+    <button type="button" id="clearFilterBtn">×</button>
+</div>
+        <!-- SONGS TABLE -->
+        <div class="songs-table">
+            <div class="songs-header">
+                <div>Música</div>
+                <div>Artista</div>
+                <div>Estilos</div>
+                <div>Idioma</div>
+                <div>Ano</div>
+                <div>Ações</div>
+            </div>
+            <div class="songs-body" id="songsBody">
+                <div class="songs-empty">Carregue o repertório do GitHub para começar.</div>
+            </div>
+        </div>
+    </main>
+    <!-- DATALISTS -->
+    <datalist id="artistaSuggestions"></datalist>
+    <datalist id="musicaSuggestions"></datalist>
+    <!-- TOAST -->
+    <div class="toast" id="toast"></div>
+    <script>
+        // ===== ESTADO =====
+        let allSongs = [];
+        let originalSongs = [];
+        let fileSha = null;
+        let pendingStyles = [];
+        let editingIndex = -1;  // -1 = modo adição; >=0 = editando esta música no form
+        let isDirty = false;
+        let artistOnlyFilter = false;
+        // ===== ELEMENTOS =====
+        const configPanel = document.getElementById('configPanel');
+        const configHeader = document.getElementById('configHeader');
+        const loadBtn = document.getElementById('loadBtn');
+        const saveBtn = document.getElementById('saveBtn');
+        const saveConfigBtn = document.getElementById('saveConfigBtn');
+        const addBtn = document.getElementById('addBtn');
+        const cancelBtn = document.getElementById('cancelBtn');
+        const addForm = document.getElementById('addForm');
+        const addFormTitle = document.getElementById('addFormTitle');
+        const songsBody = document.getElementById('songsBody');
+        const searchInput = document.getElementById('searchInput');
+        const toast = document.getElementById('toast');
+        // ===== CONFIG LOAD/SAVE =====
+        function loadConfig() {
+            const cfg = JSON.parse(localStorage.getItem('ghConfig') || '{}');
+            if (cfg.owner) document.getElementById('ghOwner').value = cfg.owner;
+            if (cfg.repo) document.getElementById('ghRepo').value = cfg.repo;
+            if (cfg.path) document.getElementById('ghPath').value = cfg.path;
+            if (cfg.branch) document.getElementById('ghBranch').value = cfg.branch;
+            if (cfg.token) document.getElementById('ghToken').value = cfg.token;
+            updateConfigStatus();
+        }
+        function saveConfig() {
+            const cfg = {
+                owner: document.getElementById('ghOwner').value.trim(),
+                repo: document.getElementById('ghRepo').value.trim(),
+                path: document.getElementById('ghPath').value.trim() || 'repertorio.json',
+                branch: document.getElementById('ghBranch').value.trim() || 'main',
+                token: document.getElementById('ghToken').value.trim()
+            };
+            localStorage.setItem('ghConfig', JSON.stringify(cfg));
+            updateConfigStatus();
+            showToast('Configuração salva!', 'success');
+        }
+        function updateConfigStatus() {
+            const token = document.getElementById('ghToken').value.trim();
+            const owner = document.getElementById('ghOwner').value.trim();
+            const repo = document.getElementById('ghRepo').value.trim();
+            const status = document.getElementById('configStatus');
+            if (token && owner && repo) {
+                status.textContent = 'Configurado';
+                status.className = 'config-status connected';
+            } else {
+                status.textContent = 'Não configurado';
+                status.className = 'config-status disconnected';
+            }
+        }
+        // ===== TOAST =====
+        function showToast(msg, type = '') {
+            toast.textContent = msg;
+            toast.className = 'toast show ' + type;
+            setTimeout(() => { toast.className = 'toast'; }, 3000);
+        }
+        // ===== GITHUB API =====
+        async function loadFromGitHub() {
+            const cfg = JSON.parse(localStorage.getItem('ghConfig') || '{}');
+            if (!cfg.token || !cfg.owner || !cfg.repo) {
+                showToast('Configure o GitHub primeiro!', 'error');
+                configPanel.classList.remove('collapsed');
+                return;
+            }
+            const path = cfg.path || 'repertorio.json';
+            const branch = cfg.branch || 'main';
+            const url = `https://api.github.com/repos/${cfg.owner}/${cfg.repo}/contents/${path}?ref=${branch}`;
+            loadBtn.disabled = true;
+            loadBtn.textContent = 'Carregando...';
+            try {
+                const resp = await fetch(url, {
+                    headers: {
+                        'Authorization': `token ${cfg.token}`,
+                        'Accept': 'application/vnd.github.v3+json'
+                    }
+                });
+                if (!resp.ok) {
+                    const errData = await resp.json().catch(() => ({}));
+                    throw new Error(errData.message || `HTTP ${resp.status}`);
+                }
+                const data = await resp.json();
+                fileSha = data.sha;
+                const binaryString = atob(data.content.replace(/\n/g, ''));
+                const bytes = new Uint8Array(binaryString.length);
+                for (let i = 0; i < binaryString.length; i++) {
+                  bytes[i] = binaryString.charCodeAt(i);
+                }
+                const content = new TextDecoder('utf-8').decode(bytes);
+                allSongs = JSON.parse(content);
+                allSongs.forEach(s => {
+                    const est = Array.isArray(s.estilo) ? s.estilo : [s.estilo];
+                    est.forEach(e => knownStyles.add(e));
+                });
+                originalSongs = JSON.parse(JSON.stringify(allSongs));
+                isDirty = false;
+                updateStats();
+                renderSongs();
+                updateDatalists();
+                saveBtn.disabled = false;
+                showToast(`${allSongs.length} músicas carregadas!`, 'success');
+            } catch (err) {
+                showToast('Erro: ' + err.message, 'error');
+            } finally {
+                loadBtn.disabled = false;
+                loadBtn.textContent = '↻ Carregar do GitHub';
+            }
+        }
+        async function saveToGitHub() {
+            const cfg = JSON.parse(localStorage.getItem('ghConfig') || '{}');
+            if (!cfg.token || !cfg.owner || !cfg.repo || !fileSha) {
+                showToast('Carregue o repertório primeiro!', 'error');
+                return;
+            }
+            saveBtn.disabled = true;
+            saveBtn.textContent = 'Salvando...';
+            const jsonStr = JSON.stringify(allSongs, null, 2);
+            const utf8Bytes = new TextEncoder().encode(jsonStr);
+            let binaryStr = '';
+            for (let i = 0; i < utf8Bytes.length; i++) {
+               binaryStr += String.fromCharCode(utf8Bytes[i]);
+            }
+            const content = btoa(binaryStr);
+            const body = {
+                message: `Atualização de repertório: ${allSongs.length} músicas (${new Date().toLocaleString('pt-BR')})`,
+                content: content,
+                sha: fileSha,
+                branch: cfg.branch || 'main'
+            };
+            try {
+                const url = `https://api.github.com/repos/${cfg.owner}/${cfg.repo}/contents/${cfg.path || 'repertorio.json'}`;
+                const resp = await fetch(url, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `token ${cfg.token}`,
+                        'Accept': 'application/vnd.github.v3+json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(body)
+                });
+                if (!resp.ok) {
+                    const errData = await resp.json().catch(() => ({}));
+                    throw new Error(errData.message || `HTTP ${resp.status}`);
+                }
+                const data = await resp.json();
+                fileSha = data.content.sha;
+                originalSongs = JSON.parse(JSON.stringify(allSongs));
+                isDirty = false;
+                updateStats();
+                showToast('Repertório salvo no GitHub!', 'success');
+            } catch (err) {
+                showToast('Erro ao salvar: ' + err.message, 'error');
+            } finally {
+                saveBtn.disabled = false;
+                saveBtn.textContent = '↑ Salvar no GitHub';
+            }
+        }
+        // ===== TAG INPUT (ESTILOS) =====
+        const estiloContainer = document.getElementById('addEstiloContainer');
+        const estiloInput = document.getElementById('addEstiloInput');
+        const estiloDropdown = document.getElementById('estiloDropdown');
+        const knownStyles = new Set();
+        function renderTags() {
+            estiloContainer.querySelectorAll('.tag-item').forEach(el => el.remove());
+            pendingStyles.forEach(tag => {
+                const el = document.createElement('span');
+                el.className = 'tag-item';
+                el.innerHTML = escapeHtml(tag) + ' <button type="button" data-tag="' + escapeHtml(tag) + '">×</button>';
+                el.querySelector('button').addEventListener('click', () => {
+                    pendingStyles = pendingStyles.filter(t => t !== tag);
+                    renderTags();
+                });
+                estiloContainer.insertBefore(el, estiloInput);
+            });
+        }
+        function showEstiloDropdown(filter = '') {
+            const filterLower = filter.toLowerCase().trim();
+            const matches = [...knownStyles]
+                .filter(s => s.toLowerCase().includes(filterLower) && !pendingStyles.includes(s))
+                .sort((a, b) => a.localeCompare(b, 'pt-BR'));
+            if (matches.length === 0) {
+                estiloDropdown.classList.remove('visible');
+                return;
+            }
+            estiloDropdown.innerHTML = matches.map(s =>
+                '<div class="estilo-option" data-style="' + escapeHtml(s) + '">' + escapeHtml(s) + '</div>'
+            ).join('');
+            estiloDropdown.classList.add('visible');
+        }
+        function hideEstiloDropdown() {
+            setTimeout(() => { estiloDropdown.classList.remove('visible'); }, 200);
+        }
+        estiloInput.addEventListener('focus', () => {
+            showEstiloDropdown(estiloInput.value);
+        });
+        estiloInput.addEventListener('blur', hideEstiloDropdown);
+        estiloInput.addEventListener('input', () => {
+            showEstiloDropdown(estiloInput.value);
+        });
+        estiloDropdown.addEventListener('click', (e) => {
+            const option = e.target.closest('.estilo-option');
+            if (!option) return;
+            const style = option.dataset.style;
+            if (!pendingStyles.includes(style)) {
+                pendingStyles.push(style);
+                renderTags();
+            }
+            estiloInput.value = '';
+            showEstiloDropdown('');
+            estiloInput.focus();
+        });
+        estiloInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ',') {
+                e.preventDefault();
+                const val = estiloInput.value.trim();
+                if (val && !pendingStyles.includes(val)) {
+                    pendingStyles.push(val);
+                    knownStyles.add(val);
+                    renderTags();
+                }
+                estiloInput.value = '';
+                showEstiloDropdown('');
+            }
+        });
+        // ===== MODO EDIÇÃO NO FORM =====
+        function enterEditMode(idx) {
+            editingIndex = idx;
+            const song = allSongs[idx];
+            const estilos = Array.isArray(song.estilo) ? song.estilo : [song.estilo];
+            // Carrega dados no form
+            document.getElementById('addMusica').value = song.musica;
+            document.getElementById('addArtista').value = song.artista;
+            document.getElementById('addIdioma').value = song.idioma || '';
+            document.getElementById('addAno').value = song.ano || '';
+            pendingStyles = [...estilos];
+            renderTags();
+            estiloInput.value = '';
+            // Troca form para modo edição
+            addForm.classList.add('editing');
+            addFormTitle.innerHTML = '✎ Editar música';
+            addBtn.textContent = '✎ Editar na lista';
+            cancelBtn.style.display = 'inline-block';
+            // Atualiza a tabela para destacar a linha
+            renderSongs();
+            // Scroll suave até o form
+            addForm.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            document.getElementById('addMusica').focus();
+        }
+        function exitEditMode() {
+            editingIndex = -1;
+            addForm.classList.remove('editing');
+            addFormTitle.innerHTML = '＋ Adicionar nova música';
+            addBtn.textContent = '＋ Adicionar à lista';
+            cancelBtn.style.display = 'none';
+            document.getElementById('addMusica').value = '';
+            document.getElementById('addArtista').value = '';
+            document.getElementById('addIdioma').value = '';
+            document.getElementById('addAno').value = '';
+            pendingStyles = [];
+            renderTags();
+            estiloInput.value = '';
+        }
+        cancelBtn.addEventListener('click', () => {
+            exitEditMode();
+            renderSongs();
+        });
+        // ===== ADD/EDIT SONG =====
+        addBtn.addEventListener('click', () => {
+            const musica = document.getElementById('addMusica').value.trim();
+            const artista = document.getElementById('addArtista').value.trim();
+            const idioma = document.getElementById('addIdioma').value;
+            if (!musica) { showToast('Informe o nome da música', 'error'); return; }
+            if (!artista) { showToast('Informe o artista', 'error'); return; }
+            if (pendingStyles.length === 0) { showToast('Adicione ao menos um estilo', 'error'); return; }
+            if (!idioma) { showToast('Selecione o idioma', 'error'); return; }
+            const ano = document.getElementById('addAno').value.trim();
+            if (editingIndex >= 0) {
+                // ---- MODO EDIÇÃO: atualiza música existente ----
+                // Verifica duplicidade apenas se mudou música ou artista
+                const orig = allSongs[editingIndex];
+                const musicaMudou = normalizeText(musica) !== normalizeText(orig.musica);
+                const artistaMudou = normalizeText(artista) !== normalizeText(orig.artista);
+                if (musicaMudou || artistaMudou) {
+                    const isDuplicate = allSongs.some((s, i) =>
+                        i !== editingIndex &&
+                        normalizeText(s.musica) === normalizeText(musica) &&
+                        normalizeText(s.artista) === normalizeText(artista)
+                    );
+                    if (isDuplicate) {
+                        showToast('"' + musica + '" de ' + artista + ' já existe no repertório!', 'error');
+                        return;
+                    }
+                }
+                allSongs[editingIndex] = { musica, artista, estilo: [...pendingStyles], idioma, ano };
+                pendingStyles.forEach(s => knownStyles.add(s));
+                updateDatalists();
+                exitEditMode();
+                isDirty = true;
+                updateStats();
+                renderSongs();
+                showToast(`"${musica}" editada!`, 'success');
+            } else {
+                // ---- MODO ADIÇÃO: nova música ----
+                const dupSong = normalizeText(musica);
+                const dupArtist = normalizeText(artista);
+                const isDuplicate = allSongs.some(s =>
+                    normalizeText(s.musica) === dupSong &&
+                    normalizeText(s.artista) === dupArtist
+                );
+                if (isDuplicate) {
+                    showToast('"' + musica + '" de ' + artista + ' já existe no repertório!', 'error');
+                    return;
+                }
+                allSongs.push({ musica, artista, estilo: [...pendingStyles], idioma, ano });
+                pendingStyles.forEach(s => knownStyles.add(s));
+                updateDatalists();
+                document.getElementById('addMusica').value = '';
+                document.getElementById('addArtista').value = '';
+                document.getElementById('addIdioma').value = '';
+                document.getElementById('addAno').value = '';
+                pendingStyles = [];
+                renderTags();
+                estiloInput.value = '';
+                isDirty = true;
+                updateStats();
+                renderSongs();
+                showToast(`"${musica}" adicionada!`, 'success');
+                document.getElementById('addMusica').focus();
+            }
+        });
+        // ===== DATALISTS =====
+        function updateDatalists() {
+            const artists = [...new Set(allSongs.map(s => s.artista))].sort((a, b) => a.localeCompare(b, 'pt-BR'));
+            document.getElementById('artistaSuggestions').innerHTML =
+                artists.map(a => `<option value="${escapeHtml(a)}">`).join('');
+        }
+        // ===== RENDER SONGS =====
+        function renderSongs() {
+            const term = searchInput.value.toLowerCase().trim();
+            let songs = allSongs;
+            if (term) {
+                if (artistOnlyFilter) {
+                    songs = allSongs.filter(s => s.artista.toLowerCase().includes(term));
+                } else {
+                    songs = allSongs.filter(s =>
+                        s.musica.toLowerCase().includes(term) ||
+                        s.artista.toLowerCase().includes(term)
+                    );
+                }
+            }
+            songs = [...songs].sort((a, b) => {
+                const cmp = a.artista.localeCompare(b.artista, 'pt-BR');
+                if (cmp !== 0) return cmp;
+                return a.musica.localeCompare(b.musica, 'pt-BR');
+            });
+            if (songs.length === 0) {
+                songsBody.innerHTML = '<div class="songs-empty">Nenhuma música encontrada.</div>';
+                return;
+            }
+            songsBody.innerHTML = songs.map(song => {
+                const idx = allSongs.indexOf(song);
+                const isEditing = editingIndex === idx;
+                const estilos = Array.isArray(song.estilo) ? song.estilo : [song.estilo];
+                const tagsHtml = estilos.map(e => `<span>${escapeHtml(e)}</span>`).join('');
+                const rowClass = isEditing ? 'song-row editing' : 'song-row';
+                const editBtnClass = isEditing ? 'edit active' : 'edit';
+                return `<div class="${rowClass}" data-idx="${idx}">
+                    <div class="song-cell">${escapeHtml(song.musica)}</div>
+                    <div class="song-cell artist">${escapeHtml(song.artista)}</div>
+                    <div class="song-cell styles">${tagsHtml}</div>
+                    <div class="song-cell lang">${escapeHtml(song.idioma || '')}</div>
+                    <div class="song-cell">${escapeHtml(song.ano || '')}</div>
+                    <div class="song-actions">
+                        <button class="${editBtnClass}" data-idx="${idx}" title="Editar">✎</button>
+                        <button class="delete" data-idx="${idx}" title="Remover">🗑</button>
+                    </div>
+                </div>`;
+            }).join('');
+        }
+        // ===== SONG ACTIONS (edit/delete) =====
+        songsBody.addEventListener('click', (e) => {
+            const btn = e.target.closest('button');
+            if (!btn) return;
+            const idx = parseInt(btn.dataset.idx);
+            if (isNaN(idx)) return;
+            if (btn.classList.contains('edit')) {
+                // Se já está editando esta música, cancela a edição
+                if (editingIndex === idx) {
+                    exitEditMode();
+                    renderSongs();
+                } else {
+                    enterEditMode(idx);
+                }
+            } else if (btn.classList.contains('delete')) {
+                const song = allSongs[idx];
+                if (confirm(`Remover "${song.musica}" de ${song.artista}?`)) {
+                    // Se estava editando esta música, cancela a edição
+                    if (editingIndex === idx) {
+                        exitEditMode();
+                    } else if (editingIndex > idx) {
+                        // Ajusta índice de edição se a música removida estava antes
+                        editingIndex--;
+                    }
+                    allSongs.splice(idx, 1);
+                    isDirty = true;
+                    updateStats();
+                    renderSongs();
+                    showToast('Música removida (clique em Salvar para confirmar no GitHub)', 'success');
+                }
+            }
+        });
+        // ===== STATS =====
+        function updateStats() {
+            document.getElementById('statTotal').textContent = allSongs.length;
+            const artists = new Set(allSongs.map(s => s.artista));
+            document.getElementById('statArtists').textContent = artists.size;
+            const styles = new Set();
+            allSongs.forEach(s => {
+                const est = Array.isArray(s.estilo) ? s.estilo : [s.estilo];
+                est.forEach(e => styles.add(e));
+            });
+            document.getElementById('statStyles').textContent = styles.size;
+            let pending = 0;
+            if (allSongs.length !== originalSongs.length) {
+                pending = Math.abs(allSongs.length - originalSongs.length);
+            } else {
+                for (let i = 0; i < allSongs.length; i++) {
+                    if (JSON.stringify(allSongs[i]) !== JSON.stringify(originalSongs[i])) pending++;
+                }
+            }
+            document.getElementById('statUnsaved').textContent = isDirty ? (pending || '✓') : '0';
+        }
+        // ===== SEARCH =====
+        let searchDebounce;
+        searchInput.addEventListener('input', () => {
+            if (artistOnlyFilter) {
+                artistOnlyFilter = false;
+                document.getElementById('filterBadge').classList.remove('visible');
+            }
+            clearTimeout(searchDebounce);
+            searchDebounce = setTimeout(renderSongs, 200);
+        });
+        // ===== CONFIG TOGGLE =====
+        configHeader.addEventListener('click', () => {
+            configPanel.classList.toggle('collapsed');
+        });
+        // ===== EVENT LISTENERS =====
+        saveConfigBtn.addEventListener('click', saveConfig);
+        loadBtn.addEventListener('click', loadFromGitHub);
+        saveBtn.addEventListener('click', saveToGitHub);
+        // Enter no form
+        document.getElementById('addMusica').addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') { e.preventDefault(); document.getElementById('addArtista').focus(); }
+        });
+        document.getElementById('addArtista').addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') { e.preventDefault(); estiloInput.focus(); }
+        });
+        // Botão lupa: filtra tabela por artista
+        document.getElementById('searchArtistBtn').addEventListener('click', () => {
+            const artist = document.getElementById('addArtista').value.trim();
+            if (!artist) {
+                showToast('Digite o nome do artista primeiro', 'error');
+                return;
+            }
+            artistOnlyFilter = true;
+            searchInput.value = artist;
+            document.getElementById('filterBadge').classList.add('visible');
+            renderSongs();
+            document.querySelector('.songs-table').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+
+        // Limpar filtro de artista
+        document.getElementById('clearFilterBtn').addEventListener('click', () => {
+            artistOnlyFilter = false;
+            searchInput.value = '';
+            document.getElementById('filterBadge').classList.remove('visible');
+            renderSongs();
+        });
+
+        // ===== HELPERS =====
+        function escapeHtml(text) {
+            if (!text) return '';
+            return String(text)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        }
+        function normalizeText(text) {
+            return (text || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim();
+        }
+        // ===== DUPLICATE PREVENTION =====
+        const dupDropdown = document.getElementById('dupDropdown');
+        const addMusicaInput = document.getElementById('addMusica');
+        const addArtistaInput = document.getElementById('addArtista');
+        function showDupDropdown(filter) {
+            if (filter.length < 2 || allSongs.length === 0) {
+                dupDropdown.classList.remove('visible');
+                return;
+            }
+            const filterNorm = normalizeText(filter);
+            const artistFilter = normalizeText(addArtistaInput.value);
+            const matches = allSongs.filter(song => {
+                const songNorm = normalizeText(song.musica);
+                const artistNorm = normalizeText(song.artista);
+                if (artistFilter && !artistNorm.includes(artistFilter)) return false;
+                return songNorm.includes(filterNorm) || artistNorm.includes(filterNorm);
+            }).slice(0, 8);
+            if (matches.length === 0) {
+                dupDropdown.classList.remove('visible');
+                return;
+            }
+            dupDropdown.innerHTML = matches.map(song => {
+                const isExact = normalizeText(song.musica) === filterNorm &&
+                    (artistFilter === '' || normalizeText(song.artista) === artistFilter);
+                const cls = isExact ? 'dup-option dup-exact' : 'dup-option';
+                return '<div class="' + cls + '" data-musica="' + escapeHtml(song.musica) +
+                    '" data-artista="' + escapeHtml(song.artista) + '">' +
+                    '<strong>' + escapeHtml(song.musica) + '</strong> — ' + escapeHtml(song.artista) +
+                    (isExact ? ' ⚠ já cadastrada' : '') + '</div>';
+            }).join('');
+            dupDropdown.classList.add('visible');
+        }
+        function hideDupDropdown() {
+            setTimeout(() => { dupDropdown.classList.remove('visible'); }, 200);
+        }
+        addMusicaInput.addEventListener('focus', () => {
+            if (addMusicaInput.value.length >= 2) showDupDropdown(addMusicaInput.value);
+        });
+        addMusicaInput.addEventListener('blur', hideDupDropdown);
+        addMusicaInput.addEventListener('input', () => {
+            showDupDropdown(addMusicaInput.value);
+        });
+        addArtistaInput.addEventListener('input', () => {
+            if (addMusicaInput.value.length >= 2) showDupDropdown(addMusicaInput.value);
+        });
+        dupDropdown.addEventListener('click', (e) => {
+            const option = e.target.closest('.dup-option');
+            if (!option) return;
+            addMusicaInput.value = option.dataset.musica;
+            addArtistaInput.value = option.dataset.artista;
+            dupDropdown.classList.remove('visible');
+            addMusicaInput.focus();
+        });
+        // ===== INIT =====
+        loadConfig();
+        const cfg = JSON.parse(localStorage.getItem('ghConfig') || '{}');
+        if (cfg.owner && cfg.repo && cfg.token) {
+            configPanel.classList.add('collapsed');
+            loadFromGitHub();
+        }
+    </script>
+</body>
+</html>
