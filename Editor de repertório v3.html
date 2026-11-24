@@ -585,6 +585,16 @@
                         <input type="text" id="ghBranch" placeholder="main" value="main">
                     </div>
                 </div>
+                <div class="config-grid">
+                    <div class="config-field">
+                        <label>Repositório do karaokê (sincronia)</label>
+                        <input type="text" id="ghKaraokeRepo" placeholder="Ex: karaoke" value="karaoke">
+                    </div>
+                    <div class="config-field">
+                        <label>Branch do karaokê</label>
+                        <input type="text" id="ghKaraokeBranch" placeholder="main" value="main">
+                    </div>
+                </div>
                 <div class="config-field" style="margin-bottom:1rem;">
                     <label>Personal Access Token (PAT)</label>
                     <input type="password" id="ghToken" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" value="">
@@ -727,6 +737,8 @@
             if (cfg.repo) document.getElementById('ghRepo').value = cfg.repo;
             if (cfg.path) document.getElementById('ghPath').value = cfg.path;
             if (cfg.branch) document.getElementById('ghBranch').value = cfg.branch;
+            if (cfg.karaokeRepo) document.getElementById('ghKaraokeRepo').value = cfg.karaokeRepo;
+            if (cfg.karaokeBranch) document.getElementById('ghKaraokeBranch').value = cfg.karaokeBranch;
             if (cfg.token) document.getElementById('ghToken').value = cfg.token;
             updateConfigStatus();
         }
@@ -736,6 +748,8 @@
                 repo: document.getElementById('ghRepo').value.trim(),
                 path: document.getElementById('ghPath').value.trim() || 'repertorio.json',
                 branch: document.getElementById('ghBranch').value.trim() || 'main',
+                karaokeRepo: document.getElementById('ghKaraokeRepo').value.trim() || 'karaoke',
+                karaokeBranch: document.getElementById('ghKaraokeBranch').value.trim() || 'main',
                 token: document.getElementById('ghToken').value.trim()
             };
             localStorage.setItem('ghConfig', JSON.stringify(cfg));
@@ -853,12 +867,57 @@
                 originalSongs = JSON.parse(JSON.stringify(allSongs));
                 isDirty = false;
                 updateStats();
-                showToast('Repertório salvo no GitHub!', 'success');
+                showToast('Repertório salvo no site!', 'success');
+                // Espelha no repositório do karaoke (não bloqueia o site em caso de falha)
+                saveToKaraoke(jsonStr).then((okK) => {
+                    if (okK) showToast('Karaokê sincronizado também!', 'success');
+                    else showToast('Atenção: salvo no site, mas FALHOU no karaoke — sincronize depois.', 'error');
+                });
             } catch (err) {
                 showToast('Erro ao salvar: ' + err.message, 'error');
             } finally {
                 saveBtn.disabled = false;
                 saveBtn.textContent = '↑ Salvar no GitHub';
+            }
+        }
+        // Nova função — colar logo abaixo da chave de fechamento de saveToGitHub
+        async function saveToKaraoke(jsonStr) {
+            try {
+                const cfg = JSON.parse(localStorage.getItem('ghConfig') || '{}');
+                const repo = cfg.karaokeRepo || 'karaoke';
+                const branch = cfg.karaokeBranch || 'main';
+                const path = 'repertorio.json';
+                const headers = {
+                    'Authorization': `token ${cfg.token}`,
+                    'Accept': 'application/vnd.github.v3+json'
+                };
+                // 1) Descobre o SHA atual do arquivo no repo do karaoke
+                const getUrl = `https://api.github.com/repos/${cfg.owner}/${repo}/contents/${path}?ref=${branch}`;
+                const getResp = await fetch(getUrl, { headers: headers });
+                if (!getResp.ok) throw new Error('GET HTTP ' + getResp.status);
+                const sha = (await getResp.json()).sha;
+                // 2) Sobrescreve com o mesmo conteúdo salvo no site
+                const utf8Bytes = new TextEncoder().encode(jsonStr);
+                let binaryStr = '';
+                for (let i = 0; i < utf8Bytes.length; i++) binaryStr += String.fromCharCode(utf8Bytes[i]);
+                const putResp = await fetch(`https://api.github.com/repos/${cfg.owner}/${repo}/contents/${path}`, {
+                    method: 'PUT',
+                    headers: { ...headers, 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        message: `Sincronia do site: ${allSongs.length} músicas (${new Date().toLocaleString('pt-BR')})`,
+                        content: btoa(binaryStr),
+                        sha: sha,
+                        branch: branch
+                    })
+                });
+                if (!putResp.ok) {
+                    const errData = await putResp.json().catch(() => ({}));
+                    throw new Error(errData.message || 'PUT HTTP ' + putResp.status);
+                }
+                return true;
+            } catch (err) {
+                console.error('Karaokê:', err);
+                return false;
             }
         }
         // ===== TAG INPUT (ESTILOS) =====
