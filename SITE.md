@@ -48,6 +48,16 @@ Site publicado: https://guilhermebulla.github.io (GitHub Pages, repo raiz = site
 - Decisões fechadas não se reabrir: PIN alfanumérico; mesa.html + histórico na
   mesma página; fila pública mostra nome de quem pediu; sem emojis em rótulos.
 
+### Editor de repertório e sincronia dupla (24/11/2026)
+- #Editor de repertório v3.html (raiz): edita repertorio.json via API do
+  GitHub (PAT classic escopo repo, token só no localStorage do dono).
+- Salvar grava em DOIS repos: site (fonte única) e karaoke
+  (guilhermebulla/karaoke/repertorio.json, SHA buscado na hora).
+- Falha no karaoke não desfaz a gravação do site — toast de aviso.
+- Kit local (C:\karaoke): arquivo local só atualiza via
+  sincroniza-repertorio.js (baixa JSON pinado pelo HEAD) + gera-letras.js.
+- repertorio.json do site segue como FONTE ÚNICA; o do karaoke é cópia.
+
 ## Regras para IA
 1. Ler base.css e app.css antes de propor qualquer estilo novo.
 2. Nunca inventar hex/fontes — usar as variáveis acima (exceção: --warn/--danger).
