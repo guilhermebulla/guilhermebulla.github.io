@@ -33,6 +33,7 @@
       <h1 class="logo">Bulla<span>Acoustic</span></h1>
       <p class="tagline">Mesa do músico — fila ao vivo</p>
     </header>
+    <h2 id="fila-titulo">Fila</h2>
     <div id="fila" class="fila"></div>
 
     <h2>Já rolaram</h2>
@@ -120,29 +121,34 @@
     });
   }
 
+  let filaAtual = [];
+
   function render(itens) {
+    filaAtual = itens;
     const alvo = document.getElementById('fila');
+    document.getElementById('fila-titulo').innerHTML =
+      itens.length ? `Fila <span class="contagem">· ${itens.length} na fila</span>` : 'Fila';
     if (!itens.length) {
       alvo.innerHTML = '<p class="vazio">Nenhum pedido na fila ainda.</p>';
       return;
     }
-    alvo.innerHTML =
-      '<p class="dica-drag">Segure e arraste um pedido para mudar a ordem — o público vê na hora.</p>' +
-      itens.map((p, i) => `
-      <div class="pedido" data-id="${p.id}" draggable="true">
+    alvo.innerHTML = itens.map((p, i) => `
+      <div class="pedido${i === 0 ? ' agora' : ''}" data-id="${p.id}">
         <span class="num">${i + 1}</span>
         <div>
+          ${i === 0 ? '<span class="tag-agora">Agora</span>' : ''}
           <strong>${esc(p.title)}</strong>
           <span>${esc(p.artist)} · ${esc(p.requester)}</span>
           <div class="acoes">
             <button data-op="tocada">Tocada</button>
             <button data-op="pulada" class="btn-sec">Pular</button>
+            <button data-op="subir" class="btn-sec" aria-label="Subir na fila" ${i === 0 ? 'disabled' : ''}>▲</button>
+            <button data-op="descer" class="btn-sec" aria-label="Descer na fila" ${i === itens.length - 1 ? 'disabled' : ''}>▼</button>
             <button data-op="remover" class="btn-perigo">Remover</button>
           </div>
         </div>
       </div>
     `).join('');
-    ativarDrag(alvo);
   }
 
   // ---- Drag & drop: reordena e grava "ordem" em lote ----
@@ -210,13 +216,25 @@
     }).join('');
   }
 
-  document.getElementById('fila').addEventListener('click', e => {
+  document.getElementById('fila').addEventListener('click', async e => {
     const btn = e.target.closest('button[data-op]');
     if (!btn) return;
-    const card = btn.closest('.pedido');
-    const id = card.dataset.id;
+    const id = btn.closest('.pedido').dataset.id;
     const op = btn.dataset.op;
-    if (op === 'remover') {
+    if (op === 'subir' || op === 'descer') {
+      const i = filaAtual.findIndex(p => p.id === id);
+      const j = op === 'subir' ? i - 1 : i + 1;
+      if (i < 0 || j < 0 || j >= filaAtual.length) return;
+      const nova = [...filaAtual];
+      [nova[i], nova[j]] = [nova[j], nova[i]];
+      const batch = db.batch();
+      nova.forEach((p, k) => batch.update(db.collection('pedidos').doc(p.id), { ordem: k }));
+      try { await batch.commit(); }
+      catch (err) {
+        console.error('Falha ao gravar ordem:', err);
+        alert('Não consegui salvar a nova ordem. Veja o console (F12).');
+      }
+    } else if (op === 'remover') {
       if (!confirm('Remover este pedido da fila? Essa ação não pode ser desfeita.')) return;
       db.collection('pedidos').doc(id).delete();
     } else {
