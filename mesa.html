@@ -123,6 +123,8 @@
 
   let filaAtual = [];
 
+  let filaAtual = [];
+
   function render(itens) {
     filaAtual = itens;
     const alvo = document.getElementById('fila');
@@ -134,7 +136,11 @@
     }
     alvo.innerHTML = itens.map((p, i) => `
       <div class="pedido${i === 0 ? ' agora' : ''}" data-id="${p.id}">
-        <span class="num">${i + 1}</span>
+        <div class="q-col">
+          <button class="ord" data-op="subir" aria-label="Subir na fila" ${i === 0 ? 'disabled' : ''}>▲</button>
+          <span class="num">${i + 1}</span>
+          <button class="ord" data-op="descer" aria-label="Descer na fila" ${i === itens.length - 1 ? 'disabled' : ''}>▼</button>
+        </div>
         <div>
           ${i === 0 ? '<span class="tag-agora">Agora</span>' : ''}
           <strong>${esc(p.title)}</strong>
@@ -142,54 +148,11 @@
           <div class="acoes">
             <button data-op="tocada">Tocada</button>
             <button data-op="pulada" class="btn-sec">Pular</button>
-            <button data-op="subir" class="btn-sec" aria-label="Subir na fila" ${i === 0 ? 'disabled' : ''}>▲</button>
-            <button data-op="descer" class="btn-sec" aria-label="Descer na fila" ${i === itens.length - 1 ? 'disabled' : ''}>▼</button>
             <button data-op="remover" class="btn-perigo">Remover</button>
           </div>
         </div>
       </div>
     `).join('');
-  }
-
-  // ---- Drag & drop: reordena e grava "ordem" em lote ----
-  let arrastado = null;
-  function ativarDrag(alvo) {
-    alvo.querySelectorAll('.pedido').forEach(card => {
-      card.addEventListener('dragstart', () => {
-        arrastado = card;
-        card.classList.add('arrastando');
-      });
-      card.addEventListener('dragend', () => {
-        card.classList.remove('arrastando');
-        alvo.querySelectorAll('.pedido').forEach(c => c.classList.remove('sobre'));
-      });
-      card.addEventListener('dragover', e => {
-        e.preventDefault();
-        if (!arrastado || card === arrastado) return;
-        card.classList.add('sobre');
-      });
-      card.addEventListener('dragleave', () => card.classList.remove('sobre'));
-      card.addEventListener('drop', e => {
-        e.preventDefault();
-        if (!arrastado || card === arrastado) return;
-        const rect = card.getBoundingClientRect();
-        const antes = (e.clientY - rect.top) < rect.height / 2;
-        alvo.insertBefore(arrastado, antes ? card : card.nextSibling);
-        gravarOrdem(alvo);
-      });
-    });
-  }
-
-  async function gravarOrdem(alvo) {
-    const batch = db.batch();
-    alvo.querySelectorAll('.pedido').forEach((card, i) => {
-      batch.update(db.collection('pedidos').doc(card.dataset.id), { ordem: i });
-    });
-    try { await batch.commit(); }
-    catch (e) {
-      console.error('Falha ao gravar ordem:', e);
-      alert('Não consegui salvar a nova ordem. Veja o console (F12).');
-    }
   }
 
   function renderHist(itens) {
@@ -216,9 +179,9 @@
     }).join('');
   }
 
-  document.getElementById('fila').addEventListener('click', async e => {
+    document.getElementById('fila').addEventListener('click', async e => {
     const btn = e.target.closest('button[data-op]');
-    if (!btn) return;
+    if (!btn || btn.disabled) return;
     const id = btn.closest('.pedido').dataset.id;
     const op = btn.dataset.op;
     if (op === 'subir' || op === 'descer') {
