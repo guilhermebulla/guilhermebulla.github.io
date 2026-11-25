@@ -10,11 +10,12 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="base.css">
-<link rel="stylesheet" href="app.css?v=4">
+<link rel="stylesheet" href="app.css?v=5">
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 </head>
 <body>
+  <main>
   <header class="app-header">
     <p class="hero-tag">Voz &amp; Violão</p>
     <h1 class="logo">Bulla<span>Acoustic</span></h1>
@@ -27,6 +28,7 @@
   <div id="resultado"></div>
     <h2>Fila agora <span class="contagem" id="fila-count"></span></h2>
   <div id="fila-publica"></div>
+  </main>
   <footer>BullaAcoustic · voz e violão</footer>
 
 <script>
@@ -133,8 +135,8 @@
       return;
     }
     let html = achados.map(m =>
-      `<div class="musica" data-idx="${m.idx}"><strong>${esc(m.musica)}</strong>` +
-      `<span>${esc(m.artista)} · ${esc((m.estilo || []).join(', '))}</span></div>`
+      `<button type="button" class="musica musica-btn" data-idx="${m.idx}"><strong>${esc(m.musica)}</strong>` +
+      `<span>${esc(m.artista)} · ${esc((m.estilo || []).join(', '))}</span></button>`
     ).join('');
     if (todos.length > achados.length) {
       html += `<p class="sub">Mais ${todos.length - achados.length} resultado(s). Refine a busca.</p>`;
