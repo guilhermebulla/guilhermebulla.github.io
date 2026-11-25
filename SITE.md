@@ -14,7 +14,10 @@ Site publicado: https://guilhermebulla.github.io (GitHub Pages, repo raiz = site
 ## Arquitetura
 - index.html + index.css + script.js (7 módulos init*)
 - repertorio.html + repertorio.css + repertorio.js — consome repertorio.json
-- conecte-se.html — monolítico (HTML+CSS inline), sem base.css
+- conecte-se.html + conecte-se.css — CSS extraído do monolítico (25/11/2026),
+  fidelidade visual preservada; tokens ainda locais (unificação com base.css
+  é fase futura, após teste visual). Botão "Pedir música ao vivo" (1º da
+  lista, âncora pedidos.html) como conveniência do QR impresso.
 - repertorio.json — FONTE ÚNICA de repertório (~1.329 músicas; campos: musica,
   artista, estilo[], idioma, ano). NÃO usar json-setlist.txt (obsoleto).
 
