@@ -290,7 +290,7 @@ h2 .contagem {
 .pedido, .musica { display: flex; align-items: flex-start; }
 .pedido > div, .musica > div { flex: 1; min-width: 0; }
 
-//* ===== MESA: ORDEM ▲▼ À ESQUERDA DA POSIÇÃO ===== */
+/* ===== MESA: ORDEM ▲▼ À ESQUERDA DA POSIÇÃO ===== */
 .pedido.agora { border-color: var(--gold); background: var(--gold-soft); }
 .tag-agora {
     display: inline-block;
