@@ -41,35 +41,46 @@ Site publicado: https://guilhermebulla.github.io (GitHub Pages, repo raiz = site
   og-image.png apagado do repo. Validar card final no WhatsApp ou
   opengraph.xyz (redes fazem cache; card velho pode persistir por horas).
 
-### App Pedidos ao vivo (23/11/2026)
-- Fluxo: QR → pedidos.html (convidado pede) → Firestore (projeto bulla-pedidos,
-  southamerica-east1) → mesa.html (painel do músico, PIN validado contra
-  config/pin; write bloqueado nas Rules).
-- Coleção pedidos: songId, title, artist, requester, requesterKey,
-  status (fila|tocada|pulada), createdAt, finishedAt, ordem (int opcional;
-  gravado em lote via batch quando o músico reordena).
-- app.css (compartilhado por pedidos.html e mesa.html, após base.css):
-  tokens locais --warn #F59E0B e --danger #DC2626 (única exceção de hex),
-  header .app-header (pill "Voz & Violão" + logo Bulla/Acoustic dourado +
-  divisor gradiente), glow de fundo body::before, cards .musica/.pedido/.hist,
-  .num (numeração circular da fila), .me-tag ("É VOCÊ"),
-  .toast (mensagens flutuantes; classes .aviso/.erro), footer neutralizado
-  contra o vazamento do base.css (!important pontual),
-  drag & drop (.arrastando/.sobre/.dica-drag).
-- mesa.html: fila em tempo real (onSnapshot). Ordenação: campo ordem manual
-  vence; sem ordem, rodízio por requesterKey (menos atendidos primeiro;
-  empate = chegada). Cards arrastáveis (drag & drop) — ao soltar, grava ordem
-  em batch; o público vê a nova ordem ao vivo. Numeração 1,2,3... nos cards.
-  Histórico "Já rolaram" com horário; botão "Devolver à fila" em puladas
-  (update: status fila + finishedAt FieldValue.delete()).
-- pedidos.html: máx. 3 pedidos ativos por requesterKey; confirmações via toast;
-  fila pública ordena por ordem manual > chegada e mostra numeração igual à
-  mesa (sem reproduzir o rodízio completo — limitação conhecida).
-- Security Rules fase 2: create só com status=='fila'; read/update/delete
-  abertos (dívida técnica anotada: blindagem real = Firebase Auth, fase futura).
-- apiKey do Firebase não é segredo; segurança mora nas Rules.
-- Decisões fechadas não se reabrir: PIN alfanumérico; mesa.html + histórico na
-  mesma página; fila pública mostra nome de quem pediu; sem emojis em rótulos.
+### App Pedidos ao vivo (atualizado 25/11/2026)
+- Fluxo: QR → pedidos.html (convidado pede) → Firestore (projeto bulla-pedidos, southamerica-east1) → mesa.html (painel do músico, PIN validado contra config/pin; write bloqueado nas Rules).
+- Coleção pedidos: songId, title, artist, requester, requesterKey, status (fila|tocada|pulada), createdAt, finishedAt, ordem (int opcional; gravado em lote quando o músico reordena com ▲▼).
+- app.css (compartilhado por pedidos.html e mesa.html, após base.css): tokens locais --warn #F59E0B e --danger #DC2626 (exceção de hex); header .app-header; glow body::before; cards .musica/.pedido/.hist; .num; .me-tag; .toast; .contador-pedidos; .lixeira; footer neutralizado com !important pontual.
+- CACHE: pedidos.html e mesa.html carregam app.css?v=N. Toda alteração em app.css exige incrementar N nos dois HTMLs.
+
+#### mesa.html
+- Fila em tempo real (onSnapshot). Ordem manual vence; sem ordem, rodízio por requesterKey (menos atendidos primeiro; empate = chegada).
+- Reordenação só por ▲▼ à esquerda da posição. Drag & drop removido (não funciona no toque). Cada movimento grava `ordem` para todos os itens da fila, em batch.
+- Card: posição, música, artista · solicitante, botões Tocada e Pular. Remover é uma lixeira vermelha pequena no canto superior direito, com confirm().
+- Primeiro da fila destacado pela cor (sem rótulo "Agora"). Título da seção: "Fila · N na fila".
+- Histórico "Já rolaram" com horário. "Devolver à fila" em puladas, com min-height 48px.
+- PIN validado contra config/pin (sessionStorage).
+
+#### pedidos.html
+- Nome salvo em localStorage (chave bullaNome) e restaurado ao abrir. Campo com aria-label.
+- Contador "Seus pedidos na fila: X de 3" (por nome digitado). Fica âmbar ao atingir 3. A checagem de envio continua em pedir().
+- Busca: todos os termos precisam bater; máximo 20 resultados; "Nada encontrado" quando não há resultado; "Mais N resultado(s). Refine a busca." quando há extras; mensagem de repertório carregando; pede o nome antes de buscar.
+- Fila pública: ordem manual > chegada; "É VOCÊ" quando o nome digitado confere.
+- Limite de pedidos é por nome digitado, não por pessoa (sem Firebase Auth, fase futura).
+
+#### Decisões fechadas (25/11/2026)
+- Sem drag & drop no toque. Reordenação por ▲▼ sem menu nem folha de ações.
+- Remover só pela lixeira, com confirmação.
+- Destaque do primeiro da fila pela cor, sem rótulo.
+- PIN alfanumérico; mesa.html e histórico na mesma página; fila pública mostra o nome de quem pediu; sem emojis em rótulos.
+
+#### Commits relevantes
+- 2fd31e8: ▲▼ à esquerda da posição; drag removido.
+- 1f36aa3: nome salvo no navegador.
+- 2a02e60: contador "X de 3".
+- 331b852: app.css?v=4 em pedidos.html.
+- c23a734: busca por palavras, estado vazio e aviso de extras.
+- Mesa com app.css?v=3 e lixeira validados no celular (SHA a registrar).
+
+#### Pendências do app (em ordem)
+1. Acessibilidade: resultados da busca focáveis por teclado (hoje são divs com clique); <main> nas telas de app.
+2. Destaque do próprio pedido na fila pública, no padrão do karaokê (fundo dourado suave, borda dourada à esquerda, nome em dourado).
+3. Desacoplar app.css do base.css (remover os !important). Baixa urgência.
+4. Opcional, após teste: folha de confirmação antes do pedido.
 
 ### Editor de repertório e sincronia dupla (ATUALIZADO 25/11/2026)
 - Editor migrou para REPO PRIVADO guilhermebulla/editor-repertorio
@@ -99,3 +110,5 @@ Site publicado: https://guilhermebulla.github.io (GitHub Pages, repo raiz = site
 7. Mapa do ecossistema (site + karaoke + editor): README de perfil em
    github.com/guilhermebulla/guilhermebulla — ponto de entrada para IAs e
    humanos; o SITE.md continua sendo a fonte técnica detalhada do site.
+8. Toda alteração em app.css: incrementar ?v= em mesa.html e pedidos.html.
+9. Antes de editar, confirmar o HEAD pela API de commits e ler o arquivo pinado no SHA. A listagem da API pode vir defasada: quando um SHA citado pelo dono não aparece nela, use o SHA citado e declare isso.
