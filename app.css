@@ -290,31 +290,43 @@ h2 .contagem {
 .pedido, .musica { display: flex; align-items: flex-start; }
 .pedido > div, .musica > div { flex: 1; min-width: 0; }
 
-/* ===== MESA: ORDEM ▲▼ À ESQUERDA DA POSIÇÃO ===== */
-.pedido.agora { border-color: var(--gold); background: var(--gold-soft); }
-.tag-agora {
-    display: inline-block;
-    color: var(--gold);
-    font-size: .72rem;
-    font-weight: 600;
-    letter-spacing: .5px;
-    text-transform: uppercase;
-    margin-bottom: 4px;
+/* ===== MESA: CARD DA FILA (ordem ▲▼ à esquerda, remover no canto) ===== */
+.pedido {
+    position: relative;
+    padding: 10px 12px;
+}
+.pedido.agora {
+    border-color: var(--gold);
+    background: var(--gold-soft);
 }
 .pedido .q-col {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 6px;
-    margin-right: 12px;
+    gap: 4px;
+    width: 44px;
+    margin-right: 10px;
     flex: none;
 }
-.pedido .q-col .num { margin-right: 0; }
+.pedido .q-col .num {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    margin-right: 0;
+    font-size: 1rem;
+    font-weight: 700;
+}
+.pedido.agora .q-col .num {
+    background: var(--gold);
+    border-color: var(--gold);
+    color: #141414;
+}
 .pedido .q-col .ord {
-    position: relative;
     width: 44px;
-    height: 44px;
-    min-height: 44px;
+    height: 38px;
+    min-height: 38px;
     padding: 0;
     border: 1px solid var(--border);
     border-radius: 8px;
@@ -324,11 +336,6 @@ h2 .contagem {
     line-height: 1;
     transform: none;
 }
-.pedido .q-col .ord::before {
-    content: '';
-    position: absolute;
-    inset: -8px -6px;
-}
 .pedido .q-col .ord:hover:not(:disabled) {
     border-color: var(--gold);
     color: var(--gold);
@@ -336,3 +343,44 @@ h2 .contagem {
     transform: none;
 }
 .pedido .q-col .ord:disabled { opacity: .3; cursor: default; }
+.pedido .q-info {
+    flex: 1;
+    min-width: 0;
+    padding-right: 40px;
+}
+.pedido .acoes {
+    display: flex;
+    gap: 8px;
+    margin-top: 8px;
+}
+.pedido .acoes > button:not(.btn-perigo) {
+    flex: 1;
+    width: auto;
+    min-height: 44px;
+    padding: 10px;
+    font-size: .95rem;
+    transform: none;
+}
+.pedido .acoes > button:not(.btn-perigo):hover { transform: none; }
+.pedido .lixeira {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 40px;
+    height: 40px;
+    min-height: 40px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--danger);
+    border-radius: 50%;
+    background: transparent;
+    color: var(--danger);
+    transform: none;
+}
+.pedido .lixeira svg { width: 18px; height: 18px; }
+.pedido .lixeira:hover {
+    background: rgba(220, 38, 38, 0.12);
+    transform: none;
+}
