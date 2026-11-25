@@ -123,7 +123,7 @@
 
   let filaAtual = [];
 
-  function render(itens) {
+    function render(itens) {
     filaAtual = itens;
     const alvo = document.getElementById('fila');
     document.getElementById('fila-titulo').innerHTML =
@@ -139,16 +139,15 @@
           <span class="num">${i + 1}</span>
           <button class="ord" data-op="descer" aria-label="Descer na fila" ${i === itens.length - 1 ? 'disabled' : ''}>▼</button>
         </div>
-        <div>
-          ${i === 0 ? '<span class="tag-agora">Agora</span>' : ''}
+        <div class="q-info">
           <strong>${esc(p.title)}</strong>
           <span>${esc(p.artist)} · ${esc(p.requester)}</span>
           <div class="acoes">
             <button data-op="tocada">Tocada</button>
             <button data-op="pulada" class="btn-sec">Pular</button>
-            <button data-op="remover" class="btn-perigo">Remover</button>
           </div>
         </div>
+        <button class="lixeira" data-op="remover" aria-label="Remover da fila" title="Remover da fila"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M6 6l1 14h10l1-14"/></svg></button>
       </div>
     `).join('');
   }
