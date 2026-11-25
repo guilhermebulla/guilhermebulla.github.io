@@ -10,6 +10,13 @@ Site publicado: https://guilhermebulla.github.io (GitHub Pages, repo raiz = site
 - Estética: "essencial bem executado" — sóbrio, premium, sem emojis em rótulos
 - Botões: .btn-primary (dourado), .btn-outline; focus-visible outline dourado
 - Sempre usar base.css via <link>; estilos específicos em <arquivo>.css separado
+- ATENÇÃO: base.css traz globais agressivos (header fixo c/ nav, section 96px,
+  footer estilizado #0a0a0a, .container 1200px). Páginas sem esse layout
+  (conecte-se, app pedidos/mesa) neutralizam ou evitam o import — ver app.css
+  footer !important e conecte-se.css tokens locais. Exceção documentada.
+- URL canônica do canal: https://youtube.com/MrGuilhermeBulla (sem /user/).
+  Formato /user/ é artefato de sessão logada — não usar. Favicon em todas as
+  páginas: SVG embutido (data URI), não favicon.ico.
 
 ## Arquitetura
 - index.html + index.css + script.js (7 módulos init*)
