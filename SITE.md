@@ -29,9 +29,9 @@ Site publicado: https://guilhermebulla.github.io (GitHub Pages, repo raiz = site
   manual no Photoshop pelo dono (fundo oil paint, glow dourado no canto
   sup. direito, foto do músico mascarada com layer mask + feather no canto
   inf. esquerdo, wordmark Playfair Display). Substitui og-image.png (884 KB).
-- PENDENTE (commit único recomendado): apontar og:image e twitter:image no
-  index.html para og-image.jpg, apagar og-image.png do repo e remover a
-  menção ao .png de SITE.md. Validação final do card no WhatsApp ou
+- FECHADO (25/11/2026, commit 5b16239 + ajuste og): index.html e
+  conecte-se.html apontam og:image/twitter:image para og-image.jpg;
+  og-image.png apagado do repo. Validar card final no WhatsApp ou
   opengraph.xyz (redes fazem cache; card velho pode persistir por horas).
 
 ### App Pedidos ao vivo (23/11/2026)
