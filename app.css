@@ -263,7 +263,7 @@ h2 .contagem {
 
 /* ===== DEVOLVER À FILA (mesa.html) ===== */
 .hist .acoes { display: flex; gap: 8px; margin-top: 10px; }
-.hist .acoes button { padding: 10px; font-size: .9rem; min-height: 40px; width: auto; }
+.hist .acoes button { padding: 10px; font-size: .9rem; min-height: 48px; width: auto; }
 
 @media (prefers-reduced-motion: reduce) {
     *, *::before {
@@ -299,3 +299,17 @@ h2 .contagem {
     color: var(--text-muted);
     margin-bottom: 8px;
 }
+
+/* ===== MESA: FILA COM ▲▼ E DESTAQUE "AGORA" ===== */
+.pedido.agora { border-color: var(--gold); background: var(--gold-soft); }
+.tag-agora {
+    display: inline-block;
+    color: var(--gold);
+    font-size: .72rem;
+    font-weight: 600;
+    letter-spacing: .5px;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+}
+.pedido .acoes { flex-wrap: wrap; }
+.pedido .acoes button:disabled { opacity: .35; cursor: default; transform: none; }
