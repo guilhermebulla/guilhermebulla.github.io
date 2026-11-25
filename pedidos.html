@@ -22,6 +22,7 @@
   </header>
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
   <input id="nome" placeholder="Seu nome" maxlength="40" autocomplete="name" aria-label="Seu nome">
+  <p id="contador-pedidos" class="contador-pedidos" aria-live="polite"></p>
   <input id="busca" placeholder="Buscar música ou artista…" autocomplete="off">
   <div id="resultado"></div>
     <h2>Fila agora <span class="contagem" id="fila-count"></span></h2>
@@ -38,12 +39,23 @@
   });
   const db = firebase.firestore();
 
-  // ===== Nome salvo no navegador =====
+  // ===== Nome salvo no navegador + contador "X de 3" =====
   const campoNome = document.getElementById('nome');
+  let filaPublica = [];
   campoNome.value = localStorage.getItem('bullaNome') || '';
   campoNome.addEventListener('input', () => {
     localStorage.setItem('bullaNome', campoNome.value.trim());
+    atualizarContador();
   });
+
+  function atualizarContador() {
+    const el = document.getElementById('contador-pedidos');
+    const chave = campoNome.value.trim().toLowerCase();
+    if (!chave) { el.textContent = ''; el.classList.remove('cheio'); return; }
+    const meus = filaPublica.filter(p => (p.requesterKey || '') === chave).length;
+    el.textContent = `Seus pedidos na fila: ${meus} de ${MAX_PEDIDOS_POR_PESSOA}`;
+    el.classList.toggle('cheio', meus >= MAX_PEDIDOS_POR_PESSOA);
+  }
 
   // ===== Toast (porta do karaoke) =====
   let toastTimer = null;
@@ -65,6 +77,8 @@
         if (oa !== ob) return oa - ob;
         return (a.createdAt?.seconds || 0) - (b.createdAt?.seconds || 0);
       });
+      filaPublica = itens;
+      atualizarContador();
       const alvo = document.getElementById('fila-publica');
       document.getElementById('fila-count').textContent =
         itens.length ? `(${itens.length})` : '';

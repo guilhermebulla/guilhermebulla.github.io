@@ -388,3 +388,12 @@ h2 .contagem {
     background: rgba(220, 38, 38, 0.12);
     transform: none;
 }
+
+/* ===== CONTADOR DE PEDIDOS DO CONVIDADO (pedidos.html) ===== */
+.contador-pedidos {
+    font-size: .85rem;
+    color: var(--text-muted);
+    margin: -4px 0 12px 2px;
+    min-height: 1.2em;
+}
+.contador-pedidos.cheio { color: var(--warn); }
