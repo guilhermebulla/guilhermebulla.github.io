@@ -111,6 +111,10 @@
     const alvo = document.getElementById('resultado');
     selecionada = null;
     if (q.length < 2) { alvo.innerHTML = ''; return; }
+    if (!campoNome.value.trim()) {
+      alvo.innerHTML = '<p class="sub">Digite seu nome acima para escolher uma música.</p>';
+      return;
+    }
     if (!catalogo.length) {
       alvo.innerHTML = '<p class="sub">Repertório ainda carregando. Verifique a conexão.</p>';
       return;
