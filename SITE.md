@@ -18,6 +18,19 @@ Site publicado: https://guilhermebulla.github.io (GitHub Pages, repo raiz = site
 - repertorio.json — FONTE ÚNICA de repertório (~1.329 músicas; campos: musica,
   artista, estilo[], idioma, ano). NÃO usar json-setlist.txt (obsoleto).
 
+### Assets de imagem (25/11/2026)
+- hero-bg.webp (1024x1024, ~69 KB) — hero do index.html. PNG de 1,57 MB
+  removido; compressão feita localmente pelo dono (qualidade <85;
+  transparency/embed color profile não alteram o tamanho).
+- og-image.jpg (1200x630, ~113 KB) — card Open Graph/Twitter; composição
+  manual no Photoshop pelo dono (fundo oil paint, glow dourado no canto
+  sup. direito, foto do músico mascarada com layer mask + feather no canto
+  inf. esquerdo, wordmark Playfair Display). Substitui og-image.png (884 KB).
+- PENDENTE (commit único recomendado): apontar og:image e twitter:image no
+  index.html para og-image.jpg, apagar og-image.png do repo e remover a
+  menção ao .png de SITE.md. Validação final do card no WhatsApp ou
+  opengraph.xyz (redes fazem cache; card velho pode persistir por horas).
+
 ### App Pedidos ao vivo (23/11/2026)
 - Fluxo: QR → pedidos.html (convidado pede) → Firestore (projeto bulla-pedidos,
   southamerica-east1) → mesa.html (painel do músico, PIN validado contra
@@ -48,12 +61,17 @@ Site publicado: https://guilhermebulla.github.io (GitHub Pages, repo raiz = site
 - Decisões fechadas não se reabrir: PIN alfanumérico; mesa.html + histórico na
   mesma página; fila pública mostra nome de quem pediu; sem emojis em rótulos.
 
-### Editor de repertório e sincronia dupla (24/11/2026)
-- #Editor de repertório v3.html (raiz): edita repertorio.json via API do
-  GitHub (PAT classic escopo repo, token só no localStorage do dono).
-- Salvar grava em DOIS repos: site (fonte única) e karaoke
+### Editor de repertório e sincronia dupla (ATUALIZADO 25/11/2026)
+- Editor migrou para REPO PRIVADO guilhermebulla/editor-repertorio
+  (25/11/2026; fechava as pendências e/f anteriores: "#" no nome e PAT
+  em página pública). Ele edita o repertorio.json via API do GitHub e
+  grava em DOIS repos: site (fonte única) e karaoke
   (guilhermebulla/karaoke/repertorio.json, SHA buscado na hora).
-- Falha no karaoke não desfaz a gravação do site — toast de aviso.
+  Falha no karaoke não desfaz a gravação do site — toast de aviso.
+- PAT classic escopo repo em localStorage, agora em página privada.
+  Verificação pendente: nome do arquivo HTML do editor no repo privado
+  e primeiro boot pós-migração (config ghConfig pode precisar de ajuste
+  de repo/path/branch).
 - Kit local (C:\karaoke): arquivo local só atualiza via
   sincroniza-repertorio.js (baixa JSON pinado pelo HEAD) + gera-letras.js.
 - repertorio.json do site segue como FONTE ÚNICA; o do karaoke é cópia.
@@ -66,3 +84,5 @@ Site publicado: https://guilhermebulla.github.io (GitHub Pages, repo raiz = site
    defasado — pinar leitura pelo SHA do commit.
 5. Marcas de equipamentos só em Rider Técnico; itinerância em termos amplos;
    Twitch nunca medida por seguidores.
+6. Editor de repertório mora no repo PRIVADO editor-repertorio — não buscar
+   arquivo dele na árvore do site.
