@@ -111,18 +111,31 @@
     const alvo = document.getElementById('resultado');
     selecionada = null;
     if (q.length < 2) { alvo.innerHTML = ''; return; }
-    const achados = [];
-    for (let i = 0; i < catalogo.length && achados.length < 20; i++) {
-      const m = catalogo[i];
-      if ((m.musica || '').toLowerCase().includes(q) ||
-          (m.artista || '').toLowerCase().includes(q)) {
-        achados.push({ idx: i, ...m });
-      }
+    if (!catalogo.length) {
+      alvo.innerHTML = '<p class="sub">Repertório ainda carregando. Verifique a conexão.</p>';
+      return;
     }
-    alvo.innerHTML = achados.map(m =>
+    // Busca por palavras: TODOS os termos precisam bater (ex.: "djavan sina")
+    const termos = q.split(/\s+/).filter(Boolean);
+    const todos = catalogo
+      .map((m, idx) => ({ idx, ...m }))
+      .filter(m => {
+        const texto = ((m.musica || '') + ' ' + (m.artista || '')).toLowerCase();
+        return termos.every(t => texto.includes(t));
+      });
+    const achados = todos.slice(0, 20);
+    if (!achados.length) {
+      alvo.innerHTML = '<p class="sub"><strong>Nada encontrado</strong><br>Tente outro trecho do nome ou do artista.</p>';
+      return;
+    }
+    let html = achados.map(m =>
       `<div class="musica" data-idx="${m.idx}"><strong>${esc(m.musica)}</strong>` +
       `<span>${esc(m.artista)} · ${esc((m.estilo || []).join(', '))}</span></div>`
     ).join('');
+    if (todos.length > achados.length) {
+      html += `<p class="sub">Mais ${todos.length - achados.length} resultado(s). Refine a busca.</p>`;
+    }
+    alvo.innerHTML = html;
   });
 
   document.getElementById('resultado').addEventListener('click', e => {
