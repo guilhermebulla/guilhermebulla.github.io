@@ -96,3 +96,6 @@ Site publicado: https://guilhermebulla.github.io (GitHub Pages, repo raiz = site
    Twitch nunca medida por seguidores.
 6. Editor de repertório mora no repo PRIVADO editor-repertorio — não buscar
    arquivo dele na árvore do site.
+7. Mapa do ecossistema (site + karaoke + editor): README de perfil em
+   github.com/guilhermebulla/guilhermebulla — ponto de entrada para IAs e
+   humanos; o SITE.md continua sendo a fonte técnica detalhada do site.
