@@ -362,13 +362,14 @@ h2 .contagem {
     transform: none;
 }
 .pedido .acoes > button:not(.btn-perigo):hover { transform: none; }
-.pedido .lixeira {
+.pedido { position: relative; }
+.pedido > button.lixeira {
     position: absolute;
-    top: 8px;
-    right: 8px;
-    width: 40px;
-    height: 40px;
-    min-height: 40px;
+    top: 6px;
+    right: 6px;
+    width: 32px;
+    height: 32px;
+    min-height: 32px;
     padding: 0;
     display: flex;
     align-items: center;
@@ -379,8 +380,11 @@ h2 .contagem {
     color: var(--danger);
     transform: none;
 }
-.pedido .lixeira svg { width: 18px; height: 18px; }
-.pedido .lixeira:hover {
+.pedido > button.lixeira svg {
+    width: 15px;
+    height: 15px;
+}
+.pedido > button.lixeira:hover {
     background: rgba(220, 38, 38, 0.12);
     transform: none;
 }
