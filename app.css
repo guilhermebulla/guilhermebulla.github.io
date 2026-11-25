@@ -192,8 +192,8 @@ button:focus-visible {
     transform: translateY(-2px);
 }
 .pedido .acoes { display: flex; gap: 8px; margin-top: 10px; }
-.pedido .acoes button { padding: 12px 10px; font-size: .9rem; min-height: 48px; }
-.pedido .acoes .btn-perigo { margin-left: auto; flex: 0 0 auto; }
+.pedido .acoes button:not(.btn-perigo) { width: auto; flex: 0 0 auto; }
+.pedido .acoes .btn-perigo { width: auto; margin-left: auto; }
 .hist .hora { float: right; color: var(--text-muted); font-size: .8rem; }
 .hist.pulada strong { color: var(--text-muted); text-decoration: line-through; }
 .vazio { text-align: center; color: var(--text-muted); padding: 24px 0; }
