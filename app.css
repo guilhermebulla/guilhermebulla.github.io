@@ -411,3 +411,10 @@ h2 .contagem {
     transform: none;
 }
 .musica-btn:hover { transform: none; }
+
+/* ===== PEDIDO DO PRÓPRIO CONVIDADO NA FILA PÚBLICA (pedidos.html) ===== */
+.musica.eu {
+    background: var(--gold-soft);
+    border-left: 3px solid var(--gold);
+}
+.musica.eu strong { color: var(--gold); }
