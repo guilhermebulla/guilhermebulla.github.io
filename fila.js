@@ -13,7 +13,7 @@
       }
     }
     return todos
-      .filter(p => p.status === 'fila')
+      .filter(p => p.status === 'fila' && p.show === showAtual)
       .sort((a, b) => {
         const oa = (a.ordem != null) ? a.ordem : Infinity;
         const ob = (b.ordem != null) ? b.ordem : Infinity;

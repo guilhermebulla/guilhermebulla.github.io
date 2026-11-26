@@ -46,7 +46,7 @@
   </main>
 
   <footer>BullaAcoustic · voz e violão</footer>
-  <script src="fila.js?v=1"></script>
+  <script src="fila.js?v=2"></script>
 
 <script>
   // Mesmas credenciais do pedidos.html (projeto bulla-pedidos)
@@ -229,7 +229,7 @@
   });
 
   document.getElementById('btn-novo-show').addEventListener('click', () => {
-    if (!confirm('Iniciar novo show? A fila continua, e o rodízio recomeça do zero.')) return;
+    if (!confirm('Iniciar novo show? Os pedidos pendentes serão encerrados e o rodízio recomeça do zero.')) return;
     db.doc('show/atual').set({ numero: showAtual + 1 }).catch(err => {
       console.error('Falha ao iniciar show:', err);
       alert('Não consegui iniciar o novo show. Veja o console (F12).');

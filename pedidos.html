@@ -30,7 +30,7 @@
   <div id="fila-publica"></div>
   </main>
   <footer>BullaAcoustic · voz e violão</footer>
-  <script src="fila.js?v=1"></script>
+  <script src="fila.js?v=2"></script>
 
 <script>
   // PREENCHA com os dados do seu projeto Firebase (instruções no arquivo 4)
@@ -169,7 +169,8 @@
     try {
       const meus = await db.collection('pedidos')
         .where('requesterKey', '==', nome.toLowerCase())
-        .where('status', '==', 'fila').get();
+        .where('status', '==', 'fila')
+        .where('show', '==', showAtual).get();
       if (meus.size >= MAX_PEDIDOS_POR_PESSOA) {
         toast(`Limite de ${MAX_PEDIDOS_POR_PESSOA} pedidos em espera. Aguarde tocar um.`, 'aviso');
         return;
