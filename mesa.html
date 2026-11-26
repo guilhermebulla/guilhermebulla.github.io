@@ -14,6 +14,7 @@
 <link rel="stylesheet" href="app.css?v=4">
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 </head>
 <body>
   <main>
@@ -24,7 +25,8 @@
       <p class="tagline">Mesa do músico — acesso restrito</p>
     </header>
     <p class="erro-pin" id="erro-pin"></p>
-    <input id="pin" type="password" placeholder="PIN alfanumérico" maxlength="24" autocomplete="off">
+    <input id="email" type="email" placeholder="E-mail" autocomplete="username">
+    <input id="senha" type="password" placeholder="Senha" autocomplete="current-password">
     <button id="btn-pin">Entrar</button>
   </div>
 
@@ -53,35 +55,47 @@
     appId: "1:459269474903:web:edc67d6f4e115eb2f3112"
   });
   const db = firebase.firestore();
+  const auth = firebase.auth();
 
-  // ---- PIN central: validado contra config/pin no Firestore ----
-  document.getElementById('btn-pin').addEventListener('click', async () => {
-    const v = document.getElementById('pin').value.trim();
+  // UID do músico no Firebase Auth. Não é segredo; a proteção real está nas Rules.
+  const UID_MUSICO = 'shP9eBMUNzbJi3yrDVekqNRraNt2';
+
+  // Sessão só na aba, igual ao sessionStorage antigo
+  auth.setPersistence(firebase.auth.Auth.Persistence.SESSION);
+
+  let filaIniciada = false;
+
+  document.getElementById('btn-pin').addEventListener('click', entrar);
+  document.getElementById('senha').addEventListener('keydown', e => {
+    if (e.key === 'Enter') entrar();
+  });
+
+  async function entrar() {
+    const email = document.getElementById('email').value.trim();
+    const senha = document.getElementById('senha').value;
     const erro = document.getElementById('erro-pin');
-    if (v.length < 4) { erro.textContent = 'Mínimo de 4 caracteres.'; return; }
+    if (!email || !senha) { erro.textContent = 'Preencha e-mail e senha.'; return; }
     erro.textContent = 'Verificando…';
     try {
-      const doc = await db.collection('config').doc('pin').get();
-      if (!doc.exists || doc.data().pin !== v) {
-        erro.textContent = 'PIN incorreto.';
-        return;
-      }
-      sessionStorage.setItem('mesa_autenticada', '1');
-      abrirPainel();
+      await auth.signInWithEmailAndPassword(email, senha);
     } catch (e) {
-      erro.textContent = 'Erro ao verificar o PIN. Verifique a conexão.';
+      erro.textContent = 'E-mail ou senha incorretos.';
+    }
+  }
+
+  auth.onAuthStateChanged(user => {
+    if (user && user.uid === UID_MUSICO) {
+      abrirPainel();
+    } else if (user) {
+      auth.signOut();
+      document.getElementById('erro-pin').textContent = 'Conta sem permissão.';
     }
   });
-  document.getElementById('pin').addEventListener('keydown', e => {
-    if (e.key === 'Enter') document.getElementById('btn-pin').click();
-  });
-
-  if (sessionStorage.getItem('mesa_autenticada')) abrirPainel();
 
   function abrirPainel() {
     document.getElementById('tela-pin').hidden = true;
     document.getElementById('painel').hidden = false;
-    iniciarFila();
+    if (!filaIniciada) { filaIniciada = true; iniciarFila(); }
   }
 
   // ---- Fila + histórico em tempo real ----
