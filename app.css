@@ -439,3 +439,37 @@ h2 .contagem {
 }
 .apoio-btn:hover { background: var(--gold-soft); transform: none; }
 .apoio-btn[aria-pressed="true"] { background: var(--gold-soft); }
+
+/* ===== CHIP "PEDINDO COMO" (pedidos.html) ===== */
+.chip-nome {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 12px 14px;
+    margin-bottom: 12px;
+    border: 1px solid var(--gold);
+    border-radius: 8px;
+    background: var(--gold-soft);
+    color: var(--text);
+    font-size: .95rem;
+}
+.chip-nome[hidden] { display: none; }
+.chip-nome strong { color: var(--gold); font-weight: 600; }
+.chip-alterar {
+    width: auto;
+    min-height: 36px;
+    padding: 6px 14px;
+    font-size: .9rem;
+    background: transparent;
+    color: var(--gold);
+    border: 1px solid var(--gold);
+    transform: none;
+}
+.chip-alterar:hover { background: var(--gold-soft); transform: none; }
+
+/* ===== CAMPO DESABILITADO (busca sem nome) ===== */
+input:disabled {
+    opacity: .45;
+    cursor: not-allowed;
+}
