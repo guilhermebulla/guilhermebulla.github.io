@@ -80,7 +80,7 @@
       await auth.signInWithEmailAndPassword(email, senha);
     } catch (e) {
       console.error('Login falhou:', e.code, e.message);
-      erro.textContent = 'E-mail ou senha incorretos. [' + e.code + ']';
+      erro.textContent = 'E-mail ou senha incorretos.';
     }
   }
 
