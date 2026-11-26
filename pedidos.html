@@ -25,7 +25,7 @@
   <input id="nome" placeholder="Seu nome" maxlength="40" autocomplete="name" aria-label="Seu nome">
   <p id="contador-pedidos" class="contador-pedidos" aria-live="polite"></p>
   <input id="busca" placeholder="Buscar música ou artista…" autocomplete="off">
-  <div id="resultado"></div>
+  <div id="resultado" aria-live="polite"></div>
     <h2>Fila agora <span class="contagem" id="fila-count"></span></h2>
   <div id="fila-publica"></div>
   </main>
@@ -86,13 +86,14 @@
         itens.length ? `(${itens.length})` : '';
       const meuNome = document.getElementById('nome').value.trim().toLowerCase();
       alvo.innerHTML = itens.length
-        ? itens.map((p, i) =>
-            `<div class="musica"><span class="num">${i + 1}</span>` +
+        ? itens.map((p, i) => {
+            const eu = !!meuNome && (p.requesterKey || '') === meuNome;
+            return `<div class="musica${eu ? ' eu' : ''}"><span class="num">${i + 1}</span>` +
             `<div><strong>${esc(p.title)}</strong>` +
             `<span>${esc(p.requester)} na fila</span>` +
-            ((p.requesterKey || '') === meuNome && meuNome
-              ? '<div class="me-tag">É VOCÊ</div>' : '') +
-            `</div></div>`).join('')
+            (eu ? '<div class="me-tag">É VOCÊ</div>' : '') +
+            `</div></div>`;
+          }).join('')
         : '<p class="sub">Nenhum pedido na fila. Seja o primeiro!</p>';
     }, () => {});
 
