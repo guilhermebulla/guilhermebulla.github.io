@@ -11,7 +11,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="base.css">
-<link rel="stylesheet" href="app.css?v=5">
+<link rel="stylesheet" href="app.css?v=7">
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
@@ -41,10 +41,12 @@
 
     <h2>Já rolaram</h2>
     <div id="historico"></div>
+    <button id="btn-novo-show" class="btn-sec">Iniciar novo show</button>
   </div>
   </main>
 
   <footer>BullaAcoustic · voz e violão</footer>
+  <script src="fila.js?v=1"></script>
 
 <script>
   // Mesmas credenciais do pedidos.html (projeto bulla-pedidos)
@@ -104,42 +106,32 @@
   }
 
   // ---- Fila + histórico em tempo real ----
+  let todosPedidos = [];
+  let showAtual = 1;
+
   function iniciarFila() {
+    db.doc('show/atual').onSnapshot(doc => {
+      showAtual = doc.exists ? doc.data().numero : 1;
+      renderTudo();
+    }, () => {});
+
     db.collection('pedidos').onSnapshot(snap => {
-      const todos = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-
-      // Rodízio por quem pediu (só vale para quem não tem ordem manual)
-      const feitos = {};
-      for (const p of todos) {
-        if (p.status === 'tocada' || p.status === 'pulada') {
-          const k = (p.requesterKey || '').toLowerCase();
-          feitos[k] = (feitos[k] || 0) + 1;
-        }
-      }
-      const fila = todos.filter(p => p.status === 'fila');
-      fila.sort((a, b) => {
-        // Ordem manual vence quando existir
-        const oa = (a.ordem != null) ? a.ordem : Infinity;
-        const ob = (b.ordem != null) ? b.ordem : Infinity;
-        if (oa !== ob) return oa - ob;
-        const ka = (a.requesterKey || '').toLowerCase();
-        const kb = (b.requesterKey || '').toLowerCase();
-        if ((feitos[ka] || 0) !== (feitos[kb] || 0)) {
-          return (feitos[ka] || 0) - (feitos[kb] || 0);
-        }
-        return (a.createdAt?.seconds || 0) - (b.createdAt?.seconds || 0);
-      });
-      render(fila);
-
-      const hist = todos.filter(p => p.status === 'tocada' || p.status === 'pulada');
-      hist.sort((a, b) =>
-        (b.finishedAt?.seconds || b.createdAt?.seconds || 0) -
-        (a.finishedAt?.seconds || a.createdAt?.seconds || 0));
-      renderHist(hist);
+      todosPedidos = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      renderTudo();
     }, err => {
       document.getElementById('fila').innerHTML =
         '<p class="vazio">Erro ao carregar a fila. Recarregue a página.</p>';
     });
+  }
+
+  function renderTudo() {
+    render(BullaFila.ordenarFila(todosPedidos, showAtual));
+    const hist = todosPedidos.filter(p =>
+      (p.status === 'tocada' || p.status === 'pulada') && p.show === showAtual);
+    hist.sort((a, b) =>
+      (b.finishedAt?.seconds || b.createdAt?.seconds || 0) -
+      (a.finishedAt?.seconds || a.createdAt?.seconds || 0));
+    renderHist(hist);
   }
 
   let filaAtual = [];
@@ -221,6 +213,7 @@
     } else {
       db.collection('pedidos').doc(id).update({
         status: op === 'tocada' ? 'tocada' : 'pulada',
+        show: showAtual,
         finishedAt: firebase.firestore.FieldValue.serverTimestamp()
       });
     }
@@ -232,6 +225,14 @@
     db.collection('pedidos').doc(btn.dataset.id).update({
       status: 'fila',
       finishedAt: firebase.firestore.FieldValue.delete()
+    });
+  });
+
+  document.getElementById('btn-novo-show').addEventListener('click', () => {
+    if (!confirm('Iniciar novo show? A fila continua, e o rodízio recomeça do zero.')) return;
+    db.doc('show/atual').set({ numero: showAtual + 1 }).catch(err => {
+      console.error('Falha ao iniciar show:', err);
+      alert('Não consegui iniciar o novo show. Veja o console (F12).');
     });
   });
 

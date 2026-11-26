@@ -10,7 +10,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="base.css">
-<link rel="stylesheet" href="app.css?v=6">
+<link rel="stylesheet" href="app.css?v=7">
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 </head>
@@ -30,6 +30,7 @@
   <div id="fila-publica"></div>
   </main>
   <footer>BullaAcoustic · voz e violão</footer>
+  <script src="fila.js?v=1"></script>
 
 <script>
   // PREENCHA com os dados do seu projeto Firebase (instruções no arquivo 4)
@@ -69,33 +70,39 @@
     toastTimer = setTimeout(() => t.classList.remove('mostrar'), 3000);
   }
 
-  // Fila pública ao vivo — mesma ordem da mesa (ordem manual > chegada)
-  db.collection('pedidos').where('status', '==', 'fila')
-    .onSnapshot(snap => {
-      const itens = snap.docs.map(d => d.data());
-      itens.sort((a, b) => {
-        const oa = (a.ordem != null) ? a.ordem : Infinity;
-        const ob = (b.ordem != null) ? b.ordem : Infinity;
-        if (oa !== ob) return oa - ob;
-        return (a.createdAt?.seconds || 0) - (b.createdAt?.seconds || 0);
-      });
-      filaPublica = itens;
-      atualizarContador();
-      const alvo = document.getElementById('fila-publica');
-      document.getElementById('fila-count').textContent =
-        itens.length ? `(${itens.length})` : '';
-      const meuNome = document.getElementById('nome').value.trim().toLowerCase();
-      alvo.innerHTML = itens.length
-        ? itens.map((p, i) => {
-            const eu = !!meuNome && (p.requesterKey || '') === meuNome;
-            return `<div class="musica${eu ? ' eu' : ''}"><span class="num">${i + 1}</span>` +
-            `<div><strong>${esc(p.title)}</strong>` +
-            `<span>${esc(p.requester)} na fila</span>` +
-            (eu ? '<div class="me-tag">É VOCÊ</div>' : '') +
-            `</div></div>`;
-          }).join('')
-        : '<p class="sub">Nenhum pedido na fila. Seja o primeiro!</p>';
-    }, () => {});
+  // Fila pública ao vivo: mesma ordenação da mesa (fila.js)
+  let todosPedidos = [];
+  let showAtual = 1;
+
+  db.doc('show/atual').onSnapshot(doc => {
+    showAtual = doc.exists ? doc.data().numero : 1;
+    renderFilaPublica();
+  }, () => {});
+
+  db.collection('pedidos').onSnapshot(snap => {
+    todosPedidos = snap.docs.map(d => d.data());
+    renderFilaPublica();
+  }, () => {});
+
+  function renderFilaPublica() {
+    const itens = BullaFila.ordenarFila(todosPedidos, showAtual);
+    filaPublica = itens;
+    atualizarContador();
+    const alvo = document.getElementById('fila-publica');
+    document.getElementById('fila-count').textContent =
+      itens.length ? `(${itens.length})` : '';
+    const meuNome = document.getElementById('nome').value.trim().toLowerCase();
+    alvo.innerHTML = itens.length
+      ? itens.map((p, i) => {
+          const eu = !!meuNome && (p.requesterKey || '') === meuNome;
+          return `<div class="musica${eu ? ' eu' : ''}"><span class="num">${i + 1}</span>` +
+          `<div><strong>${esc(p.title)}</strong>` +
+          `<span>${esc(p.requester)} na fila</span>` +
+          (eu ? '<div class="me-tag">É VOCÊ</div>' : '') +
+          `</div></div>`;
+        }).join('')
+      : '<p class="sub">Nenhum pedido na fila. Seja o primeiro!</p>';
+  }
 
     let catalogo = [];
   let selecionada = null;
@@ -172,7 +179,8 @@
         title: selecionada.musica,
         artist: selecionada.artista,
         requester: nome, requesterKey: nome.toLowerCase(),
-        status: 'fila', createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        status: 'fila', show: showAtual,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
       });
       toast(`"${selecionada.musica}" na fila! Sujeito à ordem do show.`);
       document.getElementById('busca').value = '';

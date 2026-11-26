@@ -17,11 +17,19 @@ body {
 /* ===== HEADER — mesmo tratamento do logo (conecte-se) ===== */
 .app-header {
     text-align: center;
-    margin: 16px 0 24px;
-    padding-bottom: 24px;
+    margin: 0 0 16px;
+    padding: 12px 0;
     border-bottom: 1px solid var(--border);
-    position: relative;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(15, 15, 15, 0.92);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
 }
+.app-header .hero-tag { display: none; }
+.app-header .logo { font-size: 1.4rem; }
+.app-header .tagline { font-size: .8rem; margin-top: 2px; }
 .app-header::after {
     content: '';
     position: absolute;
@@ -78,12 +86,11 @@ body::before {
 
 /* ===== SEÇÕES ===== */
 h2 {
-    font-size: .95rem;
+    font-family: 'Playfair Display', serif;
+    font-size: 1.35rem;
     font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: .08em;
-    color: var(--text-muted);
-    margin: 28px 0 8px;
+    color: var(--gold);
+    margin: 28px 0 12px;
 }
 
 .sub {
@@ -199,16 +206,15 @@ button:focus-visible {
 .vazio { text-align: center; color: var(--text-muted); padding: 24px 0; }
 .erro-pin { color: var(--danger); text-align: center; font-size: .9rem; margin-bottom: 12px; }
 
-/* ===== RODAPÉ — neutraliza o footer do base.css ===== */
+/* ===== RODAPÉ — sobrescreve o footer do base.css pela cascata (app.css carrega depois) ===== */
 footer {
-    background: transparent !important;
-    border-top: 1px solid var(--border) !important;
-    padding: 16px 0 8px !important;
-    margin-top: 40px !important;
+    background: transparent;
+    border-top: 1px solid var(--border);
+    padding: 16px 0 8px;
+    margin-top: 40px;
     text-align: center;
-    color: var(--text-muted) !important;
+    color: var(--text-muted);
     font-size: .8rem;
-    opacity: 1 !important;
 }
 
 /* ===== TOAST (porta do karaoke) ===== */
@@ -255,10 +261,10 @@ footer {
 
 /* ===== CONTADOR DAS SEÇÕES ===== */
 h2 .contagem {
-    color: var(--gold);
-    font-weight: 600;
-    letter-spacing: 0;
-    text-transform: none;
+    font-family: 'Inter', sans-serif;
+    font-size: .85rem;
+    font-weight: 400;
+    color: var(--text-muted);
 }
 
 /* ===== DEVOLVER À FILA (mesa.html) ===== */
