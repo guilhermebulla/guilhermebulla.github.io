@@ -160,6 +160,11 @@
     pedir();
   });
 
+  function normalizar(s) {
+    return (s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+      .toLowerCase().trim().replace(/\s+/g, ' ');
+  }
+
   function esc(s) { const d = document.createElement('div'); d.textContent = s || ''; return d.innerHTML; }
 
   async function pedir() {
@@ -167,6 +172,19 @@
     if (!nome) { toast('Digite seu nome primeiro.', 'aviso'); return; }
     if (!selecionada) return;
     try {
+      const doShow = await db.collection('pedidos')
+        .where('show', '==', showAtual).get();
+      const chaveMusica = normalizar(selecionada.musica) + '|' + normalizar(selecionada.artista);
+      const chaveNome = normalizar(nome);
+      const repetido = doShow.docs.some(d => {
+        const p = d.data();
+        return normalizar(p.requester) === chaveNome &&
+          normalizar(p.title) + '|' + normalizar(p.artist) === chaveMusica;
+      });
+      if (repetido) {
+        toast('Você já pediu esta música', 'aviso');
+        return;
+      }
       const meus = await db.collection('pedidos')
         .where('requesterKey', '==', nome.toLowerCase())
         .where('status', '==', 'fila')
