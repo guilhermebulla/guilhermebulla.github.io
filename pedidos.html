@@ -10,7 +10,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="base.css">
-<link rel="stylesheet" href="app.css?v=8">
+<link rel="stylesheet" href="app.css?v=9">
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 </head>
@@ -23,6 +23,10 @@
   </header>
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
   <input id="nome" placeholder="Seu nome" maxlength="40" autocomplete="name" aria-label="Seu nome">
+  <div id="chip-nome" class="chip-nome" hidden>
+    <span>Pedindo como: <strong id="chip-nome-valor"></strong></span>
+    <button type="button" id="chip-alterar" class="chip-alterar">Alterar</button>
+  </div>
   <p id="contador-pedidos" class="contador-pedidos" aria-live="polite"></p>
   <input id="busca" placeholder="Buscar música ou artista…" autocomplete="off">
   <div id="resultado" aria-live="polite"></div>
@@ -42,14 +46,49 @@
   });
   const db = firebase.firestore();
 
-  // ===== Nome salvo no navegador + contador "X de 3" =====
+  // ===== Nome salvo no navegador + chip "Pedindo como" + contador "X de 3" =====
   const campoNome = document.getElementById('nome');
+  const chipNome = document.getElementById('chip-nome');
+  const chipValor = document.getElementById('chip-nome-valor');
+  const busca = document.getElementById('busca');
   let filaPublica = [];
   campoNome.value = localStorage.getItem('bullaNome') || '';
   campoNome.addEventListener('input', () => {
     localStorage.setItem('bullaNome', campoNome.value.trim());
     atualizarContador();
   });
+  campoNome.addEventListener('blur', confirmarNome);
+  campoNome.addEventListener('keydown', e => {
+    if (e.key === 'Enter') { e.preventDefault(); confirmarNome(); }
+  });
+  document.getElementById('chip-alterar').addEventListener('click', () => {
+    atualizarNomeUI(true);
+    campoNome.focus();
+  });
+
+  function atualizarNomeUI(editando) {
+    const salvo = (localStorage.getItem('bullaNome') || '').trim();
+    const pronto = !!salvo && !editando;
+    campoNome.hidden = pronto;
+    chipNome.hidden = !pronto;
+    chipValor.textContent = salvo;
+    busca.disabled = !pronto;
+    busca.placeholder = pronto ? 'Buscar música ou artista…' : 'Informe seu nome para pedir';
+  }
+
+  function confirmarNome() {
+    const valor = campoNome.value.trim();
+    if (!valor) {
+      localStorage.removeItem('bullaNome');
+      atualizarNomeUI(true);
+    } else {
+      localStorage.setItem('bullaNome', valor);
+      atualizarNomeUI(false);
+    }
+    atualizarContador();
+  }
+
+  atualizarNomeUI(false);
 
   function atualizarContador() {
     const el = document.getElementById('contador-pedidos');
