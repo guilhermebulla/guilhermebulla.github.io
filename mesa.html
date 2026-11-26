@@ -80,7 +80,11 @@
       await auth.signInWithEmailAndPassword(email, senha);
     } catch (e) {
       console.error('Login falhou:', e.code, e.message);
-      erro.textContent = 'E-mail ou senha incorretos.';
+      if (e.code === 'auth/too-many-requests') {
+        erro.textContent = 'Muitas tentativas. Aguarde alguns minutos e tente de novo.';
+      } else {
+        erro.textContent = 'E-mail ou senha incorretos.';
+      }
     }
   }
 
