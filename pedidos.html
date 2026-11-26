@@ -10,7 +10,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="base.css">
-<link rel="stylesheet" href="app.css?v=7">
+<link rel="stylesheet" href="app.css?v=8">
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 </head>
@@ -30,7 +30,7 @@
   <div id="fila-publica"></div>
   </main>
   <footer>BullaAcoustic · voz e violão</footer>
-  <script src="fila.js?v=2"></script>
+  <script src="fila.js?v=3"></script>
 
 <script>
   // PREENCHA com os dados do seu projeto Firebase (instruções no arquivo 4)
@@ -73,6 +73,7 @@
   // Fila pública ao vivo: mesma ordenação da mesa (fila.js)
   let todosPedidos = [];
   let showAtual = 1;
+  let apoiosPorPedido = {};
 
   db.doc('show/atual').onSnapshot(doc => {
     showAtual = doc.exists ? doc.data().numero : 1;
@@ -80,25 +81,40 @@
   }, () => {});
 
   db.collection('pedidos').onSnapshot(snap => {
-    todosPedidos = snap.docs.map(d => d.data());
+    todosPedidos = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    renderFilaPublica();
+  }, () => {});
+
+  db.collectionGroup('apoios').onSnapshot(snap => {
+    apoiosPorPedido = {};
+    snap.docs.forEach(d => {
+      const pid = d.ref.parent.parent.id;
+      (apoiosPorPedido[pid] = apoiosPorPedido[pid] || []).push(d.id);
+    });
     renderFilaPublica();
   }, () => {});
 
   function renderFilaPublica() {
-    const itens = BullaFila.ordenarFila(todosPedidos, showAtual);
+    const contagem = {};
+    Object.keys(apoiosPorPedido).forEach(pid => { contagem[pid] = apoiosPorPedido[pid].length; });
+    const itens = BullaFila.ordenarFila(todosPedidos, showAtual, contagem);
     filaPublica = itens;
     atualizarContador();
     const alvo = document.getElementById('fila-publica');
     document.getElementById('fila-count').textContent =
       itens.length ? `(${itens.length})` : '';
     const meuNome = document.getElementById('nome').value.trim().toLowerCase();
+    const chaveApoio = normalizar(document.getElementById('nome').value);
     alvo.innerHTML = itens.length
       ? itens.map((p, i) => {
           const eu = !!meuNome && (p.requesterKey || '') === meuNome;
+          const apoiadores = apoiosPorPedido[p.id] || [];
+          const jaApoiei = !!chaveApoio && apoiadores.includes(chaveApoio);
           return `<div class="musica${eu ? ' eu' : ''}"><span class="num">${i + 1}</span>` +
           `<div><strong>${esc(p.title)}</strong>` +
           `<span>${esc(p.requester)} na fila</span>` +
           (eu ? '<div class="me-tag">É VOCÊ</div>' : '') +
+          `<button type="button" class="apoio-btn" data-pid="${p.id}" aria-pressed="${jaApoiei}" title="Apoiar esta música">♥ ${apoiadores.length}</button>` +
           `</div></div>`;
         }).join('')
       : '<p class="sub">Nenhum pedido na fila. Seja o primeiro!</p>';
@@ -162,10 +178,40 @@
 
   function normalizar(s) {
     return (s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '')
-      .toLowerCase().trim().replace(/\s+/g, ' ');
+      .toLowerCase().replace(/\//g, ' ').trim().replace(/\s+/g, ' ');
   }
 
   function esc(s) { const d = document.createElement('div'); d.textContent = s || ''; return d.innerHTML; }
+
+  document.getElementById('fila-publica').addEventListener('click', e => {
+    const btn = e.target.closest('.apoio-btn');
+    if (!btn) return;
+    const nome = document.getElementById('nome').value.trim();
+    if (!nome) { toast('Digite seu nome primeiro.', 'aviso'); return; }
+    apoiar(btn.dataset.pid, nome);
+  });
+
+  async function apoiar(pedidoId, nomeApoiador) {
+    try {
+      const chave = normalizar(nomeApoiador);
+      const ref = db.collection('pedidos').doc(pedidoId).collection('apoios').doc(chave);
+      const existe = await ref.get();
+      if (existe.exists) {
+        toast('Você já apoiou esta música', 'aviso');
+        return false;
+      }
+      await ref.set({
+        requester: nomeApoiador,
+        requesterKey: chave,
+        show: showAtual,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      });
+      return true;
+    } catch (err) {
+      toast('Falha ao apoiar. Tente de novo.', 'erro');
+      return false;
+    }
+  }
 
   async function pedir() {
     const nome = document.getElementById('nome').value.trim();
@@ -176,13 +222,25 @@
         .where('show', '==', showAtual).get();
       const chaveMusica = normalizar(selecionada.musica) + '|' + normalizar(selecionada.artista);
       const chaveNome = normalizar(nome);
-      const repetido = doShow.docs.some(d => {
+      const mesmaMusica = d => {
         const p = d.data();
-        return normalizar(p.requester) === chaveNome &&
-          normalizar(p.title) + '|' + normalizar(p.artist) === chaveMusica;
-      });
+        return normalizar(p.title) + '|' + normalizar(p.artist) === chaveMusica;
+      };
+      const repetido = doShow.docs.some(d =>
+        normalizar(d.data().requester) === chaveNome && mesmaMusica(d));
       if (repetido) {
         toast('Você já pediu esta música', 'aviso');
+        return;
+      }
+      const pendente = doShow.docs.find(d => d.data().status === 'fila' && mesmaMusica(d));
+      if (pendente) {
+        const ok = await apoiar(pendente.id, nome);
+        if (ok) {
+          toast(`Juntos somos mais! Seu pedido se juntou ao de ${pendente.data().requester}!`);
+          document.getElementById('busca').value = '';
+          document.getElementById('resultado').innerHTML = '';
+          selecionada = null;
+        }
         return;
       }
       const meus = await db.collection('pedidos')

@@ -46,7 +46,7 @@
   </main>
 
   <footer>BullaAcoustic · voz e violão</footer>
-  <script src="fila.js?v=2"></script>
+  <script src="fila.js?v=3"></script>
 
 <script>
   // Mesmas credenciais do pedidos.html (projeto bulla-pedidos)
@@ -108,10 +108,20 @@
   // ---- Fila + histórico em tempo real ----
   let todosPedidos = [];
   let showAtual = 1;
+  let apoios = {};
 
   function iniciarFila() {
     db.doc('show/atual').onSnapshot(doc => {
       showAtual = doc.exists ? doc.data().numero : 1;
+      renderTudo();
+    }, () => {});
+
+    db.collectionGroup('apoios').onSnapshot(snap => {
+      apoios = {};
+      snap.docs.forEach(d => {
+        const pid = d.ref.parent.parent.id;
+        apoios[pid] = (apoios[pid] || 0) + 1;
+      });
       renderTudo();
     }, () => {});
 
@@ -125,7 +135,7 @@
   }
 
   function renderTudo() {
-    render(BullaFila.ordenarFila(todosPedidos, showAtual));
+    render(BullaFila.ordenarFila(todosPedidos, showAtual, apoios));
     const hist = todosPedidos.filter(p =>
       (p.status === 'tocada' || p.status === 'pulada') && p.show === showAtual);
     hist.sort((a, b) =>
@@ -154,7 +164,7 @@
         </div>
         <div class="q-info">
           <strong>${esc(p.title)}</strong>
-          <span>${esc(p.artist)} · ${esc(p.requester)}</span>
+          <span>${esc(p.artist)} · ${esc(p.requester)} · ♥ ${apoios[p.id] || 0}</span>
           <div class="acoes">
             <button data-op="tocada">Tocada</button>
             <button data-op="pulada" class="btn-sec">Pular</button>

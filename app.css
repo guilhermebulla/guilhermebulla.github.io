@@ -424,3 +424,18 @@ h2 .contagem {
     border-left: 3px solid var(--gold);
 }
 .musica.eu strong { color: var(--gold); }
+
+/* ===== BOTÃO DE APOIO (coração) na fila pública ===== */
+.apoio-btn {
+    width: auto;
+    min-height: 36px;
+    padding: 6px 12px;
+    margin-top: 8px;
+    font-size: .9rem;
+    background: transparent;
+    color: var(--gold);
+    border: 1px solid var(--gold);
+    transform: none;
+}
+.apoio-btn:hover { background: var(--gold-soft); transform: none; }
+.apoio-btn[aria-pressed="true"] { background: var(--gold-soft); }
