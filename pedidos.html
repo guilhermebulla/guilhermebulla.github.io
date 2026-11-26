@@ -53,7 +53,7 @@
 
   function atualizarContador() {
     const el = document.getElementById('contador-pedidos');
-    const chave = campoNome.value.trim().toLowerCase();
+    const chave = normalizar(campoNome.value);
     if (!chave) { el.textContent = ''; el.classList.remove('cheio'); return; }
     const meus = filaPublica.filter(p => (p.requesterKey || '') === chave).length;
     el.textContent = `Seus pedidos na fila: ${meus} de ${MAX_PEDIDOS_POR_PESSOA}`;
@@ -103,7 +103,7 @@
     const alvo = document.getElementById('fila-publica');
     document.getElementById('fila-count').textContent =
       itens.length ? `(${itens.length})` : '';
-    const meuNome = document.getElementById('nome').value.trim().toLowerCase();
+    const meuNome = normalizar(document.getElementById('nome').value);
     const chaveApoio = normalizar(document.getElementById('nome').value);
     alvo.innerHTML = itens.length
       ? itens.map((p, i) => {
@@ -133,7 +133,7 @@
     });
 
   document.getElementById('busca').addEventListener('input', e => {
-    const q = e.target.value.trim().toLowerCase();
+    const q = normalizar(e.target.value);
     const alvo = document.getElementById('resultado');
     selecionada = null;
     if (q.length < 2) { alvo.innerHTML = ''; return; }
@@ -150,7 +150,7 @@
     const todos = catalogo
       .map((m, idx) => ({ idx, ...m }))
       .filter(m => {
-        const texto = ((m.musica || '') + ' ' + (m.artista || '')).toLowerCase();
+        const texto = normalizar((m.musica || '') + ' ' + (m.artista || ''));
         return termos.every(t => texto.includes(t));
       });
     const achados = todos.slice(0, 20);
@@ -244,7 +244,7 @@
         return;
       }
       const meus = await db.collection('pedidos')
-        .where('requesterKey', '==', nome.toLowerCase())
+        .where('requesterKey', '==', normalizar(nome))
         .where('status', '==', 'fila')
         .where('show', '==', showAtual).get();
       if (meus.size >= MAX_PEDIDOS_POR_PESSOA) {
@@ -255,7 +255,7 @@
         songId: selecionada.idx,
         title: selecionada.musica,
         artist: selecionada.artista,
-        requester: nome, requesterKey: nome.toLowerCase(),
+        requester: nome, requesterKey: normalizar(nome),
         status: 'fila', show: showAtual,
         createdAt: firebase.firestore.FieldValue.serverTimestamp()
       });
