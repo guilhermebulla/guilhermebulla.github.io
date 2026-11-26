@@ -119,3 +119,20 @@ NFD, remove diacríticos, minúsculas, "/" vira espaço, trim, espaços colapsad
 3. Confirmar o código do chip em pedidos.html (ver 5.5).
 4. Testes do apoio ainda não relatados: rodízio com apoios e Rule negando apoio em pedido tocado.
 5. Confirmar propagação da restrição de localhost na Browser key.
+
+## 8. Limites de leitura (ferramenta de leitura por URL)
+Medido em 26/11/2026, SHA 506e8c1. Hipótese, não garantia: a leitura por URL corta arquivos a partir de ~12 KB.
+
+Truncam na leitura por URL (pedir o .txt completo antes de propor ANTES/DEPOIS):
+- repertorio.js (48 KB)
+- index.html (31 KB)
+- repertorio.css (21 KB)
+- index.css (21 KB)
+- repertorio.html (14 KB)
+- pedidos.html (13 KB)
+- script.js (13 KB)
+- repertorio.json (209 KB, não testado por URL; presumido truncado; só relevante se o repertório for editado)
+
+Lidos inteiros por URL (não precisam de .txt): app.css, base.css, conecte-se.css, conecte-se.html, mesa.html, fila.js, SITE.md, Rules do Firestore.md.
+
+Regra de uso: arquivo em .txt enviado pelo dono é a fonte preferencial. Não consultar a API para conferir SHA de .txt, salvo pedido explícito.
