@@ -1,5 +1,5 @@
 BASE DE DADOS — GUILHERME BULLA (BULLAACOUSTIC)
-Atualização: 26/11/2026 (v4.2 — reescrita viva: registro de decisões do app Pedidos ao vivo; favicon e fluxo de edição mantidos)
+Atualização: 26/11/2026 (v4.3 — reescrita viva: decisões do app Pedidos ao vivo, rodízio por show e regras de duplicidade e apoio; demais seções mantidas)
 
 1. IDENTIFICAÇÃO
 Nome: Guilherme Bulla | Projeto: BullaAcoustic
@@ -76,7 +76,7 @@ E-mail: bullaacoustic@gmail.com | NF: MEI/CNPJ próprio
 13.1 QR Code para shows: página /conecte-se ativa; 1º botão dela leva ao app de pedidos ao vivo (conveniência; função primordial segue sendo redes). QR impresso.
 - Pendência: porta-acrílico (formato L, A5 vertical, cristal) + teste in loco
 13.2 Favicon do ecossistema (25/11/2026): redesenhado e aplicado nas 5 páginas (index, repertorio, conecte-se, pedidos, mesa) — design "anel duplo" (alternativa C). Aprovado pelo dono após teste visual das 3 alternativas (A/B/C). Detalhe técnico no SITE.md.
-13.3 App Pedidos ao vivo (26/11/2026): em produção no site, com fila pública (pedidos.html) e painel do músico (mesa.html). Login do músico por e-mail e senha (Firebase Auth). Regras do Firestore publicadas com validação de campos e limites. Restrições da chave de API em ajuste final. Detalhes técnicos e pendências no SITE.md.
+13.3 App Pedidos ao vivo (26/11/2026): em produção no site, com fila pública (pedidos.html) e painel do músico (mesa.html). Login do músico por e-mail e senha (Firebase Auth). Rodízio por show (fila.js). Regras do Firestore publicadas com validação de campos, limites e campo show. Restrições da chave de API: conferir propagação. Detalhes técnicos e pendências no SITE.md.
 
 14. PENDÊNCIAS
 1. Porta-acrílico do QR Code (formato L, A5 vertical, cristal)
@@ -86,13 +86,34 @@ E-mail: bullaacoustic@gmail.com | NF: MEI/CNPJ próprio
 5. sincroniza-repertorio.js NUNCA FOI CRIADO (só desenhado): kit local C:\karaoke não se atualiza sozinho. Paliativo até resolver: baixar repertorio.json do site para o kit antes de cada show. Revisitar quando houver show agendado
 6. Reprocessar as pendências antigas 6-10 do v3.0 (prints SSL, toggle de busca, separador, patch debug-2) — estado não verificado nesta revisão; fechar ou cancelar
 7. Unificação de tokens do conecte-se.css com base.css — fase futura, com teste visual (exceção documentada no SITE.md; não fazer sem teste)
-8. App Pedidos: decidir a convenção de cache de app.css e a ordem da fila pública (divergências no SITE.md)
-9. App Pedidos: desacoplar app.css do base.css (remover !important do footer) — decisão pendente
+8. App Pedidos — pendências em ordem (detalhe no contexto técnico do app):
+   8.1 Corrigir fila.js: filtrar pelo show atual (hoje pendentes antigos aparecem).
+   8.2 Limite de 3 pendentes contar só o show atual.
+   8.3 Texto do botão "Iniciar novo show": deve dizer que os pendentes são encerrados.
+   8.4 Duplicidade por título + artista normalizados, com mensagens próprias.
+   8.5 Apoio (coração): subcoleção, regra no Firestore, contagem na mesa e na fila pública.
+   8.6 Acentos na busca e no nome.
+   8.7 Chip de nome no cabeçalho.
+   8.8 Validar visual no celular (cabeçalho, títulos, rodapé).
+   8.9 Avaliar privacidade da fila pública (pedidos tocados/pulados com nome).
+   8.10 Atualizar SITE.md.
+9. Tolerância a erro de digitação na busca: fora por enquanto.
 
 15. DECISÕES REGISTRADAS (26/11/2026)
 - Login da mesa por e-mail e senha (Firebase Auth) no lugar do PIN. Não reabrir o PIN.
 - Google, GitHub e login anônimo não ativados. Não reabrir sem decisão explícita do dono.
 - Sem drag & drop no app de pedidos; reordenação por ▲▼; remoção só com confirmação.
-- Limite de 3 pedidos por nome, validado no navegador.
+- Sem confirmação antes do pedido (decisão fechada).
+- Rodízio por show. Fila encerra entre shows; pendentes de shows anteriores não aparecem.
+- Limite de 3 pedidos pendentes por nome, validado no navegador, contando só o show atual.
+- Duplicidade: mesma música (título + artista normalizados), mesmo nome, mesmo show, bloqueada (inclusive após tocada/pulada). Chave não usa songId.
+- Apoio (coração): qualquer pessoa pode apoiar qualquer música da fila, inclusive as que já pediu. Um apoio por nome normalizado por música por show. Contagem visível na mesa e na fila pública.
+- Apoio desempata apenas entre pedidos do mesmo nível de rodízio. Ordem manual (▲▼) vence.
+- Música já pedida por outra pessoa, ao ser escolhida: vira apoio, com a mensagem "Juntos somos mais! Seu pedido se juntou ao de [nome]!".
+- Repetir o próprio pedido: mensagem "Você já pediu esta música".
+- Busca e nome ignoram acento e caixa. Tolerância a erro de digitação: fora por enquanto.
+- Chip de nome no cabeçalho: camada de atrito, não barreira.
+- Cache: convenção única para app.css (hoje v=7 nas duas telas). fila.js?v=1.
+- Footer: app.css sem !important, aceitando a cascata (opção b). Visual: cabeçalho sticky compacto, títulos Playfair dourado.
 
 FIM DO DOCUMENTO
