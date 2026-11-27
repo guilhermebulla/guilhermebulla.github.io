@@ -116,29 +116,41 @@
   let apoiosPorPedido = {};
 
   let pararPedidos = null;
+  let filaComErro = false;
   function assinarPedidos() {
     if (pararPedidos) pararPedidos();
     pararPedidos = db.collection('pedidos')
       .where('show', '==', showAtual)
       .onSnapshot(snap => {
         todosPedidos = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+        filaComErro = false;
+        renderFilaPublica();
+      }, () => {
+        filaComErro = true;
+        renderFilaPublica();
+      });
+  }
+  let pararApoios = null;
+  function assinarApoios() {
+    if (pararApoios) pararApoios();
+    pararApoios = db.collectionGroup('apoios')
+      .where('show', '==', showAtual)
+      .onSnapshot(snap => {
+        apoiosPorPedido = {};
+        snap.docs.forEach(d => {
+          const pid = d.ref.parent.parent.id;
+          (apoiosPorPedido[pid] = apoiosPorPedido[pid] || []).push(d.id);
+        });
         renderFilaPublica();
       }, () => {});
   }
   db.doc('show/atual').onSnapshot(doc => {
     showAtual = doc.exists ? doc.data().numero : 1;
     assinarPedidos();
+    assinarApoios();
     renderFilaPublica();
   }, () => {});
 
-  db.collectionGroup('apoios').onSnapshot(snap => {
-    apoiosPorPedido = {};
-    snap.docs.forEach(d => {
-      const pid = d.ref.parent.parent.id;
-      (apoiosPorPedido[pid] = apoiosPorPedido[pid] || []).push(d.id);
-    });
-    renderFilaPublica();
-  }, () => {});
 
   function renderFilaPublica() {
     const contagem = {};
@@ -151,6 +163,10 @@
       itens.length ? `(${itens.length})` : '';
     const meuNome = normalizar(document.getElementById('nome').value);
     const chaveApoio = normalizar(document.getElementById('nome').value);
+    if (filaComErro) {
+      alvo.innerHTML = '<p class="sub">Fila indisponível agora. Atualize a página.</p>';
+      return;
+    }
     alvo.innerHTML = itens.length
       ? itens.map((p, i) => {
           const eu = !!meuNome && (p.requesterKey || '') === meuNome;
@@ -181,10 +197,6 @@
     const alvo = document.getElementById('resultado');
     selecionada = null;
     if (q.length < 2) { alvo.innerHTML = ''; return; }
-    if (!campoNome.value.trim()) {
-      alvo.innerHTML = '<p class="sub">Digite seu nome acima para escolher uma música.</p>';
-      return;
-    }
     if (!catalogo.length) {
       alvo.innerHTML = '<p class="sub">Repertório ainda carregando. Verifique a conexão.</p>';
       return;
