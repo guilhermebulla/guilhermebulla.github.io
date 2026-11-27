@@ -142,7 +142,9 @@
           (apoiosPorPedido[pid] = apoiosPorPedido[pid] || []).push(d.id);
         });
         renderFilaPublica();
-      }, () => {});
+      }, err => {
+        console.error('Falha ao ler apoios (verifique o índice no F12):', err);
+      });
   }
   db.doc('show/atual').onSnapshot(doc => {
     showAtual = doc.exists ? doc.data().numero : 1;
