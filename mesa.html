@@ -111,8 +111,22 @@
   let apoios = {};
 
   function iniciarFila() {
+    let pararPedidos = null;
+    function assinarPedidos() {
+      if (pararPedidos) pararPedidos();
+      pararPedidos = db.collection('pedidos')
+        .where('show', '==', showAtual)
+        .onSnapshot(snap => {
+          todosPedidos = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+          renderTudo();
+        }, err => {
+          document.getElementById('fila').innerHTML =
+            '<p class="vazio">Erro ao carregar a fila. Recarregue a página.</p>';
+        });
+    }
     db.doc('show/atual').onSnapshot(doc => {
       showAtual = doc.exists ? doc.data().numero : 1;
+      assinarPedidos();
       renderTudo();
     }, () => {});
 
@@ -124,14 +138,6 @@
       });
       renderTudo();
     }, () => {});
-
-    db.collection('pedidos').onSnapshot(snap => {
-      todosPedidos = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-      renderTudo();
-    }, err => {
-      document.getElementById('fila').innerHTML =
-        '<p class="vazio">Erro ao carregar a fila. Recarregue a página.</p>';
-    });
   }
 
   function renderTudo() {
