@@ -128,6 +128,7 @@
     function assinarApoios() {
       if (pararApoios) pararApoios();
       pararApoios = db.collectionGroup('apoios')
+        .where('show', '==', showAtual)
         .onSnapshot(snap => {
           apoios = {};
           snap.docs.forEach(d => {
@@ -136,7 +137,8 @@
           });
           renderTudo();
         }, err => {
-          console.error('Falha ao ler apoios (verifique o índice no F12):', err);
+          console.error('Falha ao ler apoios:', err);
+          alert('Não consegui carregar os apoios. Recarregue a página.');
         });
     }
     db.doc('show/atual').onSnapshot(doc => {
