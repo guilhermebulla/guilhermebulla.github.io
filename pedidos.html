@@ -34,7 +34,7 @@
   <div id="fila-publica"></div>
   </main>
   <footer>BullaAcoustic · voz e violão</footer>
-  <script src="fila.js?v=3"></script>
+  <script src="fila.js?v=4"></script>
 
 <script>
   // PREENCHA com os dados do seu projeto Firebase (instruções no arquivo 4)
@@ -120,7 +120,6 @@
     if (pararPedidos) pararPedidos();
     pararPedidos = db.collection('pedidos')
       .where('show', '==', showAtual)
-      .where('status', '==', 'fila')
       .onSnapshot(snap => {
         todosPedidos = snap.docs.map(d => ({ id: d.id, ...d.data() }));
         renderFilaPublica();
