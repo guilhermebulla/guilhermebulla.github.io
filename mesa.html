@@ -124,20 +124,29 @@
             '<p class="vazio">Erro ao carregar a fila. Recarregue a página.</p>';
         });
     }
+    let pararApoios = null;
+    function assinarApoios() {
+      if (pararApoios) pararApoios();
+      pararApoios = db.collectionGroup('apoios')
+        .where('show', '==', showAtual)
+        .onSnapshot(snap => {
+          apoios = {};
+          snap.docs.forEach(d => {
+            const pid = d.ref.parent.parent.id;
+            apoios[pid] = (apoios[pid] || 0) + 1;
+          });
+          renderTudo();
+        }, err => {
+          console.error('Falha ao ler apoios (verifique o índice no F12):', err);
+        });
+    }
     db.doc('show/atual').onSnapshot(doc => {
       showAtual = doc.exists ? doc.data().numero : 1;
       assinarPedidos();
+      assinarApoios();
       renderTudo();
     }, () => {});
 
-    db.collectionGroup('apoios').onSnapshot(snap => {
-      apoios = {};
-      snap.docs.forEach(d => {
-        const pid = d.ref.parent.parent.id;
-        apoios[pid] = (apoios[pid] || 0) + 1;
-      });
-      renderTudo();
-    }, () => {});
   }
 
   function renderTudo() {
@@ -257,6 +266,9 @@
       ordem: firebase.firestore.FieldValue.delete(),
       finishedAt: firebase.firestore.FieldValue.delete(),
       createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    }).catch(err => {
+      console.error('Falha ao devolver à fila:', err);
+      alert('Não consegui devolver o pedido à fila. Veja o console (F12).');
     });
   });
 
