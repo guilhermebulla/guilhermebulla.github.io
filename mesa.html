@@ -232,6 +232,7 @@
         status: op === 'tocada' ? 'tocada' : 'pulada',
         show: showAtual,
         ordem: firebase.firestore.FieldValue.delete(),
+        contouRodizio: true,
         finishedAt: firebase.firestore.FieldValue.serverTimestamp()
       });
       // Zera a ordem manual dos demais pendentes: o rodízio volta a valer no próximo ciclo
@@ -254,7 +255,8 @@
     db.collection('pedidos').doc(btn.dataset.id).update({
       status: 'fila',
       ordem: firebase.firestore.FieldValue.delete(),
-      finishedAt: firebase.firestore.FieldValue.delete()
+      finishedAt: firebase.firestore.FieldValue.delete(),
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
     });
   });
 
