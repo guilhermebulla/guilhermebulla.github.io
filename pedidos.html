@@ -230,12 +230,18 @@
 
   function esc(s) { const d = document.createElement('div'); d.textContent = s || ''; return d.innerHTML; }
 
+  const apoiando = new Set();
   document.getElementById('fila-publica').addEventListener('click', e => {
     const btn = e.target.closest('.apoio-btn');
     if (!btn) return;
+    const pid = btn.dataset.pid;
+    if (apoiando.has(pid)) return;
     const nome = document.getElementById('nome').value.trim();
     if (!nome) { toast('Digite seu nome primeiro.', 'aviso'); return; }
-    apoiar(btn.dataset.pid, nome);
+    apoiando.add(pid);
+    apoiar(pid, nome)
+      .then(ok => { if (ok) toast('Apoio registrado.'); })
+      .finally(() => apoiando.delete(pid));
   });
 
   async function apoiar(pedidoId, nomeApoiador) {
