@@ -1,5 +1,5 @@
 BASE DE DADOS — GUILHERME BULLA (BULLAACOUSTIC)
-Atualização: 27/11/2026 (v4.6 — reescrita viva: app Pedidos ao vivo no estado validado no teste de 3 minutos (base 0603e62); pendências restantes para a próxima IA; demais seções mantidas)
+Atualização: 27/11/2026 (v4.7 — reescrita viva: app Pedidos ao vivo no estado do commit c439605; pendências restantes para a próxima IA; demais seções mantidas)
 1. IDENTIFICAÇÃO
 Nome: Guilherme Bulla | Projeto: BullaAcoustic
 Profissão: Cantor e violonista | Carreira: 28 anos (início aos 16)
@@ -63,7 +63,7 @@ E-mail: bullaacoustic@gmail.com | NF: MEI/CNPJ próprio
 13.1 QR Code para shows: página /conecte-se ativa; 1º botão dela leva ao app de pedidos ao vivo (conveniência; função primordial segue sendo redes). QR impresso.
 - Pendência: porta-acrílico (formato L, A5 vertical, cristal) + teste in loco
 13.2 Favicon do ecossistema (25/11/2026): redesenhado e aplicado nas 5 páginas (index, repertorio, conecte-se, pedidos, mesa) — design "anel duplo" (alternativa C). Aprovado pelo dono após teste visual das 3 alternativas (A/B/C). Detalhe técnico no SITE.md.
-13.3 App Pedidos ao vivo (27/11/2026): em produção no site, base 0603e62. Fila pública (pedidos.html) e painel do músico (mesa.html). Teste de 3 minutos no celular aprovado pelo dono (pedido, apoio, tocada, devolução, limite). Login do músico por e-mail e senha (Firebase Auth). Rodízio por show. Apoios por show com índice de coleção-grupo criado no console Firebase (27/11/2026). Regras do Firestore no arquivo "Rules do Firestore.md" (igualdade com o console: pendente de verificação). Detalhe técnico no SITE.md.
+13.3 App Pedidos ao vivo (27/11/2026): em produção no site, base c439605. Fila pública (pedidos.html) e painel do músico (mesa.html). Teste de 3 minutos no celular aprovado pelo dono (pedido, apoio, tocada, devolução, limite). Visual validado pelo dono: cabeçalho sticky, "É VOCÊ" e coração "apoiado". Trava de 600 ms nas ações da mesa, com feedback por botão. Login do músico por e-mail e senha (Firebase Auth). Rodízio por show. Apoios por show com índice de coleção-grupo criado no console Firebase (27/11/2026). Regras do Firestore: "Rules do Firestore.md" na raiz é a verdade publicada. Detalhe técnico no SITE.md.
 14. PENDÊNCIAS
 1. Porta-acrílico do QR Code (formato L, A5 vertical, cristal)
 2. Definir meta de faturamento mensal com shows
@@ -73,14 +73,14 @@ E-mail: bullaacoustic@gmail.com | NF: MEI/CNPJ próprio
 6. Reprocessar as pendências antigas 6-10 do v3.0 (prints SSL, toggle de busca, separador, patch debug-2) — estado não verificado nesta revisão; fechar ou cancelar
 7. Unificação de tokens do conecte-se.css com base.css — fase futura, com teste visual (exceção documentada no SITE.md; não fazer sem teste)
 8. App Pedidos — pendências atuais (detalhe no SITE.md, seção 7):
-   8.1 Validação visual no celular com print: cabeçalho sticky, destaque "É VOCÊ", coração "apoiado".
-   8.2 Teste: rodízio com apoios e Rule negando apoio em pedido tocado.
+   8.1 Validação visual no celular: títulos, rodapé e chip (cabeçalho sticky, "É VOCÊ" e coração "apoiado" já validados).
+   8.2 Teste de rodízio com apoios em dois celulares.
    8.3 Revisar <main> e validar a busca com leitor de tela real.
-   8.4 Confirmar no console Firebase que as Rules publicadas são idênticas ao arquivo versionado.
+   8.4 Confirmar propagação da restrição de localhost na Browser key (console).
    8.5 Decisões aceitas que podem ser revistas: Devolver não confere o limite de 3 pendentes; ordem manual (▲▼) vence o rodízio até a próxima conclusão de pedido.
-   8.6 Apoios órfãos quando um pedido é removido (SITE.md, 5.7).
-   8.7 Privacidade da fila pública (pedidos tocados/pulados com nome): decisão mantida; reabrir só por decisão do dono.
-   8.8 Pedidos anteriores à normalização com acento (SITE.md, 5.1): mitigados pelo encerramento do show.
+   8.6 Privacidade da fila pública (pedidos tocados/pulados com nome): decisão mantida; reabrir só por decisão do dono.
+   8.7 Opcional, não aprovado: aviso de falha de gravação na mesa e substituição dos alerts por toast (SITE.md, 5.9 e 7.7).
+   8.8 Opcional, não aprovado: h1 duplicado em mesa.html e fila pública como lista semântica (SITE.md, 7.8).
 9. Tolerância a erro de digitação na busca: fora por enquanto.
 15. DECISÕES REGISTRADAS (26/11/2026 a 27/11/2026)
 - Login da mesa por e-mail e senha (Firebase Auth) no lugar do PIN. Não reabrir o PIN.
@@ -103,6 +103,10 @@ E-mail: bullaacoustic@gmail.com | NF: MEI/CNPJ próprio
 - Repetir o próprio pedido: mensagem "Você já pediu esta música".
 - Busca e nome ignoram acento e caixa. Tolerância a erro de digitação: fora por enquanto.
 - Chip de nome no cabeçalho: camada de atrito, não barreira.
-- Cache: app.css?v=10 nas duas telas; fila.js?v=4 nas duas telas (divergência anterior resolvida).
+- Cache: app.css?v=12 nas duas telas; fila.js?v=4 nas duas telas (27/11/2026).
 - Footer: app.css sem !important, aceitando a cascata (opção b). Visual: cabeçalho sticky compacto, títulos Playfair dourado.
+- Trava de 600 ms nas ações da mesa (▲▼, Tocada, Pular, Remover) e em Devolver à fila, com feedback por botão (.ocupado) (27/11/2026).
+- Remover pedido na mesa apaga seus apoios em lote, junto com o pedido (27/11/2026).
+- Apoio negado pelas Rules (só em corrida) mostra "Esta música já saiu da fila. Atualize a página." (27/11/2026).
+- Rules do Firestore publicadas no repo ("Rules do Firestore.md") são a verdade do console. Não exigir conferência no console (27/11/2026).
 FIM DO DOCUMENTO
