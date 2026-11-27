@@ -115,13 +115,20 @@
   let showAtual = 1;
   let apoiosPorPedido = {};
 
+  let pararPedidos = null;
+  function assinarPedidos() {
+    if (pararPedidos) pararPedidos();
+    pararPedidos = db.collection('pedidos')
+      .where('show', '==', showAtual)
+      .where('status', '==', 'fila')
+      .onSnapshot(snap => {
+        todosPedidos = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+        renderFilaPublica();
+      }, () => {});
+  }
   db.doc('show/atual').onSnapshot(doc => {
     showAtual = doc.exists ? doc.data().numero : 1;
-    renderFilaPublica();
-  }, () => {});
-
-  db.collection('pedidos').onSnapshot(snap => {
-    todosPedidos = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    assinarPedidos();
     renderFilaPublica();
   }, () => {});
 
