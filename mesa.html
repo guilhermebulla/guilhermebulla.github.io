@@ -11,7 +11,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="base.css">
-<link rel="stylesheet" href="app.css?v=10">
+<link rel="stylesheet" href="app.css?v=11">
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
@@ -234,7 +234,17 @@
       }
     } else if (op === 'remover') {
       if (!confirm('Remover este pedido da fila? Essa ação não pode ser desfeita.')) return;
-      db.collection('pedidos').doc(id).delete();
+      const ref = db.collection('pedidos').doc(id);
+      try {
+        const apoios = await ref.collection('apoios').get();
+        const batch = db.batch();
+        apoios.docs.forEach(d => batch.delete(d.ref));
+        batch.delete(ref);
+        await batch.commit();
+      } catch (err) {
+        console.error('Falha ao remover pedido:', err);
+        alert('Não consegui remover o pedido. Veja o console (F12).');
+      }
     } else {
       const batch = db.batch();
       batch.update(db.collection('pedidos').doc(id), {

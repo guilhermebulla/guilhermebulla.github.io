@@ -1,6 +1,6 @@
 # SITE.md: documento técnico vivo (BullaAcoustic)
 
-Atualizado em 27/11/2026, com base em 0603e62 (14:22 UTC).
+Atualizado em 27/11/2026, com base em <SHA do commit> (<hora> UTC).
 Site: https://guilhermebulla.github.io (GitHub Pages; repo raiz = site).
 Este arquivo descreve o estado atual. Histórico fica no git.
 Se o código divergir daqui, o código vence e este arquivo deve ser corrigido.
@@ -31,8 +31,8 @@ Configurações do Firebase Console (Rules publicadas, restrições da chave, í
 - index.html + index.css + script.js (módulos init*).
 - repertorio.html + repertorio.css + repertorio.js. Consome repertorio.json.
 - conecte-se.html + conecte-se.css. Tokens locais (unificação com base.css é fase futura, com teste visual). O 1º botão aponta para pedidos.html.
-- pedidos.html (convidado): base.css, app.css?v=10, fila.js?v=4.
-- mesa.html (músico): base.css, app.css?v=10, fila.js?v=4.
+- pedidos.html (convidado): base.css, app.css?v=11, fila.js?v=4.
+- mesa.html (músico): base.css, app.css?v=11, fila.js?v=4.
 - base.css: estilos compartilhados (header, section, footer, container).
 - app.css: estilos exclusivos de pedidos.html e mesa.html. Carregado após base.css. Rodapé sem !important: aceita a cascata.
 - fila.js: ordenação única da fila (window.BullaFila.ordenarFila(todos, showAtual, apoios)). Usado pelas duas telas.
@@ -106,8 +106,8 @@ NFD, remove diacríticos, minúsculas, "/" vira espaço, trim, espaços colapsad
 4. Restrição de localhost na Browser key: confirmar propagação e testar pedidos e mesa.
 5. Devolver à fila não confere o limite de 3 pendentes. Aceito (decisão de 27/11/2026).
 6. Ordem manual (▲▼) vence o rodízio até a próxima conclusão de pedido. Aceito (decisão de 27/11/2026).
-7. Remover um pedido na mesa não apaga sua subcoleção apoios. Os documentos ficam órfãos, lidos a cada atualização do listener. Efeito: custo de leitura, sem impacto visível. Correção possível: apagar apoios em lote antes do delete, no client, respeitando a regra de delete do músico.
-8. Seletores :not(.btn-perigo) em app.css: sem efeito, pois a classe não existe mais. Limpeza opcional.
+7. Fechado em <SHA do commit>: remover um pedido na mesa apaga seus apoios em lote, junto com o pedido.
+8. Fechado em <SHA do commit>: seletores :not(.btn-perigo) removidos de app.css.
 
 ## 6. Decisões fechadas (não reabrir sem decisão explícita do dono)
 - Sem drag & drop. Reordenação por ▲▼. Remoção só pela lixeira, com confirmação.
@@ -129,9 +129,9 @@ NFD, remove diacríticos, minúsculas, "/" vira espaço, trim, espaços colapsad
 3. Revisar <main> em pedidos.html e validar a busca com leitor de tela real.
 4. Confirmar no console Firebase que as Rules publicadas são idênticas a "Rules do Firestore.md".
 5. Confirmar propagação da restrição de localhost na Browser key.
-6. Decidir se apoios órfãos devem ser apagados junto com o pedido (5.7).
+6. Fechado em <SHA do commit> (5.7).
 7. Revisar os dois aceitos da seção 5 (itens 5 e 6) se o uso em show mostrar problema.
-8. Limpar seletores :not(.btn-perigo) (5.8), opcional.
+8. Fechado em <SHA do commit> (5.8).
 
 ## 8. Limites de leitura (ferramenta de leitura por URL)
 Medido em 26/11/2026, SHA 506e8c1, e confirmado em 27/11/2026 (mesa.html em aa53607 truncou). Hipótese, não garantia: a leitura por URL corta arquivos a partir de ~12 KB.

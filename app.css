@@ -175,8 +175,7 @@ button:focus-visible {
     background: var(--gold-soft);
     transform: translateY(-2px);
 }
-.pedido .acoes { display: flex; gap: 8px; margin-top: 10px; }
-.pedido .acoes button:not(.btn-perigo) { width: auto; flex: 0 0 auto; }
+.pedido .acoes button { width: auto; flex: 0 0 auto; }
 .hist .hora { float: right; color: var(--text-muted); font-size: .8rem; }
 .hist.pulada strong { color: var(--text-muted); text-decoration: line-through; }
 .vazio { text-align: center; color: var(--text-muted); padding: 24px 0; }
@@ -335,7 +334,7 @@ h2 .contagem {
     gap: 8px;
     margin-top: 8px;
 }
-.pedido .acoes > button:not(.btn-perigo) {
+.pedido .acoes > button {
     flex: 1;
     width: auto;
     min-height: 44px;
@@ -343,8 +342,7 @@ h2 .contagem {
     font-size: .95rem;
     transform: none;
 }
-.pedido .acoes > button:not(.btn-perigo):hover { transform: none; }
-.pedido { position: relative; }
+.pedido .acoes > button:hover { transform: none; }
 .pedido > button.lixeira {
     position: absolute;
     top: 2px;
