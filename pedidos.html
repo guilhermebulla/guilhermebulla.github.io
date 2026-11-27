@@ -335,6 +335,7 @@
       document.getElementById('resultado').innerHTML = '';
       selecionada = null;
     } catch (err) {
+      console.error('Falha ao enviar pedido:', err);
       toast('Falha ao enviar. Tente de novo.', 'erro');
     }
   }
