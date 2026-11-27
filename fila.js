@@ -1,13 +1,13 @@
 // fila.js: ordenação única da fila (mesa.html e pedidos.html).
 // Regra: ordem manual > rodízio do show atual > apoios > chegada.
-// O rodízio conta só tocada/pulada com show igual ao show atual.
+// O rodízio conta tocada, pulada ou devolvida (contouRodizio) com show igual ao show atual.
 (function () {
   function seg(ts) { return (ts && ts.seconds) || 0; }
 
   function ordenarFila(todos, showAtual, apoios = {}) {
     const feitos = {};
     for (const p of todos) {
-      if ((p.status === 'tocada' || p.status === 'pulada') && p.show === showAtual) {
+      if ((p.status === 'tocada' || p.status === 'pulada' || p.contouRodizio === true) && p.show === showAtual) {
         const k = (p.requesterKey || '').toLowerCase();
         feitos[k] = (feitos[k] || 0) + 1;
       }
