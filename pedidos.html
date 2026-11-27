@@ -51,6 +51,7 @@
   const chipNome = document.getElementById('chip-nome');
   const chipValor = document.getElementById('chip-nome-valor');
   const busca = document.getElementById('busca');
+  const MAX_PEDIDOS_POR_PESSOA = 3;
   let filaPublica = [];
   campoNome.value = localStorage.getItem('bullaNome') || '';
   campoNome.addEventListener('input', () => {
@@ -207,12 +208,14 @@
     alvo.innerHTML = html;
   });
 
+  let pedindo = false;
   document.getElementById('resultado').addEventListener('click', e => {
     const card = e.target.closest('.musica');
-    if (!card) return;
+    if (!card || pedindo) return;
     const idx = Number(card.dataset.idx);
     selecionada = { idx, ...catalogo[idx] };
-    pedir();
+    pedindo = true;
+    pedir().finally(() => { pedindo = false; });
   });
 
   function normalizar(s) {
