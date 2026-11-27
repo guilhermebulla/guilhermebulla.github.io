@@ -162,8 +162,6 @@
 
     let catalogo = [];
   let selecionada = null;
-  const MAX_PEDIDOS_POR_PESSOA = 3;
-
   fetch('repertorio.json')
     .then(r => r.json())
     .then(d => { catalogo = d; })
