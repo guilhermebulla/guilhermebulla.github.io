@@ -1,6 +1,6 @@
 # SITE.md: documento técnico vivo (BullaAcoustic)
 
-Atualizado em 27/11/2026, com base em 623827 (11:17 UTC).
+Atualizado em 27/11/2026, com base em 930a346 (11:56 UTC).
 Site: https://guilhermebulla.github.io (GitHub Pages; repo raiz = site).
 Este arquivo descreve o estado atual. Histórico fica no git.
 Se o código divergir daqui, o código vence e este arquivo deve ser corrigido.
@@ -14,8 +14,8 @@ Configurações do Firebase Console (Rules publicadas, restrições da chave) n�
 - O dono faz os commits. A IA não tem escrita no repo.
 - Chave de API, senha e UID: nunca transcrever de print. Conferir por Ctrl+F.
 - Repo editor-repertorio é privado. Não buscar arquivos dele na árvore do site.
-- Cache: cada app.css e fila.js alterado sobe de versão nas duas telas (pedidos.html e mesa.html) no mesmo commit.
-- Ao fechar uma pendência, atualizar este arquivo no mesmo commit.
+- Cache: cada app.css e fila.js alterado sobe de versão nas duas telas (pedidos.html e mesa.html) no mesmo commit. Divergência atual: ver 5.5.
+- Documentos vivos (este arquivo e a base 4.4) são atualizados sob pedido do dono, não a cada commit.
 
 ## 2. Identidade visual (definida em base.css; não reinventar)
 - Tema escuro: --bg #0f0f0f · --bg-elevated #171717 · --bg-card #1a1a1a
@@ -31,8 +31,8 @@ Configurações do Firebase Console (Rules publicadas, restrições da chave) n�
 - index.html + index.css + script.js (módulos init*).
 - repertorio.html + repertorio.css + repertorio.js. Consome repertorio.json.
 - conecte-se.html + conecte-se.css. Tokens locais (unificação com base.css é fase futura, com teste visual). O 1º botão aponta para pedidos.html.
-- pedidos.html (convidado): base.css, app.css?v=9, fila.js?v=3.
-- mesa.html (músico): base.css, app.css?v=9, fila.js?v=3.
+- pedidos.html (convidado): base.css, app.css?v=9, fila.js?v=4.
+- mesa.html (músico): base.css, app.css?v=9, fila.js?v=3 (pendente de correção, ver 5.5 e 7.1).
 - base.css: estilos compartilhados (header, section, footer, container).
 - app.css: estilos exclusivos de pedidos.html e mesa.html. Carregado após base.css. Rodapé sem !important: aceita a cascata.
 - fila.js: ordenação única da fila (window.BullaFila.ordenarFila(todos, showAtual, apoios)). Usado pelas duas telas.
@@ -47,7 +47,9 @@ QR impresso → conecte-se.html (1º botão) → pedidos.html (convidado pede, s
 ### 4.2 Coleção pedidos
 - Campos no create (8): songId (int ≥ 0), title (1 a 100), artist (1 a 80), requester (1 a 40), requesterKey (1 a 40), status (= 'fila'), createdAt (timestamp), show (int ≥ 1).
 - status: fila | tocada | pulada. finishedAt é gravado ao marcar tocada ou pulada.
-- ordem (int, opcional): gravado em lote quando o músico reordena com ▲▼. Ao tocar ou pular um pedido, o campo é removido dos demais pendentes do show. O próprio pedido ainda guarda o valor (ver 5.5).
+- ordem (int, opcional): gravado em lote quando o músico reordena com ▲▼. Ao tocar, pular ou devolver um pedido, o campo é removido do próprio pedido e dos demais pendentes do show.
+- contouRodizio (bool, opcional): gravado como true ao tocar ou pular. É mantido ao devolver. Pedidos com contouRodizio contam no rodízio do show, independentemente do status atual.
+- createdAt: renovado ao devolver à fila, para que o pedido vá ao fim do seu nível de rodízio.
 - requesterKey = nome normalizado (ver 4.4).
 - Pedido devolvido à fila mantém os apoios que já tinha.
 
@@ -65,25 +67,28 @@ NFD, remove diacríticos, minúsculas, "/" vira espaço, trim, espaços colapsad
 - Sem nome: campo visível e busca desabilitada. Alterar reabre o campo e bloqueia a busca até confirmar. Esvaziar e confirmar remove o nome salvo.
 - Contador "Seus pedidos na fila: X de 3", do show atual. MAX_PEDIDOS_POR_PESSOA é declarada uma vez, no topo do script.
 - Busca: todos os termos precisam bater; máximo de 20 resultados; ignora acento e caixa. Tolerância a erro de digitação: fora.
-- Toque duplo: uma escolha por vez (flag pedindo).
+- Toque duplo no card da busca: uma escolha por vez (flag pedindo).
+- Apoio (coração): um toque por vez por pedido (Set apoiando). Sucesso mostra "Apoio registrado.".
 - Ordem de checagem ao escolher música:
   1. Mesma música do mesmo nome no show: "Você já pediu esta música". Bloqueia, mesmo se já foi tocada ou pulada.
   2. Mesma música pendente de outra pessoa no show: vira apoio, com "Juntos somos mais! Seu pedido se juntou ao de [nome]!".
   3. Limite de 3 pendentes do show: aviso.
   4. Grava o pedido.
 - Apoio (coração) na fila pública: exige nome preenchido. Repetir: "Você já apoiou esta música". Apoio não conta no limite.
-- Fila pública: só show atual e status fila. Ordem: ordem manual > rodízio do show > apoios > chegada. "É VOCÊ" no pedido do próprio nome.
-- Tocados e pulados ficam legíveis pela leitura pública da coleção (decisão de 26/11: manter).
+- Fila pública: assina só o show atual (sem filtro de status na consulta). fila.js separa os pendentes e aplica a ordem: ordem manual > rodízio do show > apoios > chegada. "É VOCÊ" no pedido do próprio nome.
+- Tocados e pulados do show atual trafegam para a fila pública, mas não são exibidos (decisão de 26/11: manter a leitura pública; ver 5.4).
 
 ### 4.6 mesa.html (músico)
 - Login por e-mail e senha (Firebase Auth), sessão SESSION. Só o UID do músico entra.
-- Fila em tempo real: show atual e status fila. Mesma ordem da fila pública.
+- Fila em tempo real: assina só o show atual. fila.js separa os pendentes e aplica a mesma ordem da fila pública.
 - ▲▼ grava ordem em batch para os itens da fila.
-- Tocada e Pular gravam status e finishedAt, em batch, e removem ordem dos demais pendentes do show.
+- Tocada e Pular: batch com status, show, finishedAt, contouRodizio: true, remoção de ordem do próprio pedido e dos demais pendentes do show.
+- Devolver à fila: status fila, remove ordem e finishedAt, renova createdAt. Mantém contouRodizio.
 - Lixeira com confirmação.
 - Card: título; artista · solicitante · ♥ apoios. Botões Tocada e Pular.
-- Já rolaram: tocadas e puladas do show atual. Puladas têm "Devolver à fila" (ver 5.5).
+- Já rolaram: tocadas e puladas do show atual. Puladas têm "Devolver à fila".
 - Iniciar novo show: confirmação ("Os pedidos pendentes serão encerrados..."). Grava show/atual com numero + 1.
+- Listener de apoios (collectionGroup) lê todos os shows (ver 7.3).
 
 ### 4.7 Firebase
 - Projeto: bulla-pedidos.
@@ -92,6 +97,7 @@ NFD, remove diacríticos, minúsculas, "/" vira espaço, trim, espaços colapsad
   - pedidos: leitura pública; create com validação; update e delete só pelo músico.
   - pedidos/{id}/apoios: leitura pública; create com validação e pedido em fila do mesmo show; update negado; delete só pelo músico.
   - show/{doc}: leitura pública; escrita só pelo músico.
+- As Rules não validam contouRodizio nem createdAt em update (update é livre para o músico). Não foram alteradas nas rodadas de 27/11.
 - Browser key: restrição de aplicativo sites guilhermebulla.github.io/*. localhost removido em 26/11; propagação a confirmar. Restrição de API: 4 APIs. A chave fica nos dois HTMLs; conferir por Ctrl+F.
 - Domínios autorizados: localhost, bulla-pedidos.firebaseapp.com, bulla-pedidos.web.app, guilhermebulla.github.io.
 - Limite de 3 e duplicidade são validados só no navegador. As Rules não contam pedidos nem comparam músicas. Aceito para uso social; não tratar como proteção real.
@@ -101,9 +107,11 @@ NFD, remove diacríticos, minúsculas, "/" vira espaço, trim, espaços colapsad
 2. Nome que normaliza para "." ou ".." gera ID de apoio inválido; a ação mostra "Falha ao apoiar". Caso raro, não tratado.
 3. Código sem efeito: ramo "Digite seu nome acima" na busca. Não é alcançado com a busca desabilitada. Remover é opcional.
 4. Leitura pública de pedidos expõe tocados e pulados com o nome de quem pediu. Decisão mantida; reabrir só por decisão do dono.
-5. "Devolver à fila" reaproveita ordem antiga: a pulada conserva o campo ordem e volta ao topo da fila. Correção proposta, pendente de aplicação.
-6. Fila pública e mesa leem a coleção inteira, de todos os shows. Filtro por show e status é proposta pendente de aplicação.
-7. Restrição de localhost na Browser key: confirmar propagação e testar pedidos e mesa.
+5. mesa.html carrega fila.js?v=3 e pedidos.html carrega fila.js?v=4. Se o navegador da mesa mantiver a versão antiga, a ordem da mesa diverge da fila pública (sem contouRodizio). Correção pendente (7.1).
+6. Devolver à fila não respeita o limite de 3 pendentes: a pessoa pode ficar com 4 pendentes no show. O limite é validado só ao criar pedido. Decisão pendente (7.2).
+7. Pedidos devolvidos ou pulados antes do commit 9a65d5c não têm contouRodizio e perdem a contagem do rodízio. Afeta só o show em andamento no momento do deploy.
+8. Mensagem do commit 6d00b5e ("Add support for tracking supported requests") não descreve a mudança (toque duplo no apoio). Sem efeito no código.
+9. Restrição de localhost na Browser key: confirmar propagação e testar pedidos e mesa.
 
 ## 6. Decisões fechadas (não reabrir sem decisão explícita do dono)
 - Sem drag & drop. Reordenação por ▲▼. Remoção só pela lixeira, com confirmação.
@@ -111,20 +119,24 @@ NFD, remove diacríticos, minúsculas, "/" vira espaço, trim, espaços colapsad
 - Rodízio por show. Fila encerra entre shows.
 - Duplicidade: mesma música (título e artista normalizados), mesmo nome, mesmo show, bloqueada mesmo após tocada ou pulada.
 - Apoio: só em pedidos pendentes. Um por nome normalizado por pedido por show. Não conta no limite. Visível na mesa e na fila pública. Desempata só dentro do mesmo nível de rodízio.
-- Ordem manual (▲▼) vale dentro do ciclo atual. Ao concluir um pedido (tocada ou pulada), a ordem manual dos demais pendentes é zerada e o rodízio volta a valer (decisão de 27/11, opção b).
+- Ordem manual (▲▼) vale dentro do ciclo atual. Ao concluir um pedido (tocada ou pulada), a ordem manual dos demais pendentes é zerada e o rodízio volta a valer (27/11, opção b).
+- Devolver à fila preserva a contagem do rodízio (contouRodizio mantido), e o pedido volta ao fim do seu nível (27/11, opção b).
 - Limite de 3 pendentes por nome, por show, validado no navegador.
 - Busca e nome ignoram acento e caixa. Tolerância a erro de digitação: fora.
 - Chip "Pedindo como": camada de atrito, não barreira.
 - Login do músico por e-mail e senha. Sem Google, GitHub ou login anônimo.
 - Repertório: sem gospel (laicidade profissional). Marcas de equipamento só no Rider Técnico.
 
-## 7. Pendências técnicas
-1. Acessibilidade: busca navegável por teclado e resultados lidos pelo leitor de tela. Revisar uso de <main> em pedidos.html.
-2. Aplicar correção de "Devolver à fila" (5.5).
-3. Aplicar filtro por show e status na fila pública e na mesa (5.6).
-4. Testes do apoio ainda não relatados: rodízio com apoios e Rule negando apoio em pedido tocado.
-5. Confirmar propagação da restrição de localhost na Browser key.
-6. Limpeza de código: ramo morto da busca (5.3); normalizar, esc e configuração do Firebase duplicados entre as telas; variável chaveApoio é igual a meuNome em pedidos.html.
+## 7. Pendências técnicas (ordem sugerida)
+1. mesa.html: trocar fila.js?v=3 por fila.js?v=4 (alta prioridade; ANTES/DEPOIS enviado à parte).
+2. Decidir se Devolver à fila respeita o limite de 3 pendentes (5.6).
+3. Filtrar o listener de apoios (collectionGroup) por show, em pedidos.html e mesa.html.
+4. Acessibilidade: busca navegável por teclado e resultados lidos pelo leitor de tela. Revisar o uso de <main> em pedidos.html.
+5. Validação em dois celulares: (a) A pede 2, B pede 1; a mesa toca a primeira de A; B deve aparecer antes da segunda de A na fila pública e na mesa. (b) Mesa pula a segunda de A e devolve; A volta atrás de B. (c) Comparar a ordem da fila pública e da mesa após cada ação. (d) Iniciar novo show; contagens zeram.
+6. Testes do apoio ainda não relatados: rodízio com apoios e Rule negando apoio em pedido tocado.
+7. Confirmar propagação da restrição de localhost na Browser key.
+8. Limpeza de código: ramo morto da busca (5.3); normalizar, esc e configuração do Firebase duplicados entre as telas; variável chaveApoio é igual a meuNome em pedidos.html.
+9. Privacidade da leitura pública de pedidos (5.4): decisão mantida; reabrir só por decisão do dono.
 
 ## 8. Limites de leitura (ferramenta de leitura por URL)
 Medido em 26/11/2026, SHA 506e8c1. Hipótese, não garantia: a leitura por URL corta arquivos a partir de ~12 KB.
@@ -135,7 +147,7 @@ Truncam na leitura por URL (pedir o .txt completo antes de propor ANTES/DEPOIS):
 - repertorio.css (21 KB)
 - index.css (21 KB)
 - repertorio.html (14 KB)
-- pedidos.html (13 KB)
+- pedidos.html (13 KB) — hoje o arquivo tem ~20 KB; a leitura por URL tende a truncar. Usar o .txt.
 - script.js (13 KB)
 - repertorio.json (209 KB, não testado por URL; presumido truncado; só relevante se o repertório for editado)
 
