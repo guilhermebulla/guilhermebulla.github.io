@@ -1,10 +1,10 @@
 # SITE.md: documento técnico vivo (BullaAcoustic)
 
-Atualizado em 27/11/2026, com base em <SHA do commit> (<hora> UTC).
+Atualizado em 27/11/2026, com base em c439605 (17:17 UTC).
 Site: https://guilhermebulla.github.io (GitHub Pages; repo raiz = site).
 Este arquivo descreve o estado atual. Histórico fica no git.
 Se o código divergir daqui, o código vence e este arquivo deve ser corrigido.
-Configurações do Firebase Console (Rules publicadas, restrições da chave, índices) não estão no repo: são relatadas pelo dono e devem ser confirmadas no console.
+Restrições da chave e índices do Firebase Console não estão no repo: são relatados pelo dono. As Rules publicadas são o conteúdo de "Rules do Firestore.md" na raiz.
 
 ## 1. Convenções de trabalho
 - Antes de qualquer alteração: confirmar o HEAD pelo endpoint do commit (commits/{sha}), ler os arquivos pinados nesse SHA e declarar a base usada.
@@ -15,7 +15,7 @@ Configurações do Firebase Console (Rules publicadas, restrições da chave, í
 - Chave de API, senha e UID: nunca transcrever de print. Conferir por Ctrl+F.
 - Repo editor-repertorio é privado. Não buscar arquivos dele na árvore do site.
 - Cache: cada app.css e fila.js alterado sobe de versão nas duas telas (pedidos.html e mesa.html) no mesmo commit.
-- Ao fechar uma pendência, atualizar este arquivo no mesmo commit.
+- Documentos vivos (este arquivo e a base 4.6) são atualizados sob pedido do dono, não a cada commit.
 
 ## 2. Identidade visual (definida em base.css; não reinventar)
 - Tema escuro: --bg #0f0f0f · --bg-elevated #171717 · --bg-card #1a1a1a
@@ -31,8 +31,8 @@ Configurações do Firebase Console (Rules publicadas, restrições da chave, í
 - index.html + index.css + script.js (módulos init*).
 - repertorio.html + repertorio.css + repertorio.js. Consome repertorio.json.
 - conecte-se.html + conecte-se.css. Tokens locais (unificação com base.css é fase futura, com teste visual). O 1º botão aponta para pedidos.html.
-- pedidos.html (convidado): base.css, app.css?v=11, fila.js?v=4.
-- mesa.html (músico): base.css, app.css?v=11, fila.js?v=4.
+- pedidos.html (convidado): base.css, app.css?v=12, fila.js?v=4.
+- mesa.html (músico): base.css, app.css?v=12, fila.js?v=4.
 - base.css: estilos compartilhados (header, section, footer, container).
 - app.css: estilos exclusivos de pedidos.html e mesa.html. Carregado após base.css. Rodapé sem !important: aceita a cascata.
 - fila.js: ordenação única da fila (window.BullaFila.ordenarFila(todos, showAtual, apoios)). Usado pelas duas telas.
@@ -73,6 +73,7 @@ NFD, remove diacríticos, minúsculas, "/" vira espaço, trim, espaços colapsad
   3. Limite de 3 pendentes do show: aviso.
   4. Grava o pedido. Toast "Enviando pedido…" aparece antes da checagem.
 - Apoio (coração) na fila pública: exige nome preenchido. Repetir: "Você já apoiou esta música". Apoio não conta no limite. Botão mostra "♥ N" e "· apoiado" quando o nome já apoiou; aria-pressed reflete o estado.
+- Apoio negado pelas Rules (permission-denied, só em corrida, quando o pedido saiu da fila): "Esta música já saiu da fila. Atualize a página." Demais falhas: "Falha ao apoiar. Tente de novo.".
 - Fila pública: só show atual e status fila. Ordem: ordem manual > rodízio do show > apoios > chegada. "É VOCÊ" no pedido do próprio nome.
 - Tocados e pulados ficam legíveis pela leitura pública da coleção (decisão de 26/11: manter).
 - Erros: falha de apoios mostra toast de erro (6 s); falha da fila mostra aviso no lugar da lista.
@@ -81,16 +82,18 @@ NFD, remove diacríticos, minúsculas, "/" vira espaço, trim, espaços colapsad
 - Login por e-mail e senha (Firebase Auth), sessão SESSION. Só o UID do músico entra.
 - Fila em tempo real: show atual e status fila. Mesma ordem da fila pública. Apoios por show.
 - ▲▼ grava ordem em batch para os itens da fila. Lixeira com confirmação.
+- Remover: apaga os apoios do pedido em batch, junto com o pedido. Falha mostra alerta.
+- Trava global de 600 ms nas ações da fila (▲▼, Tocada, Pular, Remover) e em Devolver à fila. Durante a trava, o botão acionado fica desabilitado e com a classe .ocupado (indicador girando). As demais ações são ignoradas nesse intervalo.
 - Card: título; artista · solicitante · ♥ apoios. Botões Tocada e Pular.
 - Já rolaram: tocadas e puladas do show atual. Ambas têm "Devolver à fila".
 - Concluir (Tocada ou Pular) zera a ordem manual dos demais pendentes e grava contouRodizio.
 - Iniciar novo show: confirmação ("Os pedidos pendentes serão encerrados..."). Grava show/atual com numero + 1.
-- Erros: falha de apoios e de devolução mostra alerta; falha da fila mostra aviso na seção.
+- Erros: falha de apoios, de ordem, de remoção, de conclusão e de devolução mostra alerta (alert). Falha da fila mostra aviso na seção.
 
 ### 4.7 Firebase
 - Projeto: bulla-pedidos.
 - Authentication: só E-mail/senha. Anônimo, Google e GitHub desativados.
-- Rules: texto versionado em "Rules do Firestore.md" (lido integralmente em 42d52c9; sem alterações nos commits posteriores). Console deve ser idêntico. Relatado pelo dono; igualdade com o console ainda não verificada pela IA.
+- Rules: "Rules do Firestore.md" na raiz é a verdade publicada. Lido integralmente no SHA f75f275 (sem alteração nos commits seguintes até c439605).
   - pedidos: leitura pública; create com validação; update e delete só pelo músico.
   - pedidos/{id}/apoios: leitura pública; create com validação e pedido em fila do mesmo show; update negado; delete só pelo músico.
   - show/{doc}: leitura pública; escrita só pelo músico.
@@ -106,8 +109,9 @@ NFD, remove diacríticos, minúsculas, "/" vira espaço, trim, espaços colapsad
 4. Restrição de localhost na Browser key: confirmar propagação e testar pedidos e mesa.
 5. Devolver à fila não confere o limite de 3 pendentes. Aceito (decisão de 27/11/2026).
 6. Ordem manual (▲▼) vence o rodízio até a próxima conclusão de pedido. Aceito (decisão de 27/11/2026).
-7. Fechado em <SHA do commit>: remover um pedido na mesa apaga seus apoios em lote, junto com o pedido.
-8. Fechado em <SHA do commit>: seletores :not(.btn-perigo) removidos de app.css.
+7. Fechado (f75f275): remover um pedido na mesa apaga seus apoios em lote, junto com o pedido.
+8. Fechado (f75f275): seletores :not(.btn-perigo) removidos de app.css.
+9. Falhas de gravação na mesa (ordem, conclusão, devolução, remoção) aparecem só como alert. Não há aviso de falha após o toque: o botão volta ao normal. Melhoria opcional em 7.6.
 
 ## 6. Decisões fechadas (não reabrir sem decisão explícita do dono)
 - Sem drag & drop. Reordenação por ▲▼. Remoção só pela lixeira, com confirmação.
@@ -117,6 +121,7 @@ NFD, remove diacríticos, minúsculas, "/" vira espaço, trim, espaços colapsad
 - Apoio: só em pedidos pendentes. Um por nome normalizado por pedido por show. Não conta no limite. Visível na mesa e na fila pública. Desempata só dentro do mesmo nível de rodízio. ▲▼ vence sempre.
 - Limite de 3 pendentes por nome, por show, validado no navegador. Devolver não confere o limite (aceito).
 - Devolver disponível para tocadas e puladas.
+- Trava de 600 ms nas ações da mesa, com feedback por botão (.ocupado).
 - Busca e nome ignoram acento e caixa. Tolerância a erro de digitação: fora.
 - Chip "Pedindo como": camada de atrito, não barreira.
 - Login do músico por e-mail e senha. Sem Google, GitHub ou login anônimo.
@@ -124,14 +129,14 @@ NFD, remove diacríticos, minúsculas, "/" vira espaço, trim, espaços colapsad
 - Fila e apoios com falha de carga são visíveis ao usuário.
 
 ## 7. Pendências técnicas
-1. Validar no celular (dono): cabeçalho sticky, títulos, rodapé, chip, coração e destaque "É VOCÊ". Anexar print.
-2. Testar rodízio com apoios e a Rule que nega apoio em pedido tocado (dono).
+1. Validação visual no celular (dono): confirmados cabeçalho sticky, "É VOCÊ" e coração "apoiado". Pendentes: títulos, rodapé e chip.
+2. Testar rodízio com apoios em dois celulares (dono).
 3. Revisar <main> em pedidos.html e validar a busca com leitor de tela real.
-4. Confirmar no console Firebase que as Rules publicadas são idênticas a "Rules do Firestore.md".
-5. Confirmar propagação da restrição de localhost na Browser key.
-6. Fechado em <SHA do commit> (5.7).
-7. Revisar os dois aceitos da seção 5 (itens 5 e 6) se o uso em show mostrar problema.
-8. Fechado em <SHA do commit> (5.8).
+4. Confirmar propagação da restrição de localhost na Browser key (console).
+5. Revisar os dois aceitos da seção 5 (itens 5 e 6) se o uso em show mostrar problema.
+6. Fechado (f75f275): seletores (5.8) e apoios órfãos (5.7).
+7. Opcional, não aprovado: aviso de falha de gravação na mesa (catch dos batches com toast em vez de alert), e substituição dos demais alerts da mesa por toast. Ver 5.9.
+8. Opcional, não aprovado: h1 duplicado em mesa.html (uma tela oculta) e fila pública como lista semântica (ol/li).
 
 ## 8. Limites de leitura (ferramenta de leitura por URL)
 Medido em 26/11/2026, SHA 506e8c1, e confirmado em 27/11/2026 (mesa.html em aa53607 truncou). Hipótese, não garantia: a leitura por URL corta arquivos a partir de ~12 KB.
@@ -148,5 +153,4 @@ Truncam na leitura por URL (usar o .txt anexado antes de propor ANTES/DEPOIS):
 - repertorio.json (209 KB, não testado por URL; presumido truncado; só relevante se o repertório for editado)
 
 Lidos inteiros por URL (não precisam de .txt): app.css, base.css, conecte-se.css, conecte-se.html, fila.js, SITE.md, Rules do Firestore.md.
-
 Regra de uso: arquivo em .txt enviado pelo dono é a fonte preferencial. Não consultar a API para conferir SHA de .txt, salvo pedido explícito.
