@@ -214,9 +214,12 @@
     }).join('');
   }
 
-    document.getElementById('fila').addEventListener('click', async e => {
+  let operando = false;
+  document.getElementById('fila').addEventListener('click', async e => {
     const btn = e.target.closest('button[data-op]');
-    if (!btn || btn.disabled) return;
+    if (!btn || btn.disabled || operando) return;
+    operando = true;
+    setTimeout(() => { operando = false; }, 600);
     const id = btn.closest('.pedido').dataset.id;
     const op = btn.dataset.op;
     if (op === 'subir' || op === 'descer') {
@@ -270,7 +273,9 @@
 
   document.getElementById('historico').addEventListener('click', e => {
     const btn = e.target.closest('button[data-op="devolver"]');
-    if (!btn) return;
+    if (!btn || operando) return;
+    operando = true;
+    setTimeout(() => { operando = false; }, 600);
     db.collection('pedidos').doc(btn.dataset.id).update({
       status: 'fila',
       ordem: firebase.firestore.FieldValue.delete(),
