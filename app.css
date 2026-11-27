@@ -269,6 +269,7 @@ h2 .contagem {
     flex-shrink: 0;
 }
 .pedido, .musica { display: flex; align-items: flex-start; }
+.musica .num, .pedido .num { color: var(--gold); font-size: .8rem; }
 .pedido > div, .musica > div { flex: 1; min-width: 0; }
 
 /* ===== MESA: CARD DA FILA (ordem ▲▼ à esquerda, remover no canto) ===== */
