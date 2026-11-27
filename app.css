@@ -162,22 +162,8 @@ button:focus-visible {
 }
 
 /* ===== MENSAGENS ===== */
-.ok {
-    text-align: center;
-    color: var(--gold);
-    padding: 16px;
-    border: 1px solid var(--gold);
-    border-radius: 8px;
-    margin-top: 16px;
-    animation: fadeInUp 0.4s ease-out;
-}
 .aviso { color: var(--warn); }
 .erro { color: var(--danger); }
-
-@keyframes fadeInUp {
-    from { opacity: 0; transform: translateY(12px); }
-    to   { opacity: 1; transform: translateY(0); }
-}
 
 /* ===== AÇÕES DA MESA (mesa.html) ===== */
 .btn-sec {
@@ -189,18 +175,8 @@ button:focus-visible {
     background: var(--gold-soft);
     transform: translateY(-2px);
 }
-.btn-perigo {
-    background: transparent;
-    color: var(--danger);
-    border: 1px solid var(--danger);
-}
-.btn-perigo:hover {
-    background: rgba(220, 38, 38, 0.12);
-    transform: translateY(-2px);
-}
 .pedido .acoes { display: flex; gap: 8px; margin-top: 10px; }
 .pedido .acoes button:not(.btn-perigo) { width: auto; flex: 0 0 auto; }
-.pedido .acoes .btn-perigo { width: auto; margin-left: auto; }
 .hist .hora { float: right; color: var(--text-muted); font-size: .8rem; }
 .hist.pulada strong { color: var(--text-muted); text-decoration: line-through; }
 .vazio { text-align: center; color: var(--text-muted); padding: 24px 0; }
@@ -331,8 +307,8 @@ h2 .contagem {
 }
 .pedido .q-col .ord {
     width: 44px;
-    height: 38px;
-    min-height: 38px;
+    height: 44px;
+    min-height: 44px;
     padding: 0;
     border: 1px solid var(--border);
     border-radius: 8px;
@@ -352,7 +328,7 @@ h2 .contagem {
 .pedido .q-info {
     flex: 1;
     min-width: 0;
-    padding-right: 40px;
+    padding-right: 48px;
 }
 .pedido .acoes {
     display: flex;
@@ -371,11 +347,11 @@ h2 .contagem {
 .pedido { position: relative; }
 .pedido > button.lixeira {
     position: absolute;
-    top: 6px;
-    right: 6px;
-    width: 32px;
-    height: 32px;
-    min-height: 32px;
+    top: 2px;
+    right: 2px;
+    width: 44px;
+    height: 44px;
+    min-height: 44px;
     padding: 0;
     display: flex;
     align-items: center;
@@ -428,7 +404,7 @@ h2 .contagem {
 /* ===== BOTÃO DE APOIO (coração) na fila pública ===== */
 .apoio-btn {
     width: auto;
-    min-height: 36px;
+    min-height: 44px;
     padding: 6px 12px;
     margin-top: 8px;
     font-size: .9rem;
@@ -438,7 +414,10 @@ h2 .contagem {
     transform: none;
 }
 .apoio-btn:hover { background: var(--gold-soft); transform: none; }
-.apoio-btn[aria-pressed="true"] { background: var(--gold-soft); }
+.apoio-btn[aria-pressed="true"] {
+    background: var(--gold);
+    color: #0f0f0f;
+}
 
 /* ===== CHIP "PEDINDO COMO" (pedidos.html) ===== */
 .chip-nome {
@@ -458,7 +437,7 @@ h2 .contagem {
 .chip-nome strong { color: var(--gold); font-weight: 600; }
 .chip-alterar {
     width: auto;
-    min-height: 36px;
+    min-height: 44px;
     padding: 6px 14px;
     font-size: .9rem;
     background: transparent;
