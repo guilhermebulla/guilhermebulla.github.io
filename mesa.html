@@ -221,11 +221,23 @@
       if (!confirm('Remover este pedido da fila? Essa ação não pode ser desfeita.')) return;
       db.collection('pedidos').doc(id).delete();
     } else {
-      db.collection('pedidos').doc(id).update({
+      const batch = db.batch();
+      batch.update(db.collection('pedidos').doc(id), {
         status: op === 'tocada' ? 'tocada' : 'pulada',
         show: showAtual,
         finishedAt: firebase.firestore.FieldValue.serverTimestamp()
       });
+      // Zera a ordem manual dos demais pendentes: o rodízio volta a valer no próximo ciclo
+      filaAtual
+        .filter(p => p.id !== id && p.ordem != null)
+        .forEach(p => batch.update(db.collection('pedidos').doc(p.id), {
+          ordem: firebase.firestore.FieldValue.delete()
+        }));
+      try { await batch.commit(); }
+      catch (err) {
+        console.error('Falha ao concluir pedido:', err);
+        alert('Não consegui atualizar a fila. Veja o console (F12).');
+      }
     }
   });
 
