@@ -206,10 +206,9 @@
         ${hora ? `<span class="hora">${hora}${p.status === 'pulada' ? ' · pulada' : ''}</span>` : ''}
         <strong>${esc(p.title)}</strong>
         <span>${esc(p.artist)} · ${esc(p.requester)}</span>
-        ${p.status === 'pulada' ? `
         <div class="acoes">
           <button data-op="devolver" data-id="${p.id}" class="btn-sec">Devolver à fila</button>
-        </div>` : ''}
+        </div>
       </div>`;
     }).join('');
   }
