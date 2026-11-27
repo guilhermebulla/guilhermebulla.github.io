@@ -29,6 +29,7 @@
   </div>
   <p id="contador-pedidos" class="contador-pedidos" aria-live="polite"></p>
   <input id="busca" placeholder="Buscar música ou artista…" autocomplete="off" aria-label="Buscar música ou artista">
+  <p id="resultado-status" class="sub" aria-live="polite"></p>
   <div id="resultado"></div>
     <h2>Fila agora <span class="contagem" id="fila-count"></span></h2>
   <div id="fila-publica"></div>
@@ -197,8 +198,9 @@
   document.getElementById('busca').addEventListener('input', e => {
     const q = normalizar(e.target.value);
     const alvo = document.getElementById('resultado');
+    const statusBusca = document.getElementById('resultado-status');
     selecionada = null;
-    if (q.length < 2) { alvo.innerHTML = ''; return; }
+    if (q.length < 2) { alvo.innerHTML = ''; statusBusca.textContent = ''; return; }
     if (!catalogo.length) {
       alvo.innerHTML = '<p class="sub">Repertório ainda carregando. Verifique a conexão.</p>';
       return;
@@ -213,6 +215,7 @@
       });
     const achados = todos.slice(0, 20);
     if (!achados.length) {
+      statusBusca.textContent = 'Nenhum resultado';
       alvo.innerHTML = '<p class="sub"><strong>Nada encontrado</strong><br>Tente outro trecho do nome ou do artista.</p>';
       return;
     }
@@ -223,7 +226,8 @@
     if (todos.length > achados.length) {
       html += `<p class="sub">Mais ${todos.length - achados.length} resultado(s). Refine a busca.</p>`;
     }
-    alvo.innerHTML = `<p class="sub" aria-live="polite">${todos.length} resultado(s)</p>` + html;
+    statusBusca.textContent = `${todos.length} resultado(s)`;
+    alvo.innerHTML = html;
   });
 
   let pedindo = false;
