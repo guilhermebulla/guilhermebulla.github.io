@@ -11,7 +11,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="base.css">
-<link rel="stylesheet" href="app.css?v=11">
+<link rel="stylesheet" href="app.css?v=12">
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
@@ -219,7 +219,13 @@
     const btn = e.target.closest('button[data-op]');
     if (!btn || btn.disabled || operando) return;
     operando = true;
-    setTimeout(() => { operando = false; }, 600);
+    btn.classList.add('ocupado');
+    btn.disabled = true;
+    setTimeout(() => {
+      operando = false;
+      btn.classList.remove('ocupado');
+      btn.disabled = false;
+    }, 600);
     const id = btn.closest('.pedido').dataset.id;
     const op = btn.dataset.op;
     if (op === 'subir' || op === 'descer') {
@@ -275,7 +281,13 @@
     const btn = e.target.closest('button[data-op="devolver"]');
     if (!btn || operando) return;
     operando = true;
-    setTimeout(() => { operando = false; }, 600);
+    btn.classList.add('ocupado');
+    btn.disabled = true;
+    setTimeout(() => {
+      operando = false;
+      btn.classList.remove('ocupado');
+      btn.disabled = false;
+    }, 600);
     db.collection('pedidos').doc(btn.dataset.id).update({
       status: 'fila',
       ordem: firebase.firestore.FieldValue.delete(),

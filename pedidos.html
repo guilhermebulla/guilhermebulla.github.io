@@ -10,7 +10,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="base.css">
-<link rel="stylesheet" href="app.css?v=11">
+<link rel="stylesheet" href="app.css?v=12">
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 </head>
@@ -278,7 +278,10 @@
       });
       return true;
     } catch (err) {
-      toast('Falha ao apoiar. Tente de novo.', 'erro');
+      console.error('Falha ao apoiar:', err);
+      toast(err.code === 'permission-denied'
+        ? 'Esta música já saiu da fila. Atualize a página.'
+        : 'Falha ao apoiar. Tente de novo.', 'erro');
       return false;
     }
   }
