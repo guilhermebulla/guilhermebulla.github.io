@@ -1,5 +1,5 @@
 BASE DE DADOS — GUILHERME BULLA (BULLAACOUSTIC)
-Atualização: 27/11/2026 (v4.5 — reescrita viva: app Pedidos ao vivo com rodízio, devolução e apoio no estado atual; pendências restantes para a próxima IA; demais seções mantidas)
+Atualização: 27/11/2026 (v4.6 — reescrita viva: app Pedidos ao vivo no estado validado no teste de 3 minutos (base 0603e62); pendências restantes para a próxima IA; demais seções mantidas)
 1. IDENTIFICAÇÃO
 Nome: Guilherme Bulla | Projeto: BullaAcoustic
 Profissão: Cantor e violonista | Carreira: 28 anos (início aos 16)
@@ -63,7 +63,7 @@ E-mail: bullaacoustic@gmail.com | NF: MEI/CNPJ próprio
 13.1 QR Code para shows: página /conecte-se ativa; 1º botão dela leva ao app de pedidos ao vivo (conveniência; função primordial segue sendo redes). QR impresso.
 - Pendência: porta-acrílico (formato L, A5 vertical, cristal) + teste in loco
 13.2 Favicon do ecossistema (25/11/2026): redesenhado e aplicado nas 5 páginas (index, repertorio, conecte-se, pedidos, mesa) — design "anel duplo" (alternativa C). Aprovado pelo dono após teste visual das 3 alternativas (A/B/C). Detalhe técnico no SITE.md.
-13.3 App Pedidos ao vivo (27/11/2026): em produção no site, com fila pública (pedidos.html) e painel do músico (mesa.html). Teste visual no celular aprovado. Login do músico por e-mail e senha (Firebase Auth). Rodízio por show com contagem de pedidos devolvidos (fila.js). Regras do Firestore publicadas com validação de campos, limites e campo show. Restrições da chave de API: conferir propagação. Pendências técnicas no SITE.md, seção 7.
+13.3 App Pedidos ao vivo (27/11/2026): em produção no site, base 0603e62. Fila pública (pedidos.html) e painel do músico (mesa.html). Teste de 3 minutos no celular aprovado pelo dono (pedido, apoio, tocada, devolução, limite). Login do músico por e-mail e senha (Firebase Auth). Rodízio por show. Apoios por show com índice de coleção-grupo criado no console Firebase (27/11/2026). Regras do Firestore no arquivo "Rules do Firestore.md" (igualdade com o console: pendente de verificação). Detalhe técnico no SITE.md.
 14. PENDÊNCIAS
 1. Porta-acrílico do QR Code (formato L, A5 vertical, cristal)
 2. Definir meta de faturamento mensal com shows
@@ -73,14 +73,14 @@ E-mail: bullaacoustic@gmail.com | NF: MEI/CNPJ próprio
 6. Reprocessar as pendências antigas 6-10 do v3.0 (prints SSL, toggle de busca, separador, patch debug-2) — estado não verificado nesta revisão; fechar ou cancelar
 7. Unificação de tokens do conecte-se.css com base.css — fase futura, com teste visual (exceção documentada no SITE.md; não fazer sem teste)
 8. App Pedidos — pendências atuais (detalhe no SITE.md, seção 7):
-   8.1 mesa.html com fila.js?v=3: trocar para v=4 (alta prioridade).
-   8.2 Decidir se Devolver à fila respeita o limite de 3 pendentes por nome.
-   8.3 Filtrar o listener de apoios por show, em pedidos.html e mesa.html.
-   8.4 Acessibilidade: busca por teclado e leitor de tela; revisar <main> em pedidos.html.
-   8.5 Validação em dois celulares (roteiro na seção 7, item 5 do SITE.md).
-   8.6 Testes do apoio: rodízio com apoios e Rule negando apoio em pedido tocado.
-   8.7 Limpeza de código (ramo morto da busca, duplicações entre as telas, chaveApoio).
-   8.8 Privacidade da fila pública (pedidos tocados/pulados com nome): decisão mantida; reabrir só por decisão do dono.
+   8.1 Validação visual no celular com print: cabeçalho sticky, destaque "É VOCÊ", coração "apoiado".
+   8.2 Teste: rodízio com apoios e Rule negando apoio em pedido tocado.
+   8.3 Revisar <main> e validar a busca com leitor de tela real.
+   8.4 Confirmar no console Firebase que as Rules publicadas são idênticas ao arquivo versionado.
+   8.5 Decisões aceitas que podem ser revistas: Devolver não confere o limite de 3 pendentes; ordem manual (▲▼) vence o rodízio até a próxima conclusão de pedido.
+   8.6 Apoios órfãos quando um pedido é removido (SITE.md, 5.7).
+   8.7 Privacidade da fila pública (pedidos tocados/pulados com nome): decisão mantida; reabrir só por decisão do dono.
+   8.8 Pedidos anteriores à normalização com acento (SITE.md, 5.1): mitigados pelo encerramento do show.
 9. Tolerância a erro de digitação na busca: fora por enquanto.
 15. DECISÕES REGISTRADAS (26/11/2026 a 27/11/2026)
 - Login da mesa por e-mail e senha (Firebase Auth) no lugar do PIN. Não reabrir o PIN.
@@ -94,10 +94,15 @@ E-mail: bullaacoustic@gmail.com | NF: MEI/CNPJ próprio
 - Apoio desempata apenas entre pedidos do mesmo nível de rodízio. Ordem manual (▲▼) vale dentro do ciclo atual.
 - Ao concluir um pedido (tocada ou pulada), a ordem manual dos demais pendentes é zerada e o rodízio volta a valer (27/11/2026, opção b).
 - Devolver à fila mantém a contagem do rodízio (contouRodizio) e manda o pedido ao fim do seu nível (27/11/2026, opção b).
+- Devolver à fila disponível para tocadas e puladas (27/11/2026, decisão do dono).
+- Devolver não confere o limite de 3 pendentes: aceito por uso social, com controle do músico (27/11/2026, opção b).
+- Ordem manual (▲▼) continua valendo como prioridade absoluta sobre o rodízio (27/11/2026, opção a).
+- Falhas de carga da fila e dos apoios são visíveis ao usuário: no convidado, aviso na tela e toast; na mesa, alerta.
+- Acessibilidade: resultados da busca anunciados por região de status persistente; coração com texto "apoiado", sem aria-label que sobrescreva o texto.
 - Música já pedida por outra pessoa, ao ser escolhida: vira apoio, com a mensagem "Juntos somos mais! Seu pedido se juntou ao de [nome]!".
 - Repetir o próprio pedido: mensagem "Você já pediu esta música".
 - Busca e nome ignoram acento e caixa. Tolerância a erro de digitação: fora por enquanto.
 - Chip de nome no cabeçalho: camada de atrito, não barreira.
-- Cache: app.css?v=9 nas duas telas; fila.js?v=4 em pedidos.html e fila.js?v=3 em mesa.html (divergência pendente, item 8.1).
+- Cache: app.css?v=10 nas duas telas; fila.js?v=4 nas duas telas (divergência anterior resolvida).
 - Footer: app.css sem !important, aceitando a cascata (opção b). Visual: cabeçalho sticky compacto, títulos Playfair dourado.
 FIM DO DOCUMENTO
