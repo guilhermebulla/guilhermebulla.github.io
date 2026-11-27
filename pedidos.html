@@ -177,7 +177,7 @@
           `<div><strong>${esc(p.title)}</strong>` +
           `<span>${esc(p.requester)} na fila</span>` +
           (eu ? '<div class="me-tag">É VOCÊ</div>' : '') +
-          `<button type="button" class="apoio-btn" data-pid="${p.id}" aria-pressed="${jaApoiei}" aria-label="Apoiar esta música: ${apoiadores.length} apoios" title="Apoiar esta música">♥ ${apoiadores.length}${jaApoiei ? ' · apoiado' : ''}</button>` +
+          `<button type="button" class="apoio-btn" data-pid="${p.id}" aria-pressed="${jaApoiei}" title="Apoiar esta música">♥ ${apoiadores.length}${jaApoiei ? ' · apoiado' : ''}</button>` +
           `</div></div>`;
         }).join('')
       : '<p class="sub">Nenhum pedido na fila. Seja o primeiro!</p>';
